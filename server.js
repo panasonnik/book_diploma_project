@@ -1,10 +1,11 @@
 import express from 'express';
-import {getBooks, getBookById, addBook} from './models/database.js';
+import {getBooks, getBookById, addBook} from './models/bookModel.js';
 import {calculateDecisionMatrix} from './utils/decisionMatrix.js';
-
+import authRoutes from './routes/authRoutes.js';
 const app = express();
 app.use(express.json());
 
+app.use('/auth', authRoutes);
 app.get("/books/top", async (req, res) => {
     const books = await getBooks();
     const rankedBooks = await calculateDecisionMatrix(books);
