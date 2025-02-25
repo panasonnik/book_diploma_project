@@ -10,11 +10,14 @@ import authRoutes from './routes/authRoutes.js';
 
 
 const app = express();
+
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
