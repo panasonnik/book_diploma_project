@@ -7,5 +7,41 @@
   </head>
   <body>
     <h1>Quiz!</h1>
+    <form action="/quiz/submit" method="POST">
+      <h2>How many pages do you prefer? (1-10)</h2>
+      <input type="number" name="number_of_pages" min="1" max="10" required />
+
+      <h2>What publication year range do you prefer? (1-10)</h2>
+      <input type="number" name="year_published" min="1" max="10" required />
+
+      <h2>Select your preferred genres:</h2>
+      <label
+        ><input type="checkbox" name="genre_preferences" value="Fantasy" />
+        Fantasy</label
+      >
+      <label
+        ><input type="checkbox" name="genre_preferences" value="Sci-Fi" />
+        Sci-Fi</label
+      >
+      <label
+        ><input type="checkbox" name="genre_preferences" value="Mystery" />
+        Mystery</label
+      >
+      <label
+        ><input type="checkbox" name="genre_preferences" value="Romance" />
+        Romance</label
+      >
+      <label
+        ><input type="checkbox" name="genre_preferences" value="Thriller" />
+        Thriller</label
+      >
+      <label
+        ><input type="checkbox" name="genre_preferences" value="Non-Fiction" />
+        Non-Fiction</label
+      >
+
+      <br /><br />
+      <button type="submit">Submit Quiz</button>
+    </form>
   </body>
 </html>

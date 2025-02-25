@@ -1,0 +1,9 @@
+import pool from "../config/db.js";
+
+export async function addQuizAnswer(user_id, number_of_pages, year_published, genre_preferences) {
+    const [newQuizAnswer] = await pool.query(`
+    INSERT INTO quiz_answers (user_id, number_of_pages, year_published, genre_preferences)
+    VALUES (?, ?, ?, ?) 
+    `, [user_id, number_of_pages, year_published, genre_preferences]);
+    return newQuizAnswer.insertId;
+}

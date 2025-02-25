@@ -1,6 +1,6 @@
 import express from "express";
 import { showHomepage } from "../controllers/homeController.js";
-import { showQuiz } from "../controllers/quizController.js";
+import { showQuiz, submitQuiz } from "../controllers/quizController.js";
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -14,6 +14,7 @@ router.get('/login', (req, res) => {
 
 router.get('/home', authenticateToken, showHomepage);
 router.get('/quiz', authenticateToken, showQuiz);
+router.post('/quiz/submit', authenticateToken, submitQuiz);
 
 export default router;
 

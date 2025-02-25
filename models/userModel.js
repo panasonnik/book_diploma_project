@@ -46,7 +46,7 @@ export async function addUser(username, email, password) {
 
 export async function hasCompletedQuiz(id) {
     try {
-        const [rows] = await pool.execute('SELECT has_compeleted_quiz FROM users WHERE id = ?', [id]);
+        const [rows] = await pool.execute('SELECT has_completed_quiz FROM users WHERE user_id = ?', [id]);
         
         if (rows.length > 0) {
             return rows[0].has_completed_quiz;
@@ -56,5 +56,18 @@ export async function hasCompletedQuiz(id) {
     } catch (error) {
         console.error(error);
         return false;
+    }
+}
+
+export async function completeQuizUser(id) {
+    try {
+        await pool.query(
+            `UPDATE users SET has_completed_quiz = TRUE WHERE user_id = ?`,
+            [id]
+        );
+        return { success: true, message: "Quiz marked as completed" };
+    } catch (error) {
+        console.error("Error updating quiz status:", error);
+        return { success: false, message: "Database error" };
     }
 }
