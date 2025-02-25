@@ -71,3 +71,19 @@ export async function completeQuizUser(id) {
         return { success: false, message: "Database error" };
     }
 }
+
+export async function getUserBooks(userId) {
+    try {
+        const [rows] = await pool.query(`
+            SELECT books.*, users_books.score
+            FROM books
+            INNER JOIN users_books ON books.book_id = users_books.book_id
+            WHERE users_books.user_id = ?
+            ORDER BY users_books.score DESC;
+        `, [userId]);
+        return rows;
+    } catch (err) {
+        console.error("Error fetching user's books:", err);
+        throw new Error("Error fetching user's books");
+    }
+}

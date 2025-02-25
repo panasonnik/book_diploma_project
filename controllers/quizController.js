@@ -1,5 +1,6 @@
-import { addQuizAnswer } from "../models/quizAnswersModel.js";
+import { addQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswersModel.js";
 import { completeQuizUser } from '../models/userModel.js';
+import { calculateBookScores } from '../utils/calculateBookScores.js';
 
 export async function showQuiz(req, res) {
     try {
@@ -20,6 +21,8 @@ export async function submitQuiz (req, res) {
 
         addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString);
         completeQuizUser(userId);
+        const quizAnswer = getQuizAnswerByUserId(userId);
+        const topBooks = calculateBookScores(quizAnswer);
         res.redirect('/home');
     } catch (error) {
         console.error(error);

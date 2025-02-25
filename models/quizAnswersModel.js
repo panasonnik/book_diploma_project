@@ -7,3 +7,12 @@ export async function addQuizAnswer(user_id, number_of_pages, year_published, ge
     `, [user_id, number_of_pages, year_published, genre_preferences]);
     return newQuizAnswer.insertId;
 }
+
+export async function getQuizAnswerByUserId(id) {
+    const [quizAnswerById] = await pool.query(`
+        SELECT * 
+        FROM quiz_answers
+        WHERE user_id = ?
+        `, [id]); //prepared statement
+    return quizAnswerById[0];
+}

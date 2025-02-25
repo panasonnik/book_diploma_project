@@ -3,8 +3,8 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
-import {getBooks, getBookById, addBook} from './models/bookModel.js';
-import {calculateDecisionMatrix} from './utils/decisionMatrix.js';
+// import {getBooks, getBookById, addBook} from './models/bookModel.js';
+// import {calculateDecisionMatrix} from './utils/decisionMatrix.js';
 import navigationRoutes from './routes/navigationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 
@@ -24,29 +24,29 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/', navigationRoutes);
 app.use('/auth', authRoutes);
 
-app.get("/books/top", async (req, res) => {
-    const books = await getBooks();
-    const rankedBooks = await calculateDecisionMatrix(books);
-    const topBooks = rankedBooks.slice(0, 2);
-    res.send(topBooks);
-});
+// app.get("/books/top", async (req, res) => {
+//     const books = await getBooks();
+//     const rankedBooks = await calculateDecisionMatrix(books);
+//     const topBooks = rankedBooks.slice(0, 2);
+//     res.send(topBooks);
+// });
 
-app.get("/books", async (req, res) => {
-    const books = await getBooks();
-    res.send(books);
-});
+// app.get("/books", async (req, res) => {
+//     const books = await getBooks();
+//     res.send(books);
+// });
 
-app.get("/books/:id", async (req, res) => {
-    const id = req.params.id;
-    const book = await getBookById(id);
-    res.send(book);
-});
+// app.get("/books/:id", async (req, res) => {
+//     const id = req.params.id;
+//     const book = await getBookById(id);
+//     res.send(book);
+// });
 
-app.post("/books", async (req, res) => {
-    const {title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing} = req.body;
-    const newBook = await addBook(title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing);
-    res.status(201).send(newBook);
-});
+// app.post("/books", async (req, res) => {
+//     const {title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing} = req.body;
+//     const newBook = await addBook(title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing);
+//     res.status(201).send(newBook);
+// });
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
