@@ -25,7 +25,7 @@ export async function getUserByUsername (username) {
     const [userByUsername] = await pool.query(`
         SELECT * 
         FROM users
-        WHERE email = ?`, [username]);
+        WHERE username = ?`, [username]);
     return userByUsername[0];
 }
 export async function getUserByEmailOrUsername (emailOrUsername) {

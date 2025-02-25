@@ -1,11 +1,26 @@
 import express from 'express';
+import path from 'path';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import { fileURLToPath } from 'url';
 import {getBooks, getBookById, addBook} from './models/bookModel.js';
 import {calculateDecisionMatrix} from './utils/decisionMatrix.js';
+import navigationRoutes from './routes/navigationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-const app = express();
-app.use(express.json());
 
+
+const app = express();
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use('/', navigationRoutes);
 app.use('/auth', authRoutes);
+
 app.get("/books/top", async (req, res) => {
     const books = await getBooks();
     const rankedBooks = await calculateDecisionMatrix(books);
@@ -23,9 +38,6 @@ app.get("/books/:id", async (req, res) => {
     const book = await getBookById(id);
     res.send(book);
 });
-
-
-
 
 app.post("/books", async (req, res) => {
     const {title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing} = req.body;
