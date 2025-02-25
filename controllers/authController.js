@@ -1,4 +1,4 @@
-import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, getUsers } from '../models/userModel.js';
+import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, getUsers, hasCompletedQuiz } from '../models/userModel.js';
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
 
 
@@ -30,7 +30,9 @@ export async function registerUser(req, res) {
         const user = await addUser(username, email, hashedPassword);
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
-        res.status(201).redirect('/home');
+        
+
+        res.status(201).redirect('/quiz');
     } catch (err) {
         console.error(err);
         res.status(500).send("Database error");
@@ -53,7 +55,12 @@ export async function loginUser(req, res) {
 
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
-        res.status(201).redirect('/home');
+        const hasCompleted = await hasCompletedQuiz(user.user_id);
+        if (hasCompleted) {
+            return res.status(201).redirect('/home');
+        } else {
+            return res.status(201).redirect('/quiz');
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send("Database error");

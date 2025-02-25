@@ -43,3 +43,18 @@ export async function addUser(username, email, password) {
     `, [username, email, password]);
     return getUserById(newUser.insertId);
 }
+
+export async function hasCompletedQuiz(id) {
+    try {
+        const [rows] = await pool.execute('SELECT has_compeleted_quiz FROM users WHERE id = ?', [id]);
+        
+        if (rows.length > 0) {
+            return rows[0].has_completed_quiz;
+        } else {
+            throw new Error('User not found');
+        }
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
