@@ -1,5 +1,7 @@
 import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, getUsers, hasCompletedQuiz } from '../models/userModel.js';
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
+import { getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
+import { calculateBookScores } from '../utils/calculateBookScores.js';
 
 
 export async function allUsers(req, res) {

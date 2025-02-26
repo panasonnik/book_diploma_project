@@ -1,33 +1,39 @@
-import { getBooks } from "../models/bookModel.js";
-import { addBookScore } from "../models/usersBooksModel.js";
+import { getBooks, getBooksByGenre } from "../models/bookModel.js";
+import { addBookScore } from "../models/userBookScoreModel.js";
 
 export async function calculateBookScores(quizAnswer) {
     const resolvedQuizAnswer = await quizAnswer;
-    const books = await getBooks();
-
+    const booksByGenre = await getBooksByGenre();
     const weights = {
         numberOfPages: resolvedQuizAnswer.number_of_pages,
         yearPublished: resolvedQuizAnswer.year_published,
-        genrePreferences: resolvedQuizAnswer.genre_preferences
+        genrePreferences: resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim()),
+        genre: 0.5
     };
 
-    console.log(weights);
-    console.log(books);
-
-    const minPages = Math.min(...books.map(book => book.number_of_pages));
-    const maxPages = Math.max(...books.map(book => book.number_of_pages));
-    const minYear = Math.min(...books.map(book => book.year_published));
-    const maxYear = Math.max(...books.map(book => book.year_published));
-
     const scoredBooks = [];
-    for (let book of books) {
-        const normPages = (book.number_of_pages - minPages) / (maxPages - minPages);
-        const normYear = (book.year_published - minYear) / (maxYear - minYear);
-        const score = (normPages * weights.numberOfPages) + (normYear * weights.yearPublished);
+    let genreScore = 0;
 
-        await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
+    for (let [genre, books] of Object.entries(booksByGenre)) {
+        const minPages = Math.min(...books.map(book => book.number_of_pages));
+        const maxPages = Math.max(...books.map(book => book.number_of_pages));
+        const minYear = Math.min(...books.map(book => book.year_published));
+        const maxYear = Math.max(...books.map(book => book.year_published));
 
-        scoredBooks.push({ ...book, score });
+        for (let book of books) {
+            const normPages = maxPages !== minPages ? (book.number_of_pages - minPages) / (maxPages - minPages) : 0;
+            const normYear = maxYear !== minYear ? (book.year_published - minYear) / (maxYear - minYear) : 0;
+
+            if (weights.genrePreferences.includes(genre)) {
+                genreScore += 1;
+            }
+            const score = (normPages * weights.numberOfPages) + (normYear * weights.yearPublished) + (genreScore * weights.genre);
+
+            await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
+            genreScore = 0;
+            scoredBooks.push({ ...book, score });
+
+        }
     }
 
     return scoredBooks.sort((a, b) => b.score - a.score);

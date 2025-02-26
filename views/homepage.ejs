@@ -25,6 +25,16 @@
     <% } else { %>
     <p>No books available at the moment.</p>
     <% } %>
+    <h1>Books by Genre</h1>
+    <% for (let genre in booksByGenre) { %>
+    <h2><%= genre %></h2>
+    <ul>
+      <% booksByGenre[genre].forEach(book => { %>
+      <li><strong><%= book.title %></strong> by <%= book.author %></li>
+      <% }); %>
+    </ul>
+    <% } %>
+
     <form action="/auth/logout" method="POST">
       <button type="submit">Log out</button>
     </form>

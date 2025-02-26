@@ -3,8 +3,6 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
-// import {getBooks, getBookById, addBook} from './models/bookModel.js';
-// import {calculateDecisionMatrix} from './utils/decisionMatrix.js';
 import navigationRoutes from './routes/navigationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 

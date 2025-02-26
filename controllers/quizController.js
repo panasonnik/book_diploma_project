@@ -1,4 +1,4 @@
-import { addQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswersModel.js";
+import { addQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { completeQuizUser } from '../models/userModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
 
@@ -19,10 +19,10 @@ export async function submitQuiz (req, res) {
         const normalizedYear = year_published / 10;
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
 
-        addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString);
-        completeQuizUser(userId);
-        const quizAnswer = getQuizAnswerByUserId(userId);
-        const topBooks = calculateBookScores(quizAnswer);
+        await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString);
+        await completeQuizUser(userId);
+        const quizAnswer = await getQuizAnswerByUserId(userId);
+        const topBooks = await calculateBookScores(quizAnswer);
         res.redirect('/home');
     } catch (error) {
         console.error(error);
