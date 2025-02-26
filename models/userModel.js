@@ -87,3 +87,18 @@ export async function getUserBooks(userId) {
         throw new Error("Error fetching user's books");
     }
 }
+
+export async function getSavedBooks(userId) {
+    try {
+        const [rows] = await pool.query(`
+            SELECT b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published
+            FROM user_book_preferences p
+            JOIN books b ON p.book_id = b.book_id
+            WHERE p.user_id = ?;
+            `, [userId]);
+            return rows;
+    } catch (err) {
+        console.error("Error fetching user's books:", err);
+        throw new Error("Error fetching user's books");
+    }
+}

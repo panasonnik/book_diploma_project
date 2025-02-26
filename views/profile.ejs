@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome Page</title>
+  </head>
+  <body>
+    <h1>This is profile page!</h1>
+    <h2>Your saved books</h2>
+    <% if (savedBooks && savedBooks.length > 0) { %>
+    <ul>
+      <% savedBooks.forEach(book => { %>
+      <li>
+        <h2><%= book.title %> by <%= book.author %></h2>
+        <p><strong>Genre:</strong> <%= book.genre %></p>
+        <p><strong>Published:</strong> <%= book.year_published %></p>
+        <p><strong>Pages:</strong> <%= book.number_of_pages %></p>
+        <% if (book.image_url) { %>
+        <img src="<%= book.image_url %>" alt="Book Cover" width="150" />
+        <% } %>
+      </li>
+      <% }); %>
+    </ul>
+    <% } else { %>
+    <p>No books available at the moment.</p>
+    <% } %>
+
+    <form action="/auth/logout" method="POST">
+      <button type="submit">Log out</button>
+    </form>
+  </body>
+</html>

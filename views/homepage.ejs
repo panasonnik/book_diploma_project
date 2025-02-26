@@ -19,22 +19,36 @@
         <% if (book.image_url) { %>
         <img src="<%= book.image_url %>" alt="Book Cover" width="150" />
         <% } %>
+
+        <form action="/save-book" method="POST">
+          <input type="hidden" name="book_id" value="<%= book.book_id %>" />
+          <button type="submit">Save this book</button>
+        </form>
       </li>
       <% }); %>
     </ul>
     <% } else { %>
     <p>No books available at the moment.</p>
     <% } %>
+
     <h1>Books by Genre</h1>
-    <% for (let genre in booksByGenre) { %>
+    <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
+    booksByGenre[genre].length > 0) { %>
     <h2><%= genre %></h2>
     <ul>
       <% booksByGenre[genre].forEach(book => { %>
-      <li><strong><%= book.title %></strong> by <%= book.author %></li>
+      <li>
+        <strong><%= book.title %></strong> by <%= book.author %>
+        <form action="/save-book" method="POST">
+          <input type="hidden" name="book_id" value="<%= book.book_id %>" />
+          <button type="submit">Save this book</button>
+        </form>
+      </li>
       <% }); %>
     </ul>
-    <% } %>
+    <% } %> <% } %>
 
+    <a href="/profile">Profile</a>
     <form action="/auth/logout" method="POST">
       <button type="submit">Log out</button>
     </form>

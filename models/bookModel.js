@@ -11,7 +11,7 @@ export async function getBookById(id) {
     const [bookById] = await pool.query(`
         SELECT * 
         FROM books
-        WHERE id = ?
+        WHERE book_id = ?
         `, [id]); //prepared statement
     return bookById[0];
 }
@@ -43,5 +43,14 @@ export async function getBooksByGenre() {
         console.error("Error fetching books by genre:", error);
         throw new Error("Error fetching books by genre");
     }
+}
+
+export async function saveBookPreference(userId, bookId) {
+    const [newBookPreference] = await pool.query(`
+    INSERT INTO user_book_preferences (user_id, book_id)
+    VALUES (?, ?) 
+    ON DUPLICATE KEY UPDATE preference_id = preference_id;
+    `, [userId, bookId]);
+    return getBookById(newBookPreference.insertId);
 }
 
