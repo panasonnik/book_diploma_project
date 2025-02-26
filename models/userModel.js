@@ -75,11 +75,11 @@ export async function completeQuizUser(id) {
 export async function getUserBooks(userId) {
     try {
         const [rows] = await pool.query(`
-            SELECT books.*, user_book_scores.score
+            SELECT books.*, user_book_scores.book_score
             FROM books
             INNER JOIN user_book_scores ON books.book_id = user_book_scores.book_id
             WHERE user_book_scores.user_id = ?
-            ORDER BY user_book_scores.score DESC;
+            ORDER BY user_book_scores.book_score DESC;
         `, [userId]);
         return rows;
     } catch (err) {

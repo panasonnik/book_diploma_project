@@ -13,6 +13,19 @@ export async function addQuizAnswer(user_id, number_of_pages, year_published, ge
     return newQuizAnswer.insertId;
 }
 
+export async function updateQuizAnswers(user_id, answers) {
+    const [updatedQuizAnswer] = await pool.query(
+        `UPDATE quiz_answers 
+         SET number_of_pages = ?, 
+             year_published = ?, 
+             genre_preferences = ? 
+         WHERE user_id = ?`,
+        [answers.number_of_pages, answers.year_published, answers.genre_preferences, user_id] 
+    );
+    return updatedQuizAnswer;
+}
+
+
 
 export async function getQuizAnswerByUserId(id) {
     const [quizAnswerById] = await pool.query(`

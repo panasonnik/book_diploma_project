@@ -22,7 +22,7 @@ export async function submitQuiz (req, res) {
         await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString);
         await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
-        const topBooks = await calculateBookScores(quizAnswer);
+        await calculateBookScores(quizAnswer);
         res.redirect('/home');
     } catch (error) {
         console.error(error);

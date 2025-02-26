@@ -1,5 +1,6 @@
 import { getBooks, getBooksByGenre } from "../models/bookModel.js";
-import { addBookScore } from "../models/userBookScoreModel.js";
+import { addBookScore, bookScoreExists } from "../models/userBookScoreModel.js";
+import { updateBookScores } from "../utils/updateBookScores.js";
 
 export async function calculateBookScores(quizAnswer) {
     const resolvedQuizAnswer = await quizAnswer;
@@ -28,8 +29,14 @@ export async function calculateBookScores(quizAnswer) {
                 genreScore += 1;
             }
             const score = (normPages * weights.numberOfPages) + (normYear * weights.yearPublished) + (genreScore * weights.genre);
+            const exists = await bookScoreExists(resolvedQuizAnswer.user_id, book.book_id);
 
-            await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
+            if (exists) {
+                await updateBookScores(userId, book.book_id, newScore);
+            } else {
+                await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
+            }
+            
             genreScore = 0;
             scoredBooks.push({ ...book, score });
 
