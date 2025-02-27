@@ -1,0 +1,17 @@
+.logo {
+    display: flex;
+    flex-direction: column;
+    font-size: 32px;
+
+    &-good {
+        font-weight: 600;
+        color: #000;
+        margin: 0;
+    }
+
+    &-book {
+        font-weight: 600;
+        color: #c48900;
+        margin: 0;
+    }
+}

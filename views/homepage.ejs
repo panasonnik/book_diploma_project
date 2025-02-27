@@ -4,32 +4,141 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome Page</title>
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>This is homepage!</h1>
-    <h2>Book recommendations for you</h2>
-    <% if (books && books.length > 0) { %>
-    <ul>
-      <% books.forEach(book => { %>
-      <li>
-        <h2><%= book.title %> by <%= book.author %></h2>
-        <p><strong>Genre:</strong> <%= book.genre %></p>
-        <p><strong>Published:</strong> <%= book.year_published %></p>
-        <p><strong>Pages:</strong> <%= book.number_of_pages %></p>
-        <% if (book.image_url) { %>
-        <img src="<%= book.image_url %>" alt="Book Cover" width="150" />
-        <% } %>
-
-        <form action="/save-book" method="POST">
-          <input type="hidden" name="book_id" value="<%= book.book_id %>" />
-          <button type="submit">Save this book</button>
-        </form>
-      </li>
-      <% }); %>
-    </ul>
-    <% } else { %>
-    <p>No books available at the moment.</p>
-    <% } %>
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <div class="logo-good">GOOD</div>
+          <div class="logo-book">BOOK</div>
+        </div>
+        <div class="navbar__avatar"></div>
+      </nav>
+      <div class="content">
+        <div class="book-grid" id="bookGrid">
+          <% if (books && books.length > 0) { %> <% books.forEach(book => { %>
+          <div class="book-card">
+            <div class="book-card__image-container">
+              <img
+                src="<%= book.image_url %>"
+                alt="<%= book.title %> cover"
+                class="book-card__cover-image book-cover"
+                onclick="openModal('<%= book.title %>', '<%= book.image_url %>', '<%= book.author %>', '<%= book.description %>', '<%= book.year_published %>', '<%= book.number_of_pages %>')"
+                onerror="this.src='/images/onerror_image.jpg';"
+              />
+              <form action="/save-book" method="POST">
+                <input
+                  type="hidden"
+                  name="book_id"
+                  value="<%= book.book_id %>"
+                />
+                <button
+                  type="submit"
+                  class="like-btn <%= book.is_liked ? 'liked' : '' %>"
+                  data-book-id="<%= book.book_id %>"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    class="like-icon"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    ></path>
+                  </svg>
+                </button>
+              </form>
+            </div>
+            <div class="book-card__details">
+              <h3 class="subheading subheading--regular"><%= book.title %></h3>
+              <p class="subheading subheading--small subheading--light">
+                <%= book.author %>
+              </p>
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <p>No books available at the moment.</p>
+          <% } %>
+        </div>
+        <div
+          class="modal-overlay"
+          aria-modal="true"
+          role="dialog"
+          id="bookModal"
+        >
+          <div class="modal__container">
+            <div class="modal__content">
+              <div class="modal__header">
+                <h2 class="heading heading--bold" id="modalBookTitle"></h2>
+                <button
+                  class="close-button"
+                  aria-label="Close modal"
+                  onclick="closeModal()"
+                >
+                  ×
+                </button>
+              </div>
+              <div class="modal__body">
+                <div class="book-cover-container">
+                  <img
+                    class="book-card__cover-image"
+                    src=""
+                    alt="Book cover"
+                    id="modalBookImage"
+                  />
+                </div>
+                <div class="modal__book-details">
+                  <div class="modal__book-details__section">
+                    <h3 class="subheading subheading--bold">Author</h3>
+                    <p
+                      class="subheading subheading--light subheading--small"
+                      id="modalAuthorName"
+                    ></p>
+                  </div>
+                  <div
+                    class="modal__book-details__section modal__book-details__section--description"
+                  >
+                    <h3 class="subheading subheading--bold">Description</h3>
+                    <p
+                      class="subheading subheading--light subheading--small"
+                      id="modalBookDescription"
+                    ></p>
+                  </div>
+                  <div class="modal__book-additional-details">
+                    <div class="detail-item">
+                      <h4 class="subheading subheading--bold subheading--small">
+                        Genre
+                      </h4>
+                      <p class="text text--muted" id="modalGenres">
+                        Genres here...
+                      </p>
+                    </div>
+                    <div class="detail-item">
+                      <h4 class="subheading subheading--bold subheading--small">
+                        Year
+                      </h4>
+                      <p class="text text--muted" id="modalYear"></p>
+                    </div>
+                    <div class="detail-item">
+                      <h4 class="subheading subheading--bold subheading--small">
+                        Pages
+                      </h4>
+                      <p class="text text--muted" id="modalPages"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <h1>Books by Genre</h1>
     <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
@@ -52,5 +161,39 @@
     <form action="/auth/logout" method="POST">
       <button type="submit">Log out</button>
     </form>
+    <script>
+      document.querySelectorAll('.like-button').forEach((button) => {
+        // button.addEventListener('click', (e) => {
+        //   const bookId = parseInt(e.currentTarget.dataset.bookId);
+        //   const book = state.books.find((b) => b.id === bookId);
+        //   book.liked = !book.liked;
+        // });
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('liked');
+        });
+      });
+
+      function openModal(title, imageUrl, author, description, year, pages) {
+        document.getElementById('modalBookTitle').textContent = title;
+        document.getElementById('modalBookImage').src = imageUrl;
+        document.getElementById('modalAuthorName').textContent = author;
+        document.getElementById('modalBookDescription').textContent =
+          description;
+        document.getElementById('modalYear').textContent = year;
+        document.getElementById('modalPages').textContent = pages;
+
+        document.getElementById('bookModal').style.display = 'block';
+      }
+
+      function closeModal() {
+        document.getElementById('bookModal').style.display = 'none';
+      }
+
+      window.onclick = function (event) {
+        if (event.target == document.getElementById('bookModal')) {
+          closeModal();
+        }
+      };
+    </script>
   </body>
 </html>

@@ -1,0 +1,17 @@
+.content {
+    padding: 4rem 8rem;
+}
+
+
+
+@media (max-width: 991px) {
+    .content {
+        padding: 2rem 4rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .content {
+        padding: 1rem 2rem;
+    }
+}

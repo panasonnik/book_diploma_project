@@ -1,0 +1,29 @@
+.navbar {
+    height: 104px;
+    background-color: #d9d9d9;
+    padding: 0 8rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+
+    &__avatar {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background-color: #a8a8a8;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar {
+        padding: 0 4rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .navbar {
+        padding: 0 2rem;
+    }
+}

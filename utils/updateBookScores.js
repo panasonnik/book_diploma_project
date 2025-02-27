@@ -25,7 +25,7 @@ function adjustQuizAnswers(quizAnswer, savedBook, highestScoredBook) {
             let difference = highestScoredBook[key] - savedBook[key];
             
             if (difference > 0) {
-                updatedQuizAnswer[key] = quizAnswer[key] + 0.1;
+                updatedQuizAnswer[key] = Math.min(quizAnswer[key] + 0.1, 1);
             } else {
                 updatedQuizAnswer[key] = Math.max(quizAnswer[key] - 0.1, 0);
             }

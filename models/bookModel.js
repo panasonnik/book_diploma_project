@@ -54,3 +54,19 @@ export async function saveBookPreference(userId, bookId) {
     return getBookById(newBookPreference.insertId);
 }
 
+export async function deleteBookPreference(userId, bookId) {
+    const [deletedBookPreference] = await pool.query(`
+    DELETE FROM user_book_preferences
+    WHERE user_id = ? AND book_id = ?
+    `, [userId, bookId]);
+    return deletedBookPreference;
+}
+
+export async function isBookLiked (userId, bookId) {
+    const [rows] = await pool.query(
+        `SELECT * FROM user_book_preferences WHERE user_id = ? AND book_id = ?`,
+        [userId, bookId]
+      );
+      return rows.length > 0;
+}
+
