@@ -24,7 +24,7 @@
                 src="<%= book.image_url %>"
                 alt="<%= book.title %> cover"
                 class="book-card__cover-image book-cover"
-                onclick="openModal('<%= book.title %>', '<%= book.image_url %>', '<%= book.author %>', '<%= book.description %>', '<%= book.year_published %>', '<%= book.number_of_pages %>')"
+                onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>', '<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>')"
                 onerror="this.src='/images/onerror_image.jpg';"
               />
               <form action="/save-book" method="POST">
@@ -66,6 +66,68 @@
           <p>No books available at the moment.</p>
           <% } %>
         </div>
+
+        <h1 class="heading">Books by Genre</h1>
+        <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
+        booksByGenre[genre].length > 0) { %>
+        <div class="genre-section">
+          <h2 class="heading heading--bold"><%= genre %></h2>
+
+          <div class="book-grid">
+            <% booksByGenre[genre].forEach(book => { %>
+            <div class="book-card">
+              <div class="book-card__image-container">
+                <img
+                  src="<%= book.image_url %>"
+                  alt="<%= book.title %> cover"
+                  class="book-card__cover-image book-cover"
+                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>', '<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>')"
+                  onerror="this.src='/images/onerror_image.jpg';"
+                />
+                <form action="/save-book" method="POST">
+                  <input
+                    type="hidden"
+                    name="book_id"
+                    value="<%= book.book_id %>"
+                  />
+                  <button
+                    type="submit"
+                    class="like-btn <%= book.is_liked ? 'liked' : '' %>"
+                    data-book-id="<%= book.book_id %>"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      class="like-icon"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      ></path>
+                    </svg>
+                  </button>
+                </form>
+              </div>
+
+              <div class="book-card__details">
+                <h3 class="subheading subheading--regular">
+                  <%= book.title %>
+                </h3>
+                <p class="subheading subheading--small subheading--light">
+                  <%= book.author %>
+                </p>
+              </div>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+        <% } else { %>
+        <p>No books available in <%= genre %>.</p>
+        <% } %> <% } %>
         <div
           class="modal-overlay"
           aria-modal="true"
@@ -137,63 +199,12 @@
             </div>
           </div>
         </div>
+        <a href="/profile">Profile</a>
+        <form action="/auth/logout" method="POST">
+          <button type="submit">Log out</button>
+        </form>
       </div>
     </div>
-
-    <h1>Books by Genre</h1>
-    <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
-    booksByGenre[genre].length > 0) { %>
-    <h2><%= genre %></h2>
-    <ul>
-      <% booksByGenre[genre].forEach(book => { %>
-      <li>
-        <strong><%= book.title %></strong> by <%= book.author %>
-        <form action="/save-book" method="POST">
-          <input type="hidden" name="book_id" value="<%= book.book_id %>" />
-          <button type="submit">Save this book</button>
-        </form>
-      </li>
-      <% }); %>
-    </ul>
-    <% } %> <% } %>
-
-    <a href="/profile">Profile</a>
-    <form action="/auth/logout" method="POST">
-      <button type="submit">Log out</button>
-    </form>
-    <script>
-      document.querySelectorAll('.like-button').forEach((button) => {
-        // button.addEventListener('click', (e) => {
-        //   const bookId = parseInt(e.currentTarget.dataset.bookId);
-        //   const book = state.books.find((b) => b.id === bookId);
-        //   book.liked = !book.liked;
-        // });
-        btn.addEventListener('click', () => {
-          btn.classList.toggle('liked');
-        });
-      });
-
-      function openModal(title, imageUrl, author, description, year, pages) {
-        document.getElementById('modalBookTitle').textContent = title;
-        document.getElementById('modalBookImage').src = imageUrl;
-        document.getElementById('modalAuthorName').textContent = author;
-        document.getElementById('modalBookDescription').textContent =
-          description;
-        document.getElementById('modalYear').textContent = year;
-        document.getElementById('modalPages').textContent = pages;
-
-        document.getElementById('bookModal').style.display = 'block';
-      }
-
-      function closeModal() {
-        document.getElementById('bookModal').style.display = 'none';
-      }
-
-      window.onclick = function (event) {
-        if (event.target == document.getElementById('bookModal')) {
-          closeModal();
-        }
-      };
-    </script>
+    <script src="/js/openModal.js"></script>
   </body>
 </html>

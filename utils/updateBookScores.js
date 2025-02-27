@@ -3,35 +3,35 @@ import { getQuizAnswerByUserId, updateQuizAnswers } from "../models/quizAnswerMo
 import { getBookScore, getUserBookScores, updateBookScore } from "../models/userBookScoreModel.js";
 import { calculateBookScores } from "../utils/calculateBookScores.js";
 
-export async function updateBookScores(userId, bookId) {
+export async function updateBookScores(userId, bookId, score, isRecursive = false) {
     const quizAnswer = await getQuizAnswerByUserId(userId);
     const savedBook = await getBookById(bookId);
     const bookScore = await getBookScore(userId, bookId);
-    if (bookScore.book_score < 0.5) {
+    let pages = quizAnswer.number_of_pages;
+    let year = quizAnswer.year_published;
+
+    if (bookScore.book_score < 1.0) {
         const scoredBooks = await getUserBookScores(userId);
         const highestScoredBook = scoredBooks.sort((a, b) => b.score - a.score)[0];
-        const updatedQuizAnswers = adjustQuizAnswers(quizAnswer, savedBook, highestScoredBook);
-        await updateQuizAnswers(userId, updatedQuizAnswers);
-        await calculateBookScores(updatedQuizAnswers);
-            
+
+        if (highestScoredBook.number_of_pages > savedBook.number_of_pages) {
+            pages = Math.min(quizAnswer.number_of_pages + 0.15, 1);
+        } else {
+            pages = Math.max(quizAnswer.number_of_pages - 0.15, quizAnswer.number_of_pages * 0.5);
+        }
+
+        if (highestScoredBook.year_published > savedBook.year_published) {
+            year = Math.min(quizAnswer.year_published + 0.15, 1);
+        } else {
+            year = Math.max(quizAnswer.year_published - 0.15, quizAnswer.year_published * 0.5);
+        }
+
+        await updateQuizAnswers(userId, pages, year, quizAnswer.genre_preferences);
+
+        if (!isRecursive) {
+            const updatedQuizAnswers = await getQuizAnswerByUserId(userId);
+            calculateBookScores(updatedQuizAnswers, true);
+        }
     }
 }
 
-function adjustQuizAnswers(quizAnswer, savedBook, highestScoredBook) {
-    let updatedQuizAnswer = { ...quizAnswer };
-
-    Object.keys(quizAnswer).forEach((key) => {
-        if (typeof quizAnswer[key] === "number") {
-            let difference = highestScoredBook[key] - savedBook[key];
-            
-            if (difference > 0) {
-                updatedQuizAnswer[key] = Math.min(quizAnswer[key] + 0.1, 1);
-            } else {
-                updatedQuizAnswer[key] = Math.max(quizAnswer[key] - 0.1, 0);
-            }
-        }
-    });
-    
-
-    return updatedQuizAnswer;
-}

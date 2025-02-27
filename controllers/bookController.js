@@ -9,9 +9,12 @@ export async function saveBook(req, res) {
 
         if (isLiked) {
             await deleteBookPreference(userId, bookId);
+            console.log('Book preference deleted');
         } else {
             await saveBookPreference(userId, bookId);
+            console.log('Book preference saved');
             await updateBookScores(userId, bookId);
+            console.log('Book scores updated');
         }
 
         res.redirect('/home');
