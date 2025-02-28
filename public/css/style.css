@@ -63,32 +63,6 @@
     font-size: 16px;
   }
 }
-.navbar {
-  height: 104px;
-  background-color: #d9d9d9;
-  padding: 0 8rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-}
-.navbar__avatar {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background-color: #a8a8a8;
-}
-
-@media (max-width: 991px) {
-  .navbar {
-    padding: 0 4rem;
-  }
-}
-@media (max-width: 640px) {
-  .navbar {
-    padding: 0 2rem;
-  }
-}
 .logo {
   display: flex;
   flex-direction: column;
@@ -141,6 +115,32 @@
   cursor: pointer;
 }
 
+.navbar {
+  height: 104px;
+  background-color: #d9d9d9;
+  padding: 0 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+}
+.navbar__avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background-color: #a8a8a8;
+}
+
+@media (max-width: 991px) {
+  .navbar {
+    padding: 0 4rem;
+  }
+}
+@media (max-width: 640px) {
+  .navbar {
+    padding: 0 2rem;
+  }
+}
 .book-card {
   display: flex;
   flex-direction: column;
@@ -172,6 +172,55 @@
     height: 400px;
   }
 }
+.quiz {
+  color: red;
+}
+
+.likert__question {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 30px 0 0 4.25%;
+  margin-bottom: 10px;
+}
+.likert__scale {
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 35px;
+  display: block;
+  border-bottom: 2px solid #efefef;
+}
+.likert__scale :last-of-type {
+  border-bottom: 0;
+}
+.likert__scale :before {
+  content: "";
+  position: relative;
+  top: 11px;
+  left: 9.5%;
+  display: block;
+  background-color: #efefef;
+  height: 4px;
+  width: 78%;
+}
+.likert__scale__item {
+  display: inline-block;
+  width: 19%;
+  text-align: center;
+  vertical-align: top;
+}
+.likert__scale__item__input {
+  display: block;
+  position: relative;
+  top: 0;
+  left: 50%;
+  margin-left: -6px;
+}
+.likert__scale__item__label {
+  width: 100%;
+}
+
 .modal-overlay {
   background-color: #fff;
   display: flex;

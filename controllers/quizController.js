@@ -6,8 +6,11 @@ import { getGenres } from '../models/genreModel.js';
 export async function showQuiz(req, res) {
     try {
         const genres = await getGenres();
+
         console.log(genres);
         res.render('quiz', {genres});
+
+   
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading quiz");
@@ -16,8 +19,9 @@ export async function showQuiz(req, res) {
 
 export async function submitQuiz (req, res) {
     try {
-        const { number_of_pages, year_published, genre_preferences } = req.body;
+        const { likert, number_of_pages, year_published, genre_preferences } = req.body;
         const userId = req.user.userId;
+        console.log("likert:", likert);
         const normalizedPages = number_of_pages / 10;
         const normalizedYear = year_published / 10;
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
