@@ -25,7 +25,7 @@ export async function updateBookScores(userId, bookId, score, isRecursive = fals
         } else {
             year = Math.max(quizAnswer.year_published - 0.15, quizAnswer.year_published * 0.5);
         }
-
+        console.log(quizAnswer.genre_preferences);
         await updateQuizAnswers(userId, pages, year, quizAnswer.genre_preferences);
 
         if (!isRecursive) {

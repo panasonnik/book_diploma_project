@@ -81,7 +81,7 @@
                   src="<%= book.image_url %>"
                   alt="<%= book.title %> cover"
                   class="book-card__cover-image book-cover"
-                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>', '<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>')"
+                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>', '<%= book.image_url %>', '<%= book.genre_name %>', '<%= book.year_published %>', '<%= book.number_of_pages %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
                 <form action="/save-book" method="POST">
@@ -177,9 +177,7 @@
                       <h4 class="subheading subheading--bold subheading--small">
                         Genre
                       </h4>
-                      <p class="text text--muted" id="modalGenres">
-                        Genres here...
-                      </p>
+                      <p class="text text--muted" id="modalGenres"></p>
                     </div>
                     <div class="detail-item">
                       <h4 class="subheading subheading--bold subheading--small">

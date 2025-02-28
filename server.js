@@ -13,6 +13,12 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  next();
+});
+
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

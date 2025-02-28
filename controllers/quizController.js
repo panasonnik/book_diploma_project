@@ -1,10 +1,13 @@
 import { addQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { completeQuizUser } from '../models/userModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
+import { getGenres } from '../models/genreModel.js';
 
 export async function showQuiz(req, res) {
     try {
-        res.render('quiz');
+        const genres = await getGenres();
+        console.log(genres);
+        res.render('quiz', {genres});
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading quiz");
@@ -18,7 +21,7 @@ export async function submitQuiz (req, res) {
         const normalizedPages = number_of_pages / 10;
         const normalizedYear = year_published / 10;
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
-
+        console.log("genres:" , genrePreferencesString);
         await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString);
         await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);

@@ -15,34 +15,16 @@
       <input type="number" name="year_published" min="1" max="10" required />
 
       <h2>Select your preferred genres:</h2>
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Fantasy" />
-        Fantasy</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Fiction" />
-        Fiction</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Classic" />
-        Classic</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Romance" />
-        Romance</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Thriller" />
-        Thriller</label
-      >
-      <label
-        ><input
+      <% for (let i = 0; i < genres.length; i++) { %>
+      <label>
+        <input
           type="checkbox"
           name="genre_preferences"
-          value="Psychological"
+          value="<%= genres[i].genre_name %>"
         />
-        Psychological</label
-      >
+        <%= genres[i].genre_name %>
+      </label>
+      <% } %>
 
       <br /><br />
       <button type="submit">Submit Quiz</button>

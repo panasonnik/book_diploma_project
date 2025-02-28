@@ -9,12 +9,13 @@ document.querySelectorAll('.like-button').forEach((button) => {
     });
   });
 
-  function openModal(title, author, description, imageUrl, year, pages) {
+  function openModal(title, author, description, imageUrl, genres, year, pages) {
     document.getElementById('modalBookTitle').textContent = title;
     document.getElementById('modalBookImage').src = imageUrl;
     document.getElementById('modalAuthorName').textContent = author;
     document.getElementById('modalBookDescription').textContent =
       description;
+    document.getElementById('modalGenres').textContent = genres;
     document.getElementById('modalYear').textContent = year;
     document.getElementById('modalPages').textContent = pages;
 
