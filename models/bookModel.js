@@ -31,12 +31,16 @@ export async function getBooksByGenre() {
 
         for (const genre of genres) {
             const [books] = await pool.query(
-                `SELECT books.* FROM books
-                JOIN books_genres ON books.book_id = books_genres.book_id
-                WHERE books_genres.genre_id = ?`,
+                `SELECT b.*, GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name 
+                FROM books b
+                JOIN books_genres bg ON b.book_id = bg.book_id
+                JOIN genres g ON bg.genre_id = g.genre_id
+                WHERE bg.genre_id = ?
+                GROUP BY b.book_id`,
                 [genre.genre_id]
             );
-            booksByGenre[genre.name] = books;
+            
+            booksByGenre[genre.genre_name] = books;
         }
         return booksByGenre;
     } catch (error) {
@@ -44,6 +48,34 @@ export async function getBooksByGenre() {
         throw new Error("Error fetching books by genre");
     }
 }
+export async function getBooksWithGenres() {
+
+            const rows = await pool.query(
+                `SELECT 
+                    b.book_id,
+                    b.title,
+                    b.author,
+                    b.description,
+                    b.image_url,
+                    b.number_of_pages,
+                    b.language,
+                    b.year_published,
+                    GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+                FROM 
+                    books b
+                JOIN 
+                    books_genres bg ON b.book_id = bg.book_id
+                JOIN 
+                    genres g ON bg.genre_id = g.genre_id
+                GROUP BY 
+                    b.book_id;
+                `
+            );
+            const books = rows[0];
+            return books;
+}
+  
+
 
 export async function saveBookPreference(userId, bookId) {
     const [newBookPreference] = await pool.query(`

@@ -7,22 +7,16 @@ export async function showHomepage(req, res) {
 const books = await getUserBooks(userId);
 const booksByGenre = await getBooksByGenre();
 
-const checkedBookIds = new Set();
-
 for (let book of books) {
-    if (!checkedBookIds.has(book.book_id)) {
         book.is_liked = await isBookLiked(userId, book.book_id);
-        checkedBookIds.add(book.book_id);
-    }
 }
 
 for (let genre in booksByGenre) {
     if (Array.isArray(booksByGenre[genre])) {
         for (let book of booksByGenre[genre]) {
-            if (!checkedBookIds.has(book.book_id)) {
+            
                 book.is_liked = await isBookLiked(userId, book.book_id);
-                checkedBookIds.add(book.book_id);
-            }
+            
         }
     }
 }

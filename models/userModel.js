@@ -75,11 +75,16 @@ export async function completeQuizUser(id) {
 export async function getUserBooks(userId) {
     try {
         const [rows] = await pool.query(`
-            SELECT books.*, user_book_scores.book_score
-            FROM books
-            INNER JOIN user_book_scores ON books.book_id = user_book_scores.book_id
-            WHERE user_book_scores.user_id = ?
-            ORDER BY user_book_scores.book_score DESC;
+            SELECT b.*, ubs.book_score, 
+GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+FROM books b
+INNER JOIN user_book_scores ubs ON b.book_id = ubs.book_id
+LEFT JOIN books_genres bg ON b.book_id = bg.book_id
+LEFT JOIN genres g ON bg.genre_id = g.genre_id
+WHERE ubs.user_id = ?
+GROUP BY b.book_id, ubs.book_score
+ORDER BY ubs.book_score DESC;
+
         `, [userId]);
         return rows;
     } catch (err) {

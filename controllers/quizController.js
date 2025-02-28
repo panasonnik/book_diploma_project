@@ -1,6 +1,7 @@
 import { addQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { completeQuizUser } from '../models/userModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
+import { getGenres } from '../models/genreModel.js';
 
 export async function showQuiz(req, res) {
     try {

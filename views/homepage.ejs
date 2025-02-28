@@ -24,7 +24,7 @@
                 src="<%= book.image_url %>"
                 alt="<%= book.title %> cover"
                 class="book-card__cover-image book-cover"
-                onclick="openModal('<%= book.title %>', '<%= book.image_url %>', '<%= book.author %>', '<%= book.description %>', '<%= book.year_published %>', '<%= book.number_of_pages %>')"
+                onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>')"
                 onerror="this.src='/images/onerror_image.jpg';"
               />
               <form action="/save-book" method="POST">
@@ -66,72 +66,124 @@
           <p>No books available at the moment.</p>
           <% } %>
         </div>
-        <div
-          class="modal-overlay"
-          aria-modal="true"
-          role="dialog"
-          id="bookModal"
-        >
-          <div class="modal__container">
-            <div class="modal__content">
-              <div class="modal__header">
-                <h2 class="heading heading--bold" id="modalBookTitle"></h2>
+
+        <h1>Books by Genre</h1>
+        <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
+        booksByGenre[genre].length > 0) { %>
+        <h2><%= genre %></h2>
+        <div class="book-grid">
+          <% booksByGenre[genre].forEach(book => { %>
+          <div class="book-card">
+            <div class="book-card__image-container">
+              <img
+                src="<%= book.image_url %>"
+                alt="<%= book.title %> cover"
+                class="book-card__cover-image book-cover"
+                onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>')"
+                onerror="this.src='/images/onerror_image.jpg';"
+              />
+              <form action="/save-book" method="POST">
+                <input
+                  type="hidden"
+                  name="book_id"
+                  value="<%= book.book_id %>"
+                />
                 <button
-                  class="close-button"
-                  aria-label="Close modal"
-                  onclick="closeModal()"
+                  type="submit"
+                  class="like-btn <%= book.is_liked ? 'liked' : '' %>"
+                  data-book-id="<%= book.book_id %>"
                 >
-                  ×
-                </button>
-              </div>
-              <div class="modal__body">
-                <div class="book-cover-container">
-                  <img
-                    class="book-card__cover-image"
-                    src=""
-                    alt="Book cover"
-                    id="modalBookImage"
-                  />
-                </div>
-                <div class="modal__book-details">
-                  <div class="modal__book-details__section">
-                    <h3 class="subheading subheading--bold">Author</h3>
-                    <p
-                      class="subheading subheading--light subheading--small"
-                      id="modalAuthorName"
-                    ></p>
-                  </div>
-                  <div
-                    class="modal__book-details__section modal__book-details__section--description"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    class="like-icon"
                   >
-                    <h3 class="subheading subheading--bold">Description</h3>
-                    <p
-                      class="subheading subheading--light subheading--small"
-                      id="modalBookDescription"
-                    ></p>
-                  </div>
-                  <div class="modal__book-additional-details">
-                    <div class="detail-item">
-                      <h4 class="subheading subheading--bold subheading--small">
-                        Genre
-                      </h4>
-                      <p class="text text--muted" id="modalGenres">
-                        Genres here...
-                      </p>
-                    </div>
-                    <div class="detail-item">
-                      <h4 class="subheading subheading--bold subheading--small">
-                        Year
-                      </h4>
-                      <p class="text text--muted" id="modalYear"></p>
-                    </div>
-                    <div class="detail-item">
-                      <h4 class="subheading subheading--bold subheading--small">
-                        Pages
-                      </h4>
-                      <p class="text text--muted" id="modalPages"></p>
-                    </div>
-                  </div>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    ></path>
+                  </svg>
+                </button>
+              </form>
+            </div>
+            <div class="book-card__details">
+              <h3 class="subheading subheading--regular"><%= book.title %></h3>
+              <p class="subheading subheading--small subheading--light">
+                <%= book.author %>
+              </p>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+        <% } %> <% } %>
+
+        <a href="/profile">Profile</a>
+        <form action="/auth/logout" method="POST">
+          <button type="submit">Log out</button>
+        </form>
+      </div>
+    </div>
+    <div class="modal-overlay" aria-modal="true" role="dialog" id="bookModal">
+      <div class="modal__container">
+        <div class="modal__content">
+          <div class="modal__header">
+            <h2 class="heading heading--bold" id="modalBookTitle"></h2>
+            <button
+              class="close-button"
+              aria-label="Close modal"
+              onclick="closeModal()"
+            >
+              ×
+            </button>
+          </div>
+          <div class="modal__body">
+            <div class="book-cover-container">
+              <img
+                class="book-card__cover-image"
+                src=""
+                alt="Book cover"
+                id="modalBookImage"
+              />
+            </div>
+            <div class="modal__book-details">
+              <div class="modal__book-details__section">
+                <h3 class="subheading subheading--bold">Author</h3>
+                <p
+                  class="subheading subheading--light subheading--small"
+                  id="modalAuthorName"
+                ></p>
+              </div>
+              <div
+                class="modal__book-details__section modal__book-details__section--description"
+              >
+                <h3 class="subheading subheading--bold">Description</h3>
+                <p
+                  class="subheading subheading--light subheading--small"
+                  id="modalBookDescription"
+                ></p>
+              </div>
+              <div class="modal__book-additional-details">
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Genre
+                  </h4>
+                  <p class="text text--muted" id="modalGenres"></p>
+                </div>
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Year
+                  </h4>
+                  <p class="text text--muted" id="modalYear"></p>
+                </div>
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Pages
+                  </h4>
+                  <p class="text text--muted" id="modalPages"></p>
                 </div>
               </div>
             </div>
@@ -139,28 +191,6 @@
         </div>
       </div>
     </div>
-
-    <h1>Books by Genre</h1>
-    <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
-    booksByGenre[genre].length > 0) { %>
-    <h2><%= genre %></h2>
-    <ul>
-      <% booksByGenre[genre].forEach(book => { %>
-      <li>
-        <strong><%= book.title %></strong> by <%= book.author %>
-        <form action="/save-book" method="POST">
-          <input type="hidden" name="book_id" value="<%= book.book_id %>" />
-          <button type="submit">Save this book</button>
-        </form>
-      </li>
-      <% }); %>
-    </ul>
-    <% } %> <% } %>
-
-    <a href="/profile">Profile</a>
-    <form action="/auth/logout" method="POST">
-      <button type="submit">Log out</button>
-    </form>
     <script>
       document.querySelectorAll('.like-button').forEach((button) => {
         // button.addEventListener('click', (e) => {
@@ -173,12 +203,21 @@
         });
       });
 
-      function openModal(title, imageUrl, author, description, year, pages) {
+      function openModal(
+        title,
+        author,
+        description,
+        imageUrl,
+        year,
+        pages,
+        genres
+      ) {
         document.getElementById('modalBookTitle').textContent = title;
         document.getElementById('modalBookImage').src = imageUrl;
         document.getElementById('modalAuthorName').textContent = author;
         document.getElementById('modalBookDescription').textContent =
           description;
+        document.getElementById('modalGenres').textContent = genres;
         document.getElementById('modalYear').textContent = year;
         document.getElementById('modalPages').textContent = pages;
 
