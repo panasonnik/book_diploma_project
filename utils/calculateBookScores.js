@@ -9,13 +9,13 @@ export async function calculateBookScores(quizAnswer, flagShortBook, flagOldBook
         numberOfPages: resolvedQuizAnswer.number_of_pages,
         yearPublished: resolvedQuizAnswer.year_published,
         genrePreferences: resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim()),
-        genre: 0.3,
+        genre: 0.2,
     };
     const scoredBooks = [];
     const minPages = Math.min(...booksByGenre.map(book => book.number_of_pages));
     const maxPages = Math.max(...booksByGenre.map(book => book.number_of_pages));
     const minYear = Math.min(...booksByGenre.map(book => book.year_published));
-    const maxYear = Math.max(...booksByGenre.map(book => book.year_published));
+    const maxYear = Math.max(...booksByGenre.map(book => book.year_published)); 
     for (let book of booksByGenre) {
         let normPages = (book.number_of_pages - minPages) / (maxPages - minPages);
         let normYear = (book.year_published - minYear) / (maxYear - minYear);

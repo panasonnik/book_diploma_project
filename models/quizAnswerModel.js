@@ -14,16 +14,22 @@ export async function addQuizAnswer(user_id, number_of_pages, year_published, ge
 }
 
 export async function updateQuizAnswers(user_id, pages, year, genre) {
+    if (Array.isArray(genre)) {
+        genre = genre.join(', ');
+    }
+
     const [updatedQuizAnswer] = await pool.query(
         `UPDATE quiz_answers 
          SET number_of_pages = ?, 
              year_published = ?, 
-             genre_preferences = ? 
+             genre_preferences = ?
          WHERE user_id = ?`,
-        [pages, year, genre, user_id] 
+        [pages, year, genre, user_id]
     );
     return updatedQuizAnswer;
 }
+
+
 
 
 
