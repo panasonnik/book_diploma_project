@@ -4,48 +4,102 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
   </head>
   <body>
-    <h1>Quiz!</h1>
-    <form action="/quiz/submit" method="POST">
-      <h2>How many pages do you prefer? (1-10)</h2>
-      <input type="number" name="number_of_pages" min="1" max="10" required />
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <div class="logo-good">GOOD</div>
+          <div class="logo-book">BOOK</div>
+        </div>
+        <div class="navbar__avatar"></div>
+      </nav>
+      <div class="content">
+        <h1 class="quiz">Quiz!</h1>
+        <form class="likert" action="/quiz/submit" method="POST">
+          <label class="likert__question"
+            >Book of which length do you prefer?</label
+          >
+          <ul class="likert__scale">
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likert"
+                value="0"
+              />
+              <label class="likert__scale__item__label">Short books</label>
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likert"
+                value="0.25"
+              />
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likert"
+                value="0.5"
+              />
+              <label class="likert__scale__item__label">Neutral</label>
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likert"
+                value="0.75"
+              />
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likert"
+                value="1"
+              />
+              <label class="likert__scale__item__label">Long books</label>
+            </li>
+          </ul>
+          <h2>Do you like reading long books?</h2>
+          <input
+            type="number"
+            name="number_of_pages"
+            min="1"
+            max="10"
+            required
+          />
 
-      <h2>What publication year range do you prefer? (1-10)</h2>
-      <input type="number" name="year_published" min="1" max="10" required />
+          <h2>Do you like reading new modern books?</h2>
+          <input
+            type="number"
+            name="year_published"
+            min="1"
+            max="10"
+            required
+          />
 
-      <h2>Select your preferred genres:</h2>
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Fantasy" />
-        Fantasy</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Fiction" />
-        Fiction</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Classic" />
-        Classic</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Romance" />
-        Romance</label
-      >
-      <label
-        ><input type="checkbox" name="genre_preferences" value="Thriller" />
-        Thriller</label
-      >
-      <label
-        ><input
-          type="checkbox"
-          name="genre_preferences"
-          value="Psychological"
-        />
-        Psychological</label
-      >
+          <h2>Select your preferred genres:</h2>
+          <% for (let i = 0; i < genres.length; i++) { %>
+          <label>
+            <input
+              type="checkbox"
+              name="genre_preferences"
+              value="<%= genres[i].genre_name %>"
+            />
+            <%= genres[i].genre_name %>
+          </label>
+          <% } %>
 
-      <br /><br />
-      <button type="submit">Submit Quiz</button>
-    </form>
+          <br /><br />
+          <button type="submit">Submit Quiz</button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>
