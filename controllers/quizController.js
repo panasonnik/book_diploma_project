@@ -15,17 +15,35 @@ export async function showQuiz(req, res) {
 
 export async function submitQuiz (req, res) {
     try {
-        const { likert, number_of_pages, year_published, genre_preferences } = req.body;
+        const { likertPages, likertYear, genre_preferences } = req.body;
         const userId = req.user.userId;
-        console.log("likert:", likert);
-        const normalizedPages = number_of_pages / 10;
-        const normalizedYear = year_published / 10;
+        let flagShortBook = false;
+        let flagOldBook = false;
+        let normalizedPages = 0;
+        let normalizedYear = 0;
+        if(likertPages < 0.5) {
+            flagShortBook = true;
+            normalizedPages = 1 - likertPages;
+        } else if (likertPages == 0.5) {
+            normalizedPages = 0;
+        } else {
+            normalizedPages = likertPages;
+        }
+        if(likertYear < 0.5) {
+            normalizedYear = 1 - likertYear;
+            flagOldBook = true;
+        }
+        else if (likertYear == 0.5) {
+            normalizedYear = 0;
+        } else {
+            normalizedYear = likertYear;
+        }
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
 
         await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString);
         await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
-        await calculateBookScores(quizAnswer);
+        await calculateBookScores(quizAnswer, flagShortBook, flagOldBook);
         res.redirect('/home');
     } catch (error) {
         console.error(error);

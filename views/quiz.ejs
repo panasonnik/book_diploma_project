@@ -26,7 +26,7 @@
               <input
                 class="likert__scale__item__input"
                 type="radio"
-                name="likert"
+                name="likertPages"
                 value="0"
               />
               <label class="likert__scale__item__label">Short books</label>
@@ -35,7 +35,7 @@
               <input
                 class="likert__scale__item__input"
                 type="radio"
-                name="likert"
+                name="likertPages"
                 value="0.25"
               />
             </li>
@@ -43,7 +43,7 @@
               <input
                 class="likert__scale__item__input"
                 type="radio"
-                name="likert"
+                name="likertPages"
                 value="0.5"
               />
               <label class="likert__scale__item__label">Neutral</label>
@@ -52,7 +52,7 @@
               <input
                 class="likert__scale__item__input"
                 type="radio"
-                name="likert"
+                name="likertPages"
                 value="0.75"
               />
             </li>
@@ -60,13 +60,61 @@
               <input
                 class="likert__scale__item__input"
                 type="radio"
-                name="likert"
+                name="likertPages"
                 value="1"
               />
               <label class="likert__scale__item__label">Long books</label>
             </li>
           </ul>
-          <h2>Do you like reading long books?</h2>
+          <label class="likert__question"
+            >Book of which length do you prefer?</label
+          >
+          <ul class="likert__scale">
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likertYear"
+                value="0"
+              />
+              <label class="likert__scale__item__label">Old books</label>
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likertYear"
+                value="0.25"
+              />
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likertYear"
+                value="0.5"
+              />
+              <label class="likert__scale__item__label">Neutral</label>
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likertYear"
+                value="0.75"
+              />
+            </li>
+            <li class="likert__scale__item">
+              <input
+                class="likert__scale__item__input"
+                type="radio"
+                name="likertYear"
+                value="1"
+              />
+              <label class="likert__scale__item__label">New books</label>
+            </li>
+          </ul>
+          <!-- <h2>Do you like reading long books?</h2>
           <input
             type="number"
             name="number_of_pages"
@@ -82,7 +130,7 @@
             min="1"
             max="10"
             required
-          />
+          /> -->
 
           <h2>Select your preferred genres:</h2>
           <% for (let i = 0; i < genres.length; i++) { %>

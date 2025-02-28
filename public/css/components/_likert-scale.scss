@@ -19,21 +19,6 @@
         display: block;
         border-bottom: 2px solid #efefef;
 
-        :last-of-type {
-            border-bottom: 0;
-        }
-
-        :before {
-            content: '';
-            position: relative;
-            top: 11px;
-            left: 9.5%;
-            display: block;
-            background-color: #efefef;
-            height: 4px;
-            width: 78%;
-        }
-
         &__item {
             display: inline-block;
             width: 19%;
@@ -52,6 +37,21 @@
                 width: 100%;
             }
         }
+    }
+
+    &__scale:last-of-type {
+        border-bottom: 0;
+    }
+
+    &__scale:before {
+        content: '';
+        position: relative;
+        top: 11px;
+        left: 9.5%;
+        display: block;
+        background-color: #efefef;
+        height: 4px;
+        width: 78%;
     }
 
 }
