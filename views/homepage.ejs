@@ -16,7 +16,8 @@
         <div class="navbar__avatar"></div>
       </nav>
       <div class="content">
-        <div class="book-grid" id="bookGrid">
+        <h1 class="heading heading--bold mb">Top picks for you!</h1>
+        <div class="book-grid colored-background" id="bookGrid">
           <% if (books && books.length > 0) { %> <% books.forEach(book => { %>
           <div class="book-card">
             <div class="book-card__image-container">
@@ -67,10 +68,14 @@
           <% } %>
         </div>
 
-        <h1>Books by Genre</h1>
+        <h1 class="heading heading--bold mt-5">Books by Genre</h1>
         <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
         booksByGenre[genre].length > 0) { %>
-        <h2><%= genre %></h2>
+        <div class="heading-with-divider">
+          <h2 class="heading mt mb"><%= genre %></h2>
+          <span class="divider"></span>
+        </div>
+
         <div class="book-grid">
           <% booksByGenre[genre].forEach(book => { %>
           <div class="book-card">
@@ -193,46 +198,11 @@
     </div>
     <script>
       document.querySelectorAll('.like-button').forEach((button) => {
-        // button.addEventListener('click', (e) => {
-        //   const bookId = parseInt(e.currentTarget.dataset.bookId);
-        //   const book = state.books.find((b) => b.id === bookId);
-        //   book.liked = !book.liked;
-        // });
         btn.addEventListener('click', () => {
           btn.classList.toggle('liked');
         });
       });
-
-      function openModal(
-        title,
-        author,
-        description,
-        imageUrl,
-        year,
-        pages,
-        genres
-      ) {
-        document.getElementById('modalBookTitle').textContent = title;
-        document.getElementById('modalBookImage').src = imageUrl;
-        document.getElementById('modalAuthorName').textContent = author;
-        document.getElementById('modalBookDescription').textContent =
-          description;
-        document.getElementById('modalGenres').textContent = genres;
-        document.getElementById('modalYear').textContent = year;
-        document.getElementById('modalPages').textContent = pages;
-
-        document.getElementById('bookModal').style.display = 'block';
-      }
-
-      function closeModal() {
-        document.getElementById('bookModal').style.display = 'none';
-      }
-
-      window.onclick = function (event) {
-        if (event.target == document.getElementById('bookModal')) {
-          closeModal();
-        }
-      };
     </script>
+    <script src="/js/openModal.js"></script>
   </body>
 </html>

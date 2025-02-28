@@ -1,6 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+.mt {
+  margin-top: 2rem;
+}
+.mt-5 {
+  margin-top: 4rem;
+}
+
+.mb {
+  margin-bottom: 1rem;
+}
+
+.colored-background {
+  background: #f4f4f4;
+  padding: 2rem;
+  border-radius: 16px;
+}
+
 * {
   margin: 0;
+  box-sizing: border-box;
 }
 
 .content {
@@ -23,9 +41,23 @@
 
 .heading {
   font-size: 32px;
+  font-weight: 400;
 }
 .heading--bold {
   font-weight: 600;
+}
+
+.heading-with-divider {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.divider {
+  height: 1px;
+  color: gray;
+  width: 100%;
+  background-color: gray;
 }
 
 .subheading {

@@ -6,10 +6,24 @@
 
 .heading {
     font-size: 32px;
+    font-weight: 400;
 
     &--bold {
         font-weight: 600;
     }
+}
+
+.heading-with-divider {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+}
+
+.divider {
+    height: 1px;
+    color: gray;
+    width: 100%;
+    background-color: gray;
 }
 
 .subheading {
@@ -39,6 +53,8 @@
         color: #666363;
     }
 }
+
+
 
 @media (max-width:640px) {
     .subheading {
