@@ -21,7 +21,7 @@ for (let genre in booksByGenre) {
     }
 }
 
-res.render('homepage', { books, booksByGenre });
+res.render('homepage', { books: books.slice(0,4), booksByGenre });
 
     } catch (err) {
         console.error("Error rendering homepage:", err);
