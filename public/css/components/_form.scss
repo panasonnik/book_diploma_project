@@ -1,0 +1,60 @@
+@import '../abstracts/variables';
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        &__label {
+            font-weight: 600;
+        }
+    }
+
+    &__input-field {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 16px;
+        background-color: $light-color;
+        border: 1px solid $light-gray-color;
+        font-size: 16px;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+        }
+
+        &.error {
+            border-color: $error-color;
+        }
+    }
+
+    &__login-link {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 14px;
+        color: $secondary-color;
+
+        &__link {
+            color: $secondary-light-color;
+            font-weight: 800;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

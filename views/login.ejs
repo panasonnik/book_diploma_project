@@ -4,17 +4,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Login Page</h1>
-    <form action="/auth/login" method="POST">
-      <label for="usernameOrEmail">Username or Email:</label>
-      <input type="text" id="usernameOrEmail" name="usernameOrEmail" required />
-
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
-
-      <button type="submit">Login</button>
-    </form>
+    <div class="container">
+      <div class="content">
+        <div class="form__header">
+          <div class="logo logo--background form__header__logo">
+            <div class="logo-good">GOOD</div>
+            <div class="logo-book">BOOK</div>
+          </div>
+          <h1 class="heading heading--bold">Login</h1>
+        </div>
+        <form class="form mt-5" action="/auth/login" method="POST">
+          <div class="form__field">
+            <label class="form__field__label" for="usernameOrEmail"
+              >Username or Email:</label
+            >
+            <input
+              class="form__input-field"
+              type="text"
+              id="usernameOrEmail"
+              name="usernameOrEmail"
+              required
+            />
+            <span class="error-message" id="username-error" role="alert" hidden>
+              Username is required
+            </span>
+          </div>
+          <div class="form__field">
+            <label class="form__field__label" for="password">Password:</label>
+            <input
+              class="form__input-field"
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+        <div class="form__login-link">
+          <span>Do not have an account?</span>
+          <a href="/" class="form__login-link__link">Register</a>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Quiz</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
@@ -13,10 +13,11 @@
           <div class="logo-good">GOOD</div>
           <div class="logo-book">BOOK</div>
         </div>
-        <div class="navbar__avatar"></div>
       </nav>
       <div class="content">
-        <h1 class="quiz">Quiz!</h1>
+        <h1 class="heading heading--bold heading--muted">
+          Complete the quiz to finish your registration
+        </h1>
         <form class="likert" action="/quiz/submit" method="POST">
           <label class="likert__question"
             >Book of which length do you prefer?</label
@@ -28,6 +29,7 @@
                 type="radio"
                 name="likertPages"
                 value="0"
+                required
               />
               <label class="likert__scale__item__label">Short books</label>
             </li>
@@ -67,7 +69,7 @@
             </li>
           </ul>
           <label class="likert__question"
-            >Book of which length do you prefer?</label
+            >Which year of publishing do you prefer?</label
           >
           <ul class="likert__scale">
             <li class="likert__scale__item">
@@ -76,6 +78,7 @@
                 type="radio"
                 name="likertYear"
                 value="0"
+                required
               />
               <label class="likert__scale__item__label">Old books</label>
             </li>
@@ -132,20 +135,22 @@
             required
           /> -->
 
-          <h2>Select your preferred genres:</h2>
-          <% for (let i = 0; i < genres.length; i++) { %>
-          <label>
-            <input
-              type="checkbox"
-              name="genre_preferences"
-              value="<%= genres[i].genre_name %>"
-            />
-            <%= genres[i].genre_name %>
-          </label>
-          <% } %>
+          <h2 class="likert__question">Select your preferred genres:</h2>
+          <div class="checkbox-grid">
+            <% for (let i = 0; i < genres.length; i++) { %>
+            <label class="checkbox-option">
+              <input
+                type="checkbox"
+                name="genre_preferences"
+                value="<%= genres[i].genre_name %>"
+                class="genre-checkbox"
+              />
+              <%= genres[i].genre_name %>
+            </label>
+            <% } %>
+          </div>
 
-          <br /><br />
-          <button type="submit">Submit Quiz</button>
+          <button type="submit" class="mt submit-btn">Submit Quiz</button>
         </form>
       </div>
     </div>

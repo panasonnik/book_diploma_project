@@ -7,6 +7,9 @@
 @import 'base/typography';
 
 @import 'components/logo';
+@import 'components/form';
+@import 'components/checkbox-option';
+@import 'components/submit-button';
 @import 'components/like-button';
 @import 'components/close-button';
 @import 'components/navbar';
@@ -15,3 +18,4 @@
 @import 'components/modal';
 
 @import 'pages/homepage';
+@import 'pages/registration';

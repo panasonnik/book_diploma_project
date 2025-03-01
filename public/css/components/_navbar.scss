@@ -1,6 +1,9 @@
+@import '../abstracts/variables';
+
 .navbar {
+
     height: 104px;
-    background-color: #d9d9d9;
+    background-color: $secondary-color;
     padding: 0 8rem;
 
     display: flex;
@@ -12,7 +15,7 @@
         width: 68px;
         height: 68px;
         border-radius: 50%;
-        background-color: #a8a8a8;
+        background-color: $light-color;
     }
 }
 
