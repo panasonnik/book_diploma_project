@@ -96,10 +96,17 @@ ORDER BY ubs.book_score DESC;
 export async function getSavedBooks(userId) {
     try {
         const [rows] = await pool.query(`
-            SELECT b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published
+            SELECT b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published, GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
             FROM user_book_preferences p
             JOIN books b ON p.book_id = b.book_id
-            WHERE p.user_id = ?;
+            JOIN 
+                    books_genres bg ON b.book_id = bg.book_id
+                JOIN 
+                    genres g ON bg.genre_id = g.genre_id
+                
+            WHERE p.user_id = ?
+            GROUP BY 
+                    b.book_id;
             `, [userId]);
             return rows;
     } catch (err) {

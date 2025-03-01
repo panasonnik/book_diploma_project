@@ -1,0 +1,40 @@
+@import '../abstracts/variables';
+
+.profile {
+    &__side-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        flex: 1;
+        line-height: 1;
+    }
+
+    &__content {
+        display: flex;
+        gap: 4rem;
+        justify-content: space-between;
+    }
+
+    &__saved-books {
+        flex: 4;
+    }
+
+    &__log-out {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    &__submit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+        background: transparent;
+        justify-content: center;
+    }
+}
+
+.log-out-icon {
+    fill: currentColor;
+}

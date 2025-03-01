@@ -3,31 +3,102 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome Page</title>
+    <title>Profile</title>
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>This is profile page!</h1>
-    <h2>Your saved books</h2>
-    <% if (savedBooks && savedBooks.length > 0) { %>
-    <ul>
-      <% savedBooks.forEach(book => { %>
-      <li>
-        <h2><%= book.title %> by <%= book.author %></h2>
-        <p><strong>Genre:</strong> <%= book.genre %></p>
-        <p><strong>Published:</strong> <%= book.year_published %></p>
-        <p><strong>Pages:</strong> <%= book.number_of_pages %></p>
-        <% if (book.image_url) { %>
-        <img src="<%= book.image_url %>" alt="Book Cover" width="150" />
-        <% } %>
-      </li>
-      <% }); %>
-    </ul>
-    <% } else { %>
-    <p>No books available at the moment.</p>
-    <% } %>
-
-    <form action="/auth/logout" method="POST">
-      <button type="submit">Log out</button>
-    </form>
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <div class="logo-good">GOOD</div>
+          <div class="logo-book">BOOK</div>
+        </div>
+        <a href="/profile">
+          <div class="navbar__avatar"></div>
+        </a>
+      </nav>
+      <div class="content profile__content">
+        <div class="profile__side-menu">
+          <h2 class="heading heading--bold">Personal info</h2>
+          <p class="subheading subheading--regular"><%= user.username %></p>
+          <p class="subheading subheading--small subheading--light">
+            <%= user.email %>
+          </p>
+          <form class="profile__log-out" action="/auth/logout" method="POST">
+            <button
+              class="profile__submit-btn submit-btn submit-btn--outline"
+              type="submit"
+            >
+              <svg
+                class="icon log-out-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"
+                />
+              </svg>
+              Log out
+            </button>
+          </form>
+        </div>
+        <div class="profile__saved-books">
+          <h2 class="heading heading--bold">Your saved books</h2>
+          <div class="book-grid mt" id="bookGrid">
+            <% if (savedBooks && savedBooks.length > 0) { %> <%
+            savedBooks.forEach(book => { %>
+            <div class="book-card">
+              <div class="book-card__image-container">
+                <img
+                  src="<%= book.image_url %>"
+                  alt="<%= book.title %> cover"
+                  class="book-card__cover-image book-cover"
+                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>')"
+                  onerror="this.src='/images/onerror_image.jpg';"
+                />
+                <form action="/save-book" method="POST">
+                  <input
+                    type="hidden"
+                    name="book_id"
+                    value="<%= book.book_id %>"
+                  />
+                  <button
+                    type="submit"
+                    class="like-btn liked"
+                    data-book-id="<%= book.book_id %>"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      class="like-icon"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      ></path>
+                    </svg>
+                  </button>
+                </form>
+              </div>
+              <div class="book-card__details">
+                <h3 class="subheading subheading--regular">
+                  <%= book.title %>
+                </h3>
+                <p class="subheading subheading--small subheading--light">
+                  <%= book.author %>
+                </p>
+              </div>
+            </div>
+            <% }); %> <% } else { %>
+            <p>No books available at the moment.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

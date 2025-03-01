@@ -1,4 +1,4 @@
-import { getUserBooks, getSavedBooks } from '../models/userModel.js';
+import { getUserBooks, getSavedBooks, getUserById } from '../models/userModel.js';
 import { getBooksByGenre, isBookLiked } from '../models/bookModel.js';
 
 export async function showHomepage(req, res) {
@@ -34,7 +34,8 @@ export async function showProfilePage(req, res) {
     try {
         const userId = req.user.userId;
         const savedBooks = await getSavedBooks(userId);
-        res.render('profile', { savedBooks });
+        const user = await getUserById(userId);
+        res.render('profile', { savedBooks, user });
     } catch (err) {
         console.error("Error rendering profile page:", err);
         res.status(500).send("Error loading profile page");

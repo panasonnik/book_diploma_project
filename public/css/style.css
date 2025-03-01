@@ -202,6 +202,11 @@
 .submit-btn:hover {
   transform: scale(1.02);
 }
+.submit-btn--outline {
+  background-color: transparent;
+  color: #1C1F73;
+  border: 2px solid #1C1F73;
+}
 
 .like-btn {
   position: absolute;
@@ -226,7 +231,8 @@
   transform: scale(1.1);
 }
 
-.like-icon {
+.like-icon,
+.icon {
   height: 1.5rem;
   width: 1.5rem;
 }
@@ -447,4 +453,36 @@
     width: 48px;
     height: 48px;
   }
+}
+.profile__side-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  flex: 1;
+  line-height: 1;
+}
+.profile__content {
+  display: flex;
+  gap: 4rem;
+  justify-content: space-between;
+}
+.profile__saved-books {
+  flex: 4;
+}
+.profile__log-out {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.profile__submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  background: transparent;
+  justify-content: center;
+}
+
+.log-out-icon {
+  fill: currentColor;
 }
