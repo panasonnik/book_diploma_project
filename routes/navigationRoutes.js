@@ -7,10 +7,10 @@ import { authenticateToken } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.render('register');
+    res.render('register', {errorDB:null, errorUsername:null, errorEmail:null, data:null});
 });
 router.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', {errorDB:null, errorUsername: null, errorPassword:null, data: null});
 });
 
 router.get('/home', authenticateToken, showHomepage);

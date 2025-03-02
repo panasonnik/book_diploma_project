@@ -21,6 +21,10 @@
   box-sizing: border-box;
 }
 
+a {
+  text-decoration: none;
+}
+
 .content {
   padding: 4rem 8rem;
 }
@@ -84,6 +88,10 @@
 }
 .text--muted {
   color: #666363;
+}
+
+.error-message {
+  color: #ff4444;
 }
 
 @media (max-width: 640px) {

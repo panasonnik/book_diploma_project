@@ -26,11 +26,14 @@
               type="text"
               id="usernameOrEmail"
               name="usernameOrEmail"
+              value="<%= data?.usernameOrEmail || '' %>"
               required
             />
-            <span class="error-message" id="username-error" role="alert" hidden>
-              Username is required
+            <% if (errorUsername) { %>
+            <span class="error-message" id="username-error" role="alert">
+              <%= errorUsername %>
             </span>
+            <% } %>
           </div>
           <div class="form__field">
             <label class="form__field__label" for="password">Password:</label>
@@ -41,7 +44,15 @@
               name="password"
               required
             />
+            <% if (errorPassword) { %>
+            <span class="error-message" id="password-error" role="alert">
+              <%= errorPassword %>
+            </span>
+            <% } %>
           </div>
+          <% if (errorDB) { %>
+          <span class="error-message" role="alert"> <%= errorDB %> </span>
+          <% } %>
           <button type="submit" class="submit-btn">Login</button>
         </form>
         <div class="form__login-link">

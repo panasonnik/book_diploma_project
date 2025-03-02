@@ -9,7 +9,7 @@ export async function calculateBookScores(quizAnswer, flagShortBook, flagOldBook
         numberOfPages: resolvedQuizAnswer.number_of_pages,
         yearPublished: resolvedQuizAnswer.year_published,
         genrePreferences: resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim()),
-        genre: 0.2,
+        genre: 0.3,
     };
     const scoredBooks = [];
     const minPages = Math.min(...booksByGenre.map(book => book.number_of_pages));

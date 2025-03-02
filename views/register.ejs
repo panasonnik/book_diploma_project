@@ -14,6 +14,7 @@
             <div class="logo-good">GOOD</div>
             <div class="logo-book">BOOK</div>
           </div>
+
           <h1 class="heading heading--bold form__header__heading">
             Create an Account
           </h1>
@@ -27,11 +28,14 @@
               id="username"
               name="username"
               autocomplete="off"
+              value="<%= data?.username || '' %>"
               required
             />
-            <span class="error-message" id="username-error" role="alert" hidden>
-              Username is required
+            <% if (errorUsername) { %>
+            <span class="error-message" id="username-error" role="alert">
+              <%= errorUsername %>
             </span>
+            <% } %>
           </div>
           <div class="form__field">
             <label class="form__field__label" for="email">Email</label>
@@ -41,8 +45,14 @@
               id="email"
               name="email"
               autocomplete="off"
+              value="<%= data?.email || '' %>"
               required
             />
+            <% if (errorEmail) { %>
+            <span class="error-message" id="email-error" role="alert">
+              <%= errorEmail %>
+            </span>
+            <% } %>
           </div>
           <div class="form__field">
             <label class="form__field__label" for="password">Password</label>
@@ -54,6 +64,9 @@
               required
             />
           </div>
+          <% if (errorDB) { %>
+          <span class="error-message" role="alert"> <%= errorDB %> </span>
+          <% } %>
           <button type="submit" class="submit-btn">Create account</button>
         </form>
 
