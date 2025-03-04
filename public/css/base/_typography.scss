@@ -26,9 +26,9 @@
 
 .divider {
     height: 1px;
-    color: gray;
+    color: $muted-color;
     width: 100%;
-    background-color: gray;
+    background-color: $muted-color;
 }
 
 .subheading {
@@ -43,7 +43,7 @@
     }
 
     &--light {
-        color: #666363;
+        color: $muted-color;
     }
 
     &--small {
@@ -55,7 +55,7 @@
     font-size: 18px;
 
     &--muted {
-        color: #666363;
+        color: $muted-color;
     }
 }
 

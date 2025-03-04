@@ -77,7 +77,7 @@ a {
   font-weight: 600;
 }
 .subheading--light {
-  color: #666363;
+  color: gray;
 }
 .subheading--small {
   font-size: 20px;
@@ -87,7 +87,7 @@ a {
   font-size: 18px;
 }
 .text--muted {
-  color: #666363;
+  color: gray;
 }
 
 .error-message {
@@ -196,6 +196,7 @@ a {
   }
 }
 .submit-btn {
+  display: flex;
   width: 100%;
   padding: 1rem;
   border-radius: 16px;
@@ -214,6 +215,12 @@ a {
   background-color: transparent;
   color: #1C1F73;
   border: 2px solid #1C1F73;
+}
+.submit-btn--navbar {
+  background: #eeecec;
+  align-items: center;
+  color: #1C1F73;
+  gap: 1rem;
 }
 
 .like-btn {
@@ -489,6 +496,11 @@ a {
   cursor: pointer;
   background: transparent;
   justify-content: center;
+}
+.profile__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .log-out-icon {
