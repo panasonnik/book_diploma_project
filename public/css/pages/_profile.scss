@@ -34,7 +34,8 @@
         justify-content: center;
     }
 
-    &__info {
+    &__info,
+    &__languages {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;

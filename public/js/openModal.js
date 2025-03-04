@@ -5,7 +5,8 @@ function openModal(
     imageUrl,
     year,
     pages,
-    genres
+    genres,
+    language
   ) {
     document.getElementById('modalBookTitle').textContent = title;
     document.getElementById('modalBookImage').src = imageUrl;
@@ -15,6 +16,7 @@ function openModal(
     document.getElementById('modalGenres').textContent = genres;
     document.getElementById('modalYear').textContent = year;
     document.getElementById('modalPages').textContent = pages;
+    document.getElementById('modalLanguage').textContent = language;
 
     document.getElementById('bookModal').style.display = 'block';
   }

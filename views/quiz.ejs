@@ -149,6 +149,20 @@
             </label>
             <% } %>
           </div>
+          <h2 class="likert__question">Choose your language preferences:</h2>
+          <div class="checkbox-grid">
+            <% for (let i = 0; i < languages.length; i++) { %>
+            <label class="checkbox-option">
+              <input
+                type="checkbox"
+                name="language_preferences"
+                value="<%= languages[i] %>"
+                class="genre-checkbox"
+              />
+              <%= languages[i] %>
+            </label>
+            <% } %>
+          </div>
 
           <button type="submit" class="mt submit-btn">Submit Quiz</button>
         </form>

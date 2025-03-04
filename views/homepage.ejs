@@ -41,7 +41,7 @@
                 src="<%= book.image_url %>"
                 alt="<%= book.title %> cover"
                 class="book-card__cover-image book-cover"
-                onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>')"
+                onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
                 onerror="this.src='/images/onerror_image.jpg';"
               />
               <form action="/save-book" method="POST">
@@ -102,7 +102,7 @@
                 src="<%= book.image_url %>"
                 alt="<%= book.title %> cover"
                 class="book-card__cover-image book-cover"
-                onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>')"
+                onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
                 onerror="this.src='/images/onerror_image.jpg';"
               />
               <form action="/save-book" method="POST">
@@ -202,6 +202,12 @@
                     Pages
                   </h4>
                   <p class="text text--muted" id="modalPages"></p>
+                </div>
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Language
+                  </h4>
+                  <p class="text text--muted" id="modalLanguage"></p>
                 </div>
               </div>
             </div>

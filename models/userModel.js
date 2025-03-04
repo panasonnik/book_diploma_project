@@ -8,9 +8,12 @@ export async function getUsers() {
 
 export async function getUserById(id) {
     const [userById] = await pool.query(`
-        SELECT * 
-        FROM users
-        WHERE user_id = ?
+        SELECT u.user_id, u.username, u.email, GROUP_CONCAT(qa.language_preferences ORDER BY qa.language_preferences SEPARATOR ', ') AS languages
+        FROM users u
+        
+        JOIN quiz_answers qa ON u.user_id = qa.user_id
+        WHERE u.user_id = ?
+        GROUP BY u.user_id;
         `, [id]); //prepared statement
     return userById[0];
 }
@@ -76,14 +79,14 @@ export async function getUserBooks(userId) {
     try {
         const [rows] = await pool.query(`
             SELECT b.*, ubs.book_score, 
-GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
-FROM books b
-INNER JOIN user_book_scores ubs ON b.book_id = ubs.book_id
-LEFT JOIN books_genres bg ON b.book_id = bg.book_id
-LEFT JOIN genres g ON bg.genre_id = g.genre_id
-WHERE ubs.user_id = ?
-GROUP BY b.book_id, ubs.book_score
-ORDER BY ubs.book_score DESC;
+            GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+            FROM books b
+            INNER JOIN user_book_scores ubs ON b.book_id = ubs.book_id
+            LEFT JOIN books_genres bg ON b.book_id = bg.book_id
+            LEFT JOIN genres g ON bg.genre_id = g.genre_id
+            WHERE ubs.user_id = ? AND ubs.book_score != 0
+            GROUP BY b.book_id, ubs.book_score
+            ORDER BY ubs.book_score DESC;
 
         `, [userId]);
         return rows;

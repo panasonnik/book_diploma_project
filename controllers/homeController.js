@@ -4,24 +4,22 @@ import { getBooksByGenre, isBookLiked } from '../models/bookModel.js';
 export async function showHomepage(req, res) {
     try {
         const userId = req.user.userId;
-const books = await getUserBooks(userId);
-const booksByGenre = await getBooksByGenre();
+        const books = await getUserBooks(userId);
+        const booksByGenre = await getBooksByGenre();
 
-for (let book of books) {
-        book.is_liked = await isBookLiked(userId, book.book_id);
-}
-
-for (let genre in booksByGenre) {
-    if (Array.isArray(booksByGenre[genre])) {
-        for (let book of booksByGenre[genre]) {
-            
-                book.is_liked = await isBookLiked(userId, book.book_id);
-            
+        for (let book of books) {
+            book.is_liked = await isBookLiked(userId, book.book_id);
         }
-    }
-}
 
-res.render('homepage', { books: books.slice(0,4), booksByGenre });
+        for (let genre in booksByGenre) {
+            if (Array.isArray(booksByGenre[genre])) {
+                for (let book of booksByGenre[genre]) {
+                    book.is_liked = await isBookLiked(userId, book.book_id);
+                }
+            }
+        }
+
+        res.render('homepage', { books: books.slice(0,4), booksByGenre });
 
     } catch (err) {
         console.error("Error rendering homepage:", err);

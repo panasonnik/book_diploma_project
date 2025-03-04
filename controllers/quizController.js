@@ -2,11 +2,14 @@ import { addQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.
 import { completeQuizUser } from '../models/userModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
 import { getGenres } from '../models/genreModel.js';
+import { getLanguages } from '../models/bookModel.js';
 
 export async function showQuiz(req, res) {
     try {
         const genres = await getGenres();
-        res.render('quiz', { genres });
+        const languagesObj = await getLanguages();
+        const languages = [...new Set(languagesObj.map(item => item.language))];
+        res.render('quiz', { genres, languages });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading quiz");
@@ -15,7 +18,7 @@ export async function showQuiz(req, res) {
 
 export async function submitQuiz (req, res) {
     try {
-        const { likertPages, likertYear, genre_preferences } = req.body;
+        const { likertPages, likertYear, genre_preferences, language_preferences } = req.body;
         const userId = req.user.userId;
         let flagShortBook = false;
         let flagOldBook = false;
@@ -39,8 +42,9 @@ export async function submitQuiz (req, res) {
             normalizedYear = likertYear;
         }
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
+        const languagePreferencesString = Array.isArray(language_preferences) ? language_preferences.join(', ') : language_preferences;
 
-        await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString);
+        await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString, languagePreferencesString);
         await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
         await calculateBookScores(quizAnswer, flagShortBook, flagOldBook);

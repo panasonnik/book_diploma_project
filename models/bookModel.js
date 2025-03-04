@@ -102,3 +102,9 @@ export async function isBookLiked (userId, bookId) {
       return rows.length > 0;
 }
 
+export async function getLanguages() {
+    const dbResult = await pool.query("SELECT b.language FROM books b");
+    const languagesList = dbResult[0];
+    return languagesList;
+}
+

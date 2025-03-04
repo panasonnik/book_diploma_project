@@ -9,6 +9,7 @@ export async function calculateBookScores(quizAnswer, flagShortBook, flagOldBook
         numberOfPages: resolvedQuizAnswer.number_of_pages,
         yearPublished: resolvedQuizAnswer.year_published,
         genrePreferences: resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim()),
+        languagePreferences: resolvedQuizAnswer.language_preferences.split(',').map(genre => genre.trim()),
         genre: 0.3,
     };
     const scoredBooks = [];
@@ -16,6 +17,7 @@ export async function calculateBookScores(quizAnswer, flagShortBook, flagOldBook
     const maxPages = Math.max(...booksByGenre.map(book => book.number_of_pages));
     const minYear = Math.min(...booksByGenre.map(book => book.year_published));
     const maxYear = Math.max(...booksByGenre.map(book => book.year_published)); 
+    let score = 0;
     for (let book of booksByGenre) {
         let normPages = (book.number_of_pages - minPages) / (maxPages - minPages);
         let normYear = (book.year_published - minYear) / (maxYear - minYear);
@@ -27,8 +29,10 @@ export async function calculateBookScores(quizAnswer, flagShortBook, flagOldBook
         if(flagOldBook) {
             normYear = 1 - normYear;
         }
-        const score = (normPages * weights.numberOfPages) + (normYear * weights.yearPublished) + (genreScore * weights.genre);
-        
+        score = (normPages * weights.numberOfPages) + (normYear * weights.yearPublished) + (genreScore * weights.genre);
+        if(!weights.languagePreferences.includes(book.language)) {
+            score = 0;
+        }
         await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
         scoredBooks.push({ ...book, score });
     }

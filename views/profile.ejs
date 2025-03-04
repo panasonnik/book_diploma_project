@@ -40,6 +40,10 @@
               <%= user.email %>
             </p>
           </div>
+          <div class="profile__languages">
+            <p class="text text--muted">Language preference:</p>
+            <p class="subheading subheading--small"><%= user.languages %></p>
+          </div>
           <form class="profile__log-out" action="/auth/logout" method="POST">
             <button
               class="profile__submit-btn submit-btn submit-btn--outline"
@@ -69,7 +73,7 @@
                   src="<%= book.image_url %>"
                   alt="<%= book.title %> cover"
                   class="book-card__cover-image book-cover"
-                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>')"
+                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
                 <form action="/remove-book" method="POST">
@@ -118,6 +122,76 @@
         </div>
       </div>
     </div>
-    <script src="/js/"></script>
+    <div class="modal-overlay" aria-modal="true" role="dialog" id="bookModal">
+      <div class="modal__container">
+        <div class="modal__content">
+          <div class="modal__header">
+            <h2 class="heading heading--bold" id="modalBookTitle"></h2>
+            <button
+              class="close-button"
+              aria-label="Close modal"
+              onclick="closeModal()"
+            >
+              ×
+            </button>
+          </div>
+          <div class="modal__body">
+            <div class="book-cover-container">
+              <img
+                class="book-card__cover-image"
+                src=""
+                alt="Book cover"
+                id="modalBookImage"
+              />
+            </div>
+            <div class="modal__book-details">
+              <div class="modal__book-details__section">
+                <h3 class="subheading subheading--bold">Author</h3>
+                <p
+                  class="subheading subheading--light subheading--small"
+                  id="modalAuthorName"
+                ></p>
+              </div>
+              <div
+                class="modal__book-details__section modal__book-details__section--description"
+              >
+                <h3 class="subheading subheading--bold">Description</h3>
+                <p
+                  class="subheading subheading--light subheading--small"
+                  id="modalBookDescription"
+                ></p>
+              </div>
+              <div class="modal__book-additional-details">
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Genre
+                  </h4>
+                  <p class="text text--muted" id="modalGenres"></p>
+                </div>
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Year
+                  </h4>
+                  <p class="text text--muted" id="modalYear"></p>
+                </div>
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Pages
+                  </h4>
+                  <p class="text text--muted" id="modalPages"></p>
+                </div>
+                <div class="detail-item">
+                  <h4 class="subheading subheading--bold subheading--small">
+                    Language
+                  </h4>
+                  <p class="text text--muted" id="modalLanguage"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/openModal.js"></script>
   </body>
 </html>
