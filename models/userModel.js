@@ -96,7 +96,7 @@ ORDER BY ubs.book_score DESC;
 export async function getSavedBooks(userId) {
     try {
         const [rows] = await pool.query(`
-            SELECT b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published, GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+            SELECT b.book_id, b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published, GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
             FROM user_book_preferences p
             JOIN books b ON p.book_id = b.book_id
             JOIN 

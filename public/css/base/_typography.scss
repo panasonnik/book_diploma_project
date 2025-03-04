@@ -22,6 +22,10 @@
     display: flex;
     gap: 1rem;
     align-items: baseline;
+
+    &__heading {
+        flex: 1;
+    }
 }
 
 .divider {
@@ -29,6 +33,7 @@
     color: $muted-color;
     width: 100%;
     background-color: $muted-color;
+    flex: 6;
 }
 
 .subheading {

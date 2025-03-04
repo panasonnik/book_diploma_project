@@ -88,7 +88,9 @@
         <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
         booksByGenre[genre].length > 0) { %>
         <div class="heading-with-divider">
-          <h2 class="heading mt mb"><%= genre %></h2>
+          <h2 class="heading mt mb heading-with-divider__heading">
+            <%= genre %>
+          </h2>
           <span class="divider"></span>
         </div>
 
