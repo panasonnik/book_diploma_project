@@ -1,5 +1,7 @@
-import { getUserBooks, getSavedBooks, getUserById } from '../models/userModel.js';
-import { getBooksByGenre, isBookLiked } from '../models/bookModel.js';
+import { getUserBooks, getSavedBooks, getUserById, updateUser } from '../models/userModel.js';
+import { getBooksByGenre, isBookLiked, getLanguages } from '../models/bookModel.js';
+import {updateQuizAnswerLanguages, getQuizAnswerByUserId} from '../models/quizAnswerModel.js';
+import { calculateBookScores } from '../utils/calculateBookScores.js';
 
 export async function showHomepage(req, res) {
     try {
@@ -38,4 +40,36 @@ export async function showProfilePage(req, res) {
         console.error("Error rendering profile page:", err);
         res.status(500).send("Error loading profile page");
     }
+}
+
+export async function showEditProfilePage(req, res) {
+    try {
+        const userId = req.user.userId;
+        const user = await getUserById(userId);
+        const languagesObj = await getLanguages();
+        const languages = [...new Set(languagesObj.map(item => item.language))];
+        res.render('edit-profile', { user, languages, errorUsername:null, errorEmail:null });
+    } catch (err) {
+        console.error("Error rendering edit profile page:", err);
+        res.status(500).send("Error loading edit profile page");
+    }
+}
+
+export async function saveProfileChanges(req, res) {
+    try {
+            const { username, email, languages } = req.body;
+            const userId = req.user.userId;
+        
+            const languagePreferencesString = Array.isArray(languages) ? languages.join(', ') : languages;
+
+            await updateUser(userId, username, email);
+            await updateQuizAnswerLanguages(userId, languagePreferencesString);
+            
+            const quizAnswer = await getQuizAnswerByUserId(userId);
+            await calculateBookScores(quizAnswer);
+            res.redirect('/profile');
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Error saving quiz data.");
+        }
 }

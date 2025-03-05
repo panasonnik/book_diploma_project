@@ -30,6 +30,20 @@ export async function updateQuizAnswers(user_id, pages, year, genre) {
     return updatedQuizAnswer;
 }
 
+export async function updateQuizAnswerLanguages(user_id, languages) {
+    if (Array.isArray(languages)) {
+        languages = languages.join(', ');
+    }
+
+    const [updatedQuizAnswer] = await pool.query(
+        `UPDATE quiz_answers 
+         SET language_preferences = ?
+         WHERE user_id = ?`,
+        [languages, user_id]
+    );
+    return updatedQuizAnswer;
+}
+
 
 
 

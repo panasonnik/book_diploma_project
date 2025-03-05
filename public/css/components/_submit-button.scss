@@ -3,16 +3,18 @@
 .submit-btn {
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
     padding: 1rem;
     border-radius: 16px;
-    background-color: $primary-color;
+    background-color: $secondary-color;
     color: $white-color;
     font-weight: 600;
     font-size: 16px;
     border: none;
     cursor: pointer;
     transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 1rem;
 
     &:hover {
         transform: scale(1.02);
@@ -29,5 +31,10 @@
         align-items: center;
         color: $secondary-color;
         gap: 1rem;
+    }
+
+    &--red {
+        color: $error-color;
+        border: 2px solid $error-color;
     }
 }

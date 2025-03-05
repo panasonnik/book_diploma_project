@@ -47,6 +47,16 @@ export async function addUser(username, email, password) {
     return getUserById(newUser.insertId);
 }
 
+export async function updateUser(user_id, username, email) {
+    const [updatedUser] = await pool.query(
+        `UPDATE users 
+         SET username = ?, email = ?
+         WHERE user_id = ?`,
+        [username, email, user_id]
+    );
+    return updatedUser;
+}
+
 export async function hasCompletedQuiz(id) {
     try {
         const [rows] = await pool.execute('SELECT has_completed_quiz FROM users WHERE user_id = ?', [id]);
