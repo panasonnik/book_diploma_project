@@ -36,9 +36,33 @@
           <h2 class="heading heading--bold">Navigation</h2>
           <div class="sidebar__link-container">
             <a class="sidebar__link" href="/profile">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="like-icon"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                ></path>
+              </svg>
               <p class="subheading subheading--regular">Saved books</p>
             </a>
-            <a class="sidebar__link" href="/profile/edit">
+
+            <a class="sidebar__link sidebar__link--active" href="/profile/edit">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                class="icon"
+              >
+                <path
+                  d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"
+                />
+              </svg>
               <p class="subheading subheading--regular">Personal data</p>
             </a>
           </div>
@@ -114,7 +138,7 @@
                   name="languages"
                   value="<%= languages[i] %>"
                   class="genre-checkbox"
-                  <%if(user.languages.includes(languages[i])){%>
+                  <%if(user.languages.includes(languages[i])){ %>
                 checked <% } %> /> <%= languages[i] %>
               </label>
               <% } %>

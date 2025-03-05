@@ -5,6 +5,8 @@
     flex-direction: column;
     gap: 2rem;
     flex: 1;
+    border-right: 1px solid $light-gray-color;
+    padding-right: 4rem;
 
     &__link-container {
         display: flex;
@@ -16,12 +18,22 @@
         color: $dark-color;
         transition: all 200ms ease-in-out;
 
-        &:hover {
-            transform: translateX(0.5rem);
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
 
-            & p {
-                font-weight: 600;
-            }
+        &--active {
+            background: $light-color;
+        }
+
+        &:hover {
+            transform: scale(1.02);
+
+            // & p {
+            //     font-weight: 600;
+            // }
         }
     }
 }

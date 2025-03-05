@@ -475,6 +475,8 @@ a {
   flex-direction: column;
   gap: 2rem;
   flex: 1;
+  border-right: 1px solid #dddddd;
+  padding-right: 4rem;
 }
 .sidebar__link-container {
   display: flex;
@@ -484,12 +486,17 @@ a {
 .sidebar__link {
   color: #000;
   transition: all 200ms ease-in-out;
+  padding: 1rem 2rem;
+  border-radius: 16px;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.sidebar__link--active {
+  background: #eeecec;
 }
 .sidebar__link:hover {
-  transform: translateX(0.5rem);
-}
-.sidebar__link:hover p {
-  font-weight: 600;
+  transform: scale(1.02);
 }
 
 .book-grid {

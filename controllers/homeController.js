@@ -1,4 +1,4 @@
-import { getUserBooks, getSavedBooks, getUserById, updateUser } from '../models/userModel.js';
+import { getUserBooks, getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail } from '../models/userModel.js';
 import { getBooksByGenre, isBookLiked, getLanguages } from '../models/bookModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId} from '../models/quizAnswerModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
@@ -59,15 +59,27 @@ export async function saveProfileChanges(req, res) {
     try {
             const { username, email, languages } = req.body;
             const userId = req.user.userId;
-        
+            const user = await getUserById(userId);
+            const languagesObj = await getLanguages();
+            const bookLanguages = [...new Set(languagesObj.map(item => item.language))];
             const languagePreferencesString = Array.isArray(languages) ? languages.join(', ') : languages;
+            const existingUsername = await getUserByUsername(username);
+
+            if (existingUsername && username !== user.username) {
+                return res.render('edit-profile', {errorDB:null, errorUsername: 'Username already in use', errorEmail:null, languages: bookLanguages, user});
+            }
+            
+            const existingEmail = await getUserByEmail(email);
+            if (existingEmail && email !== user.email) {
+                return res.render('edit-profile', {errorDB:null, errorUsername:null, errorEmail: 'Email already in use', languages: bookLanguages, user});
+            }
 
             await updateUser(userId, username, email);
             await updateQuizAnswerLanguages(userId, languagePreferencesString);
             
             const quizAnswer = await getQuizAnswerByUserId(userId);
             await calculateBookScores(quizAnswer);
-            res.redirect('/profile');
+            res.redirect('/profile/edit');
         } catch (error) {
             console.error(error);
             res.status(500).send("Error saving quiz data.");
