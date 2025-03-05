@@ -1,0 +1,27 @@
+@import '../abstracts/variables';
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1;
+
+    &__link-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__link {
+        color: $dark-color;
+        transition: all 200ms ease-in-out;
+
+        &:hover {
+            transform: translateX(0.5rem);
+
+            & p {
+                font-weight: 600;
+            }
+        }
+    }
+}

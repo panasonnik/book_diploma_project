@@ -1,12 +1,6 @@
 @import '../abstracts/variables';
 
 .profile {
-    &__side-menu {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-        flex: 1;
-    }
 
     &__content {
         display: flex;
