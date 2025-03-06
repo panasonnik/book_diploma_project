@@ -1,0 +1,27 @@
+@import '../abstracts/variables';
+
+.to-top-btn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    background-color: $light-color;
+    width: 48px;
+    height: 48px;
+
+    &__icon {
+        fill: $secondary-color;
+        stroke: $secondary-color;
+        height: 1.5rem;
+        width: 1.5rem;
+        position: relative;
+        left: 0;
+        top: 4px;
+        transition: all 200ms ease-in-out;
+
+        &:hover {
+            top: 0;
+        }
+    }
+}

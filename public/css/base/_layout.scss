@@ -1,5 +1,14 @@
+html {
+    scroll-behavior: smooth;
+}
+
 .content {
     padding: 4rem 8rem;
+
+    &--flexbox {
+        display: flex;
+        gap: 2rem;
+    }
 }
 
 @media (max-width: 991px) {
