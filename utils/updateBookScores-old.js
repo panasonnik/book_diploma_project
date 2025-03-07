@@ -10,6 +10,8 @@ export async function updateBookScores(userId, bookId) {
     const bookScore = await getBookScore(userId, bookId);
     let pages = quizAnswer.number_of_pages;
     let year = quizAnswer.year_published;
+    console.log("Year: ", year);
+    console.log("Pages: ", pages);
     let genres = [];
     let genrePreferences = quizAnswer.genre_preferences;
     let flagShortBook = false;
@@ -22,23 +24,31 @@ export async function updateBookScores(userId, bookId) {
         let savedGenres = savedBookGenre.map(g => g.genre_name).join(', ').split(', ').map(g => g.trim());
 
         genres = savedGenres.filter(genre => !genrePreferences.includes(genre));
-        if (highestScoredBook.number_of_pages > savedBook.number_of_pages) {
-            pages = Math.min(quizAnswer.number_of_pages + 0.25, 1);
-            
+        
+        let highestScoredBookObj = await getBookById(highestScoredBook.book_id);
+        console.log(highestScoredBookObj);
+        console.log("Saved book: ", savedBook);
+        if (highestScoredBookObj.number_of_pages > savedBook.number_of_pages) {
+            pages = Math.min(quizAnswer.number_of_pages * 1.25, 1);
+            flagShortBook = true;
         } else {
             pages = Math.max(quizAnswer.number_of_pages - 0.25, quizAnswer.number_of_pages * 0.75);
-            flagShortBook = true;
+            console.log("longer books");
         }
 
-        if (highestScoredBook.year_published > savedBook.year_published) {
-            year = Math.min(quizAnswer.year_published + 0.25, 1);
+        if (highestScoredBookObj.year_published > savedBook.year_published) {
+            year = Math.min(quizAnswer.year_published * 1.25, 1);
+            console.log("older books");
             flagOldBook = true;
         } else {
             year = Math.max(quizAnswer.year_published - 0.25, quizAnswer.year_published * 0.75);
         }
-        await updateQuizAnswers(userId, pages, year, genres.concat(genrePreferences).join(', '));
-            const updatedQuizAnswers = await getQuizAnswerByUserId(userId);
-            calculateBookScores(updatedQuizAnswers, flagShortBook, flagOldBook);
-        
+        genrePreferences = genres.concat(genrePreferences).join(', ');
+        genrePreferences = genrePreferences.split(',').slice(0,3).join(',');
+        console.log("Year: ", year);
+        console.log("Pages: ", pages);
+        await updateQuizAnswers(userId, pages, year, genrePreferences);
+        const updatedQuizAnswers = await getQuizAnswerByUserId(userId);
+        calculateBookScores(updatedQuizAnswers, flagShortBook, flagOldBook);
     }
 }

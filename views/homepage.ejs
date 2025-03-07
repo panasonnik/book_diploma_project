@@ -65,6 +65,10 @@
         </div>
         <div class="for-you__container">
           <h1 class="heading heading--bold mb">Top picks for you!</h1>
+          <form action="/update-book-scores" method="POST">
+            <input type="hidden" />
+            <button type="submit">Update recs</button>
+          </form>
           <div class="book-grid colored-background" id="bookGrid">
             <% if (books && books.length > 0) { %> <% books.forEach(book => { %>
             <div class="book-card">

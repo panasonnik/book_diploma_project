@@ -1,6 +1,6 @@
 import { getUserBooks, getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail } from '../models/userModel.js';
-import { getBooksByGenre, isBookLiked, getLanguages } from '../models/bookModel.js';
-import {updateQuizAnswerLanguages, getQuizAnswerByUserId} from '../models/quizAnswerModel.js';
+import { getBooksByGenre, isBookLiked, getLanguages, getBooksWithGenres } from '../models/bookModel.js';
+import {updateQuizAnswerLanguages, getQuizAnswerByUserId, updateQuizAnswerPreferences} from '../models/quizAnswerModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
 
 export async function showHomepage(req, res) {
@@ -85,3 +85,49 @@ export async function saveProfileChanges(req, res) {
             res.status(500).send("Error saving quiz data.");
         }
 }
+
+export async function updateBookScoresBasedOnLikes (req,res) {
+    const userId = req.user.userId;
+    const quizAnswer = await getQuizAnswerByUserId(userId);
+    const savedBooks = await getSavedBooks(userId);
+    const allBooks = await getBooksWithGenres();
+    console.log("Saved books: ", savedBooks);
+    let genres = [quizAnswer.genre_preferences];
+    let languages = [quizAnswer.language_preferences];
+    let sumOfYears = 0;
+    let sumOfPages = 0;
+    let likesOldBooksFlag = false;
+    let likesShortBooksFlag = false;
+    for(let book of savedBooks) {
+        sumOfYears += book.year_published;
+        sumOfPages += book.number_of_pages;
+    }
+    let avgSavedYear = sumOfYears/savedBooks.length;
+    let avgSavedPages = sumOfPages/savedBooks.length;
+    let avgBookYear = (allBooks.reduce((sum, book) => sum + book.year_published, 0))/allBooks.length;
+    let avgBookPages = (allBooks.reduce((sum, book) => sum + book.number_of_pages, 0))/allBooks.length;
+
+    if(avgSavedYear < avgBookYear) {
+        likesOldBooksFlag = true;
+    }
+    if(avgSavedPages < avgBookPages) {
+        likesShortBooksFlag = true;
+    }
+    const mostFrequentGenres = findMostFrequentGenres(savedBooks);
+    genres = genres[0].split(', ').map(genre => genre.trim());
+    let genresWithoutDuplicates = [...new Set(genres.concat(mostFrequentGenres))];
+    await updateQuizAnswerPreferences(userId, 0.25/genresWithoutDuplicates.length, 0.25/languages.length, likesOldBooksFlag, likesShortBooksFlag, genresWithoutDuplicates, languages);
+    res.redirect('/home');
+}
+
+function findMostFrequentGenres(books) {
+    const genres = books.flatMap(book => book.genre_name.split(',').map(genre => genre.trim()));
+  const genreCounts = genres.reduce((counts, genre) => {
+    counts[genre] = (counts[genre] || 0) + 1;
+    return counts;
+  }, {});
+
+  const maxCount = Math.max(...Object.values(genreCounts));
+  return Object.keys(genreCounts).filter(genre => genreCounts[genre] === maxCount);
+  }
+

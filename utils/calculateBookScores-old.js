@@ -1,12 +1,18 @@
 import { getBooksWithGenres } from "../models/bookModel.js";
 import { addBookScore } from "../models/userBookScoreModel.js";
 
-//initial book score calculation (each criteria weights = 0.25)
 export async function calculateBookScores(quizAnswer) {
     const resolvedQuizAnswer = await quizAnswer;
+    console.log("HERE");
+    console.log(resolvedQuizAnswer);
     const booksByGenre = await getBooksWithGenres();
-    let userGenrePreferences = resolvedQuizAnswer.genre_preferences.split(', ');
-    let userLanguagePreferences = resolvedQuizAnswer.language_preferences.split(', ');
+    const weights = {
+        numberOfPages: resolvedQuizAnswer.number_of_pages,
+        yearPublished: resolvedQuizAnswer.year_published,
+        genrePreferences: resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim()),
+        languagePreferences: resolvedQuizAnswer.language_preferences.split(',').map(genre => genre.trim()),
+        genre: 0.3,
+    };
     const scoredBooks = [];
     const minPages = Math.min(...booksByGenre.map(book => book.number_of_pages));
     const maxPages = Math.max(...booksByGenre.map(book => book.number_of_pages));
@@ -17,20 +23,17 @@ export async function calculateBookScores(quizAnswer) {
         let normPages = (book.number_of_pages - minPages) / (maxPages - minPages);
         let normYear = (book.year_published - minYear) / (maxYear - minYear);
         let genreWords = book.genre_name.split(',').map(word => word.trim());
-
-        let numOfMatchingGenres = userGenrePreferences.filter(genre => genreWords.includes(genre)).length;
-        let languageWords = book.language.split(',').map(word => word.trim());
-        let numOfMatchingLanguages = userLanguagePreferences.filter(genre => languageWords.includes(genre)).length;
-        if(resolvedQuizAnswer.likes_short_books) {
+        let genreScore = weights.genrePreferences.filter(genre => genreWords.includes(genre)).length;
+        if(flagShortBook) {
             normPages = 1 - normPages;
         }
-        if(resolvedQuizAnswer.likes_old_books) {
+        if(flagOldBook) {
             normYear = 1 - normYear;
         }
-        score = (normPages * resolvedQuizAnswer.weights_number_of_pages) + (normYear * resolvedQuizAnswer.weights_year_published) + (numOfMatchingGenres * resolvedQuizAnswer.weights_genre) + (numOfMatchingLanguages * resolvedQuizAnswer.weights_language);
-        // if(!weights.languagePreferences.includes(book.language)) {
-        //     score = 0;
-        // }
+        score = (normPages * weights.numberOfPages) + (normYear * weights.yearPublished) + (genreScore * weights.genre);
+        if(!weights.languagePreferences.includes(book.language)) {
+            score = 0;
+        }
         await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
         scoredBooks.push({ ...book, score });
     }

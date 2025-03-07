@@ -1,5 +1,4 @@
 import { saveBookPreference, isBookLiked, deleteBookPreference } from '../models/bookModel.js';
-import { updateBookScores } from '../utils/updateBookScores.js';
 
 export async function saveBook(req, res) {
     try {
@@ -11,7 +10,7 @@ export async function saveBook(req, res) {
             await deleteBookPreference(userId, bookId);
         } else {
             await saveBookPreference(userId, bookId);
-            await updateBookScores(userId, bookId);
+            // await updateBookScores(userId, bookId);
         }
 
         res.redirect('/home');

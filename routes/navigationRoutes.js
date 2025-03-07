@@ -1,5 +1,5 @@
 import express from "express";
-import { showHomepage, showProfilePage, showEditProfilePage, saveProfileChanges } from "../controllers/homeController.js";
+import { showHomepage, showProfilePage, showEditProfilePage, saveProfileChanges, updateBookScoresBasedOnLikes } from "../controllers/homeController.js";
 import { showQuiz, submitQuiz } from "../controllers/quizController.js";
 import { saveBook, removeBook } from "../controllers/bookController.js";
 import { authenticateToken, checkQuizCompletion } from '../middleware/authMiddleware.js';
@@ -16,6 +16,7 @@ router.get('/login', (req, res) => {
 router.get('/home', authenticateToken, checkQuizCompletion, showHomepage);
 router.get('/quiz', authenticateToken, showQuiz);
 router.post('/quiz/submit', authenticateToken, submitQuiz);
+router.post('/update-book-scores', authenticateToken, updateBookScoresBasedOnLikes);
 router.get('/profile', authenticateToken, checkQuizCompletion, showProfilePage);
 router.get('/profile/edit', authenticateToken, checkQuizCompletion, showEditProfilePage);
 router.post('/profile/save-changes', authenticateToken, saveProfileChanges);

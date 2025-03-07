@@ -26,7 +26,6 @@ export async function registerUser(req, res) {
 
         const hashedPassword = hashPassword(password);
         const user = await addUser(username, email, hashedPassword);
-        console.log(user);
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
         

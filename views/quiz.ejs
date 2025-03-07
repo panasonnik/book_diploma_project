@@ -18,122 +18,47 @@
         <h1 class="heading heading--bold heading--muted">
           Complete the quiz to finish your registration
         </h1>
-        <form class="likert" action="/quiz/submit" method="POST">
+        <form id="quizForm" class="likert" action="/quiz/submit" method="POST">
           <label class="likert__question"
             >Book of which length do you prefer?</label
           >
-          <ul class="likert__scale">
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertPages"
-                value="0"
-                required
-              />
-              <label class="likert__scale__item__label">Short books</label>
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertPages"
-                value="0.25"
-              />
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertPages"
-                value="0.5"
-              />
-              <label class="likert__scale__item__label">Neutral</label>
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertPages"
-                value="0.75"
-              />
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertPages"
-                value="1"
-              />
-              <label class="likert__scale__item__label">Long books</label>
-            </li>
-          </ul>
+          <input
+            class="likert__scale__item__input"
+            id="bookLengthShort"
+            type="radio"
+            name="bookLength"
+            value="shortBook"
+            required
+          />
+          <label for="bookLengthShort">Short</label><br />
+          <input
+            class="likert__scale__item__input"
+            id="bookLengthLong"
+            type="radio"
+            name="bookLength"
+            value="longBook"
+          />
+          <label for="bookLengthLong">Long</label><br />
           <label class="likert__question"
             >Which year of publishing do you prefer?</label
           >
-          <ul class="likert__scale">
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertYear"
-                value="0"
-                required
-              />
-              <label class="likert__scale__item__label">Old books</label>
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertYear"
-                value="0.25"
-              />
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertYear"
-                value="0.5"
-              />
-              <label class="likert__scale__item__label">Neutral</label>
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertYear"
-                value="0.75"
-              />
-            </li>
-            <li class="likert__scale__item">
-              <input
-                class="likert__scale__item__input"
-                type="radio"
-                name="likertYear"
-                value="1"
-              />
-              <label class="likert__scale__item__label">New books</label>
-            </li>
-          </ul>
-          <!-- <h2>Do you like reading long books?</h2>
           <input
-            type="number"
-            name="number_of_pages"
-            min="1"
-            max="10"
+            class="likert__scale__item__input"
+            id="bookYearOld"
+            type="radio"
+            name="bookYear"
+            value="oldBook"
             required
           />
-
-          <h2>Do you like reading new modern books?</h2>
+          <label for="bookYearOld">Old</label><br />
           <input
-            type="number"
-            name="year_published"
-            min="1"
-            max="10"
-            required
-          /> -->
+            class="likert__scale__item__input"
+            id="bookYearNew"
+            type="radio"
+            name="bookYear"
+            value="newBook"
+          />
+          <label for="bookYearNew">New</label><br />
 
           <h2 class="likert__question">Select your preferred genres:</h2>
           <div class="checkbox-grid">
@@ -149,6 +74,13 @@
             </label>
             <% } %>
           </div>
+          <p
+            id="genreErrorMessage"
+            class="error-message error-message--hidden"
+            role="alert"
+          >
+            Please select at least one genre.
+          </p>
           <h2 class="likert__question">Choose your language preferences:</h2>
           <div class="checkbox-grid">
             <% for (let i = 0; i < languages.length; i++) { %>
@@ -157,16 +89,24 @@
                 type="checkbox"
                 name="language_preferences"
                 value="<%= languages[i] %>"
-                class="genre-checkbox"
+                class="language-checkbox"
               />
               <%= languages[i] %>
             </label>
             <% } %>
           </div>
+          <p
+            id="languageErrorMessage"
+            class="error-message error-message--hidden"
+            role="alert"
+          >
+            Please select at least one language.
+          </p>
 
           <button type="submit" class="mt submit-btn">Submit Quiz</button>
         </form>
       </div>
     </div>
+    <script src="/js/checkCheckboxSelection.js"></script>
   </body>
 </html>

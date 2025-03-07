@@ -66,6 +66,10 @@
 
 .error-message {
     color: $error-color;
+
+    &--hidden {
+        display: none;
+    }
 }
 
 

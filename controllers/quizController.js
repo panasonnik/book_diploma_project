@@ -18,41 +18,48 @@ export async function showQuiz(req, res) {
 
 export async function submitQuiz (req, res) {
     try {
-        const { likertPages, likertYear, genre_preferences, language_preferences } = req.body;
+        const { bookLength, bookYear, genre_preferences, language_preferences } = req.body;
         const userId = req.user.userId;
+        console.log(req.body);
+        const numOfSelectedGenres = getLength(genre_preferences);
+        const numOfSelectedLanguages = getLength(language_preferences);
+        const bookLengthWeights = 0.25;
+        const bookYearWeights = 0.25;
+        let genreWeights = 0.25/numOfSelectedGenres;
+        let languageWeights = 0.25/numOfSelectedLanguages;
+        // const genreWeights = 0.25;
+        // const languageWeights = 0.25;
+
         let flagShortBook = false;
         let flagOldBook = false;
-        let normalizedPages = 0;
-        let normalizedYear = 0;
-        if(likertPages < 0.5) {
+
+        if(bookLength !== 'longBook') {
             flagShortBook = true;
-            normalizedPages = 1 - likertPages;
-        } else if (likertPages == 0.5) {
-            normalizedPages = 0;
-        } else {
-            normalizedPages = likertPages;
         }
-        if(likertYear < 0.5) {
-            normalizedYear = 1 - likertYear;
+        if(bookYear !== 'newBook') {
             flagOldBook = true;
         }
-        else if (likertYear == 0.5) {
-            normalizedYear = 0;
-        } else {
-            normalizedYear = likertYear;
-        }
+
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
         const languagePreferencesString = Array.isArray(language_preferences) ? language_preferences.join(', ') : language_preferences;
 
-        await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString, languagePreferencesString);
+        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesString, languagePreferencesString, flagOldBook, flagShortBook);
         
         req.user = await completeQuizUser(userId);
-        console.log(req.user);
         const quizAnswer = await getQuizAnswerByUserId(userId);
-        await calculateBookScores(quizAnswer, flagShortBook, flagOldBook);
+        await calculateBookScores(quizAnswer);
         res.redirect('/home');
     } catch (error) {
         console.error(error);
         res.status(500).send("Error saving quiz data.");
     }
 }
+
+function getLength(input) {
+    if (Array.isArray(input)) {
+      return input.length;
+    } else if (typeof input === 'string') {
+      return input.split(',').length;
+    }
+    return 0;
+  }
