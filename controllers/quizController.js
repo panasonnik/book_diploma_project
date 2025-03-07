@@ -45,7 +45,9 @@ export async function submitQuiz (req, res) {
         const languagePreferencesString = Array.isArray(language_preferences) ? language_preferences.join(', ') : language_preferences;
 
         await addQuizAnswer(userId, normalizedPages, normalizedYear, genrePreferencesString, languagePreferencesString);
-        await completeQuizUser(userId);
+        
+        req.user = await completeQuizUser(userId);
+        console.log(req.user);
         const quizAnswer = await getQuizAnswerByUserId(userId);
         await calculateBookScores(quizAnswer, flagShortBook, flagOldBook);
         res.redirect('/home');

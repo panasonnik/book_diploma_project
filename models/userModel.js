@@ -8,10 +8,10 @@ export async function getUsers() {
 
 export async function getUserById(id) {
     const [userById] = await pool.query(`
-        SELECT u.user_id, u.username, u.email, 
-        GROUP_CONCAT(qa.language_preferences ORDER BY qa.language_preferences SEPARATOR ', ') AS languages
+        SELECT u.user_id, u.username, u.email, u.has_completed_quiz,
+        IFNULL(GROUP_CONCAT(qa.language_preferences ORDER BY qa.language_preferences SEPARATOR ', '), '') AS languages
         FROM users u
-        JOIN quiz_answers qa ON u.user_id = qa.user_id
+        LEFT JOIN quiz_answers qa ON u.user_id = qa.user_id
         WHERE u.user_id = ?
         GROUP BY u.user_id;
         `, [id]);
@@ -85,7 +85,7 @@ export async function completeQuizUser(id) {
             WHERE user_id = ?
             `, [id]
         );
-        return { success: true, message: "Quiz marked as completed" };
+        return getUserById(id);
     } catch (error) {
         console.error("Error updating quiz status:", error);
         return { success: false, message: "Database error" };

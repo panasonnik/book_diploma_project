@@ -6,6 +6,7 @@ import { calculateBookScores } from '../utils/calculateBookScores.js';
 export async function showHomepage(req, res) {
     try {
         const userId = req.user.userId;
+
         const books = await getUserBooks(userId);
         const booksByGenre = await getBooksByGenre();
 
@@ -26,8 +27,7 @@ export async function showHomepage(req, res) {
     } catch (err) {
         console.error("Error rendering homepage:", err);
         res.status(500).send("Error loading homepage");
-    }
-    
+    } 
 }
 
 export async function showProfilePage(req, res) {
