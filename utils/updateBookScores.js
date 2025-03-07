@@ -1,7 +1,7 @@
-import { getBookById, getBooks, getBooksByGenre } from "../models/bookModel.js";
+import { getBookById } from "../models/bookModel.js";
 import { getBookGenre } from "../models/genreModel.js";
 import { getQuizAnswerByUserId, updateQuizAnswers } from "../models/quizAnswerModel.js";
-import { getBookScore, getUserBookScores, updateBookScore } from "../models/userBookScoreModel.js";
+import { getBookScore, getUserBookScores } from "../models/userBookScoreModel.js";
 import { calculateBookScores } from "../utils/calculateBookScores.js";
 
 export async function updateBookScores(userId, bookId) {

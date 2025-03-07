@@ -35,7 +35,7 @@ export async function getUserBookScores(userId) {
         FROM user_book_scores
         WHERE user_id = ?
         `, [userId]);
-    return bookScores;//[0]?
+    return bookScores;
 }
 
 export async function getBookScore(userId, bookId) {

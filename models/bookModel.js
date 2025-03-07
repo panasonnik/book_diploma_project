@@ -30,15 +30,15 @@ export async function getBooksByGenre() {
         const booksByGenre = {};
 
         for (const genre of genres) {
-            const [books] = await pool.query(
-                `SELECT b.*, GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name 
+            const [books] = await pool.query(`
+                SELECT b.*, 
+                GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name 
                 FROM books b
                 JOIN books_genres bg ON b.book_id = bg.book_id
                 JOIN genres g ON bg.genre_id = g.genre_id
                 WHERE bg.genre_id = ?
-                GROUP BY b.book_id`,
-                [genre.genre_id]
-            );
+                GROUP BY b.book_id
+                `, [genre.genre_id]);
             
             booksByGenre[genre.genre_name] = books;
         }
@@ -49,33 +49,17 @@ export async function getBooksByGenre() {
     }
 }
 export async function getBooksWithGenres() {
-
-            const rows = await pool.query(
-                `SELECT 
-                    b.book_id,
-                    b.title,
-                    b.author,
-                    b.description,
-                    b.image_url,
-                    b.number_of_pages,
-                    b.language,
-                    b.year_published,
-                    GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
-                FROM 
-                    books b
-                JOIN 
-                    books_genres bg ON b.book_id = bg.book_id
-                JOIN 
-                    genres g ON bg.genre_id = g.genre_id
-                GROUP BY 
-                    b.book_id;
-                `
-            );
-            const books = rows[0];
-            return books;
+    const rows = await pool.query(`
+        SELECT b.book_id, b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published,
+        GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+        FROM books b
+        JOIN books_genres bg ON b.book_id = bg.book_id
+        JOIN genres g ON bg.genre_id = g.genre_id
+        GROUP BY b.book_id;
+    `);
+    const books = rows[0];
+    return books;
 }
-  
-
 
 export async function saveBookPreference(userId, bookId) {
     const [newBookPreference] = await pool.query(`
@@ -95,11 +79,13 @@ export async function deleteBookPreference(userId, bookId) {
 }
 
 export async function isBookLiked (userId, bookId) {
-    const [rows] = await pool.query(
-        `SELECT * FROM user_book_preferences WHERE user_id = ? AND book_id = ?`,
-        [userId, bookId]
-      );
-      return rows.length > 0;
+    const [rows] = await pool.query(`
+        SELECT * 
+        FROM user_book_preferences 
+        WHERE user_id = ? AND book_id = ?
+        `, [userId, bookId]
+    );
+    return rows.length > 0;
 }
 
 export async function getLanguages() {

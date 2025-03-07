@@ -1,5 +1,5 @@
-import { getBooks, getBooksWithGenres } from "../models/bookModel.js";
-import { addBookScore, bookScoreExists, updateBookScore } from "../models/userBookScoreModel.js";
+import { getBooksWithGenres } from "../models/bookModel.js";
+import { addBookScore } from "../models/userBookScoreModel.js";
 
 export async function calculateBookScores(quizAnswer, flagShortBook = false, flagOldBook = false) {
     const resolvedQuizAnswer = await quizAnswer;

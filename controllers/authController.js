@@ -1,8 +1,5 @@
 import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, getUsers, hasCompletedQuiz } from '../models/userModel.js';
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
-import { getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
-import { calculateBookScores } from '../utils/calculateBookScores.js';
-
 
 export async function allUsers(req, res) {
     try {
@@ -33,7 +30,6 @@ export async function registerUser(req, res) {
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
         
-
         res.status(201).redirect('/quiz');
     } catch (err) {
         console.error(err);
@@ -43,18 +39,15 @@ export async function registerUser(req, res) {
 
 export async function loginUser(req, res) {
     const { usernameOrEmail, password } = req.body;
-
     try {
         const user = await getUserByEmailOrUsername(usernameOrEmail);
         if (!user) {
             return res.render('login', {errorDB:null, errorUsername: 'Username/email not found', errorPassword:null, data: {usernameOrEmail}});
         }
-
         const isPasswordValid = comparePassword(password, user.password);
         if (!isPasswordValid) {
             return res.render('login', {errorDB:null, errorUsername: null, errorPassword: 'Incorrect password', data: {usernameOrEmail}});
         }
-
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
         const hasCompleted = await hasCompletedQuiz(user.user_id);
@@ -77,4 +70,4 @@ export async function logoutUser(req, res) {
       console.error(err);
       res.status(500).send("Error logging out");
     }
-  }
+}

@@ -19,13 +19,11 @@ export async function updateQuizAnswers(user_id, pages, year, genre) {
         genre = genre.join(', ');
     }
 
-    const [updatedQuizAnswer] = await pool.query(
-        `UPDATE quiz_answers 
-         SET number_of_pages = ?, 
-             year_published = ?, 
-             genre_preferences = ?
-         WHERE user_id = ?`,
-        [pages, year, genre, user_id]
+    const [updatedQuizAnswer] = await pool.query(`
+        UPDATE quiz_answers 
+        SET number_of_pages = ?, year_published = ?, genre_preferences = ?
+        WHERE user_id = ?
+        `, [pages, year, genre, user_id]
     );
     return updatedQuizAnswer;
 }
@@ -35,18 +33,14 @@ export async function updateQuizAnswerLanguages(user_id, languages) {
         languages = languages.join(', ');
     }
 
-    const [updatedQuizAnswer] = await pool.query(
-        `UPDATE quiz_answers 
-         SET language_preferences = ?
-         WHERE user_id = ?`,
-        [languages, user_id]
+    const [updatedQuizAnswer] = await pool.query(`
+        UPDATE quiz_answers 
+        SET language_preferences = ?
+        WHERE user_id = ?
+        `, [languages, user_id]
     );
     return updatedQuizAnswer;
 }
-
-
-
-
 
 export async function getQuizAnswerByUserId(id) {
     const [quizAnswerById] = await pool.query(`

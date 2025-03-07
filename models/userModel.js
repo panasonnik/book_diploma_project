@@ -8,51 +8,57 @@ export async function getUsers() {
 
 export async function getUserById(id) {
     const [userById] = await pool.query(`
-        SELECT u.user_id, u.username, u.email, GROUP_CONCAT(qa.language_preferences ORDER BY qa.language_preferences SEPARATOR ', ') AS languages
+        SELECT u.user_id, u.username, u.email, 
+        GROUP_CONCAT(qa.language_preferences ORDER BY qa.language_preferences SEPARATOR ', ') AS languages
         FROM users u
-        
         JOIN quiz_answers qa ON u.user_id = qa.user_id
         WHERE u.user_id = ?
         GROUP BY u.user_id;
-        `, [id]); //prepared statement
+        `, [id]);
     return userById[0];
 }
 export async function getUserByEmail (email) {
     const [userByEmail] = await pool.query(`
         SELECT * 
         FROM users
-        WHERE email = ?`, [email]);
+        WHERE email = ?
+        `, [email]);
     return userByEmail[0];
 }
 export async function getUserByUsername (username) {
     const [userByUsername] = await pool.query(`
         SELECT * 
         FROM users
-        WHERE username = ?`, [username]);
+        WHERE username = ?
+        `, [username]
+    );
     return userByUsername[0];
 }
 export async function getUserByEmailOrUsername (emailOrUsername) {
     const [userByEmailOrUsername] = await pool.query(`
         SELECT * 
         FROM users
-        WHERE email = ? OR username = ?`, [emailOrUsername, emailOrUsername]);
+        WHERE email = ? OR username = ?
+        `, [emailOrUsername, emailOrUsername]
+    );
     return userByEmailOrUsername[0];
 }
   
 export async function addUser(username, email, password) {
     const [newUser] = await pool.query(`
-    INSERT INTO users (username, email, password)
-    VALUES (?, ?, ?) 
-    `, [username, email, password]);
+        INSERT INTO users (username, email, password)
+        VALUES (?, ?, ?) 
+        `, [username, email, password]
+    );
     return getUserById(newUser.insertId);
 }
 
 export async function updateUser(user_id, username, email) {
-    const [updatedUser] = await pool.query(
-        `UPDATE users 
-         SET username = ?, email = ?
-         WHERE user_id = ?`,
-        [username, email, user_id]
+    const [updatedUser] = await pool.query(`
+        UPDATE users 
+        SET username = ?, email = ?
+        WHERE user_id = ?
+        `, [username, email, user_id]
     );
     return updatedUser;
 }
@@ -60,7 +66,6 @@ export async function updateUser(user_id, username, email) {
 export async function hasCompletedQuiz(id) {
     try {
         const [rows] = await pool.execute('SELECT has_completed_quiz FROM users WHERE user_id = ?', [id]);
-        
         if (rows.length > 0) {
             return rows[0].has_completed_quiz;
         } else {
@@ -74,9 +79,11 @@ export async function hasCompletedQuiz(id) {
 
 export async function completeQuizUser(id) {
     try {
-        await pool.query(
-            `UPDATE users SET has_completed_quiz = TRUE WHERE user_id = ?`,
-            [id]
+        await pool.query(`
+            UPDATE users 
+            SET has_completed_quiz = TRUE 
+            WHERE user_id = ?
+            `, [id]
         );
         return { success: true, message: "Quiz marked as completed" };
     } catch (error) {
@@ -97,7 +104,6 @@ export async function getUserBooks(userId) {
             WHERE ubs.user_id = ? AND ubs.book_score != 0
             GROUP BY b.book_id, ubs.book_score
             ORDER BY ubs.book_score DESC;
-
         `, [userId]);
         return rows;
     } catch (err) {
@@ -109,17 +115,14 @@ export async function getUserBooks(userId) {
 export async function getSavedBooks(userId) {
     try {
         const [rows] = await pool.query(`
-            SELECT b.book_id, b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published, GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+            SELECT b.book_id, b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published, 
+            GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
             FROM user_book_preferences p
             JOIN books b ON p.book_id = b.book_id
-            JOIN 
-                    books_genres bg ON b.book_id = bg.book_id
-                JOIN 
-                    genres g ON bg.genre_id = g.genre_id
-                
+            JOIN books_genres bg ON b.book_id = bg.book_id
+            JOIN genres g ON bg.genre_id = g.genre_id  
             WHERE p.user_id = ?
-            GROUP BY 
-                    b.book_id;
+            GROUP BY b.book_id;
             `, [userId]);
             return rows;
     } catch (err) {

@@ -57,29 +57,29 @@ export async function showEditProfilePage(req, res) {
 
 export async function saveProfileChanges(req, res) {
     try {
-            const { username, email, languages } = req.body;
-            const userId = req.user.userId;
-            const user = await getUserById(userId);
-            const languagesObj = await getLanguages();
-            const bookLanguages = [...new Set(languagesObj.map(item => item.language))];
-            const languagePreferencesString = Array.isArray(languages) ? languages.join(', ') : languages;
-            const existingUsername = await getUserByUsername(username);
+        const { username, email, languages } = req.body;
+        const userId = req.user.userId;
+        const user = await getUserById(userId);
+        const languagesObj = await getLanguages();
+        const bookLanguages = [...new Set(languagesObj.map(item => item.language))];
+        const languagePreferencesString = Array.isArray(languages) ? languages.join(', ') : languages;
+        const existingUsername = await getUserByUsername(username);
 
-            if (existingUsername && username !== user.username) {
-                return res.render('edit-profile', {errorDB:null, errorUsername: 'Username already in use', errorEmail:null, languages: bookLanguages, user});
-            }
+        if (existingUsername && username !== user.username) {
+            return res.render('edit-profile', {errorDB:null, errorUsername: 'Username already in use', errorEmail:null, languages: bookLanguages, user});
+        }
             
-            const existingEmail = await getUserByEmail(email);
-            if (existingEmail && email !== user.email) {
-                return res.render('edit-profile', {errorDB:null, errorUsername:null, errorEmail: 'Email already in use', languages: bookLanguages, user});
-            }
+        const existingEmail = await getUserByEmail(email);
+        if (existingEmail && email !== user.email) {
+            return res.render('edit-profile', {errorDB:null, errorUsername:null, errorEmail: 'Email already in use', languages: bookLanguages, user});
+        }
 
-            await updateUser(userId, username, email);
-            await updateQuizAnswerLanguages(userId, languagePreferencesString);
+        await updateUser(userId, username, email);
+        await updateQuizAnswerLanguages(userId, languagePreferencesString);
             
-            const quizAnswer = await getQuizAnswerByUserId(userId);
-            await calculateBookScores(quizAnswer);
-            res.redirect('/profile/edit');
+        const quizAnswer = await getQuizAnswerByUserId(userId);
+        await calculateBookScores(quizAnswer);
+        res.redirect('/profile');
         } catch (error) {
             console.error(error);
             res.status(500).send("Error saving quiz data.");
