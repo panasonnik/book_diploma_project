@@ -74,13 +74,15 @@
 @media (max-width: 991px) {
     .modal__body {
         flex-direction: column;
+        gap:1rem;
     }
-
+    .modal__content {
+        margin:4rem;
+    }
     .book-cover-container {
-        width: 100%;
-        max-width: 400px;
-        margin-left: auto;
+        max-width:30%;
         margin-right: auto;
+        align-self: start;
     }
 }
 
