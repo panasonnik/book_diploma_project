@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= translations.lang %>">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,12 +16,25 @@
           </div>
 
           <h1 class="heading heading--bold form__header__heading">
-            Create an Account
+            <%= translations.createAccount%>
           </h1>
         </div>
-        <form class="form mt-5" action="/auth/register" method="POST">
+
+        <a href="/lang/switch/uk" class="switch-lang-btn">Українська</a> |
+        <a href="/lang/switch/en" class="switch-lang-btn">English</a>
+
+        <form
+          class="form mt-5"
+          action="/<%= translations.lang %>/auth/register"
+          method="POST"
+        >
           <div class="form__field">
-            <label class="form__field__label" for="username">Username</label>
+            <label
+              class="form__field__label"
+              for="username"
+              id="register__username"
+              ><%= translations.username%></label
+            >
             <input
               class="form__input-field"
               type="text"
@@ -32,13 +45,19 @@
               required
             />
             <% if (errorUsername) { %>
-            <span class="error-message" id="username-error" role="alert">
-              <%= errorUsername %>
+            <span
+              class="error-message"
+              id="username-error register__username-error"
+              role="alert"
+            >
+              <%= translations.errorUsername%>
             </span>
             <% } %>
           </div>
           <div class="form__field">
-            <label class="form__field__label" for="email">Email</label>
+            <label class="form__field__label" id="register__email" for="email"
+              ><%= translations.email%></label
+            >
             <input
               class="form__input-field"
               type="email"
@@ -49,13 +68,22 @@
               required
             />
             <% if (errorEmail) { %>
-            <span class="error-message" id="email-error" role="alert">
-              <%= errorEmail %>
+            <span
+              class="error-message"
+              id="email-error register__email-error"
+              role="alert"
+            >
+              <%= translations.errorEmail%>
             </span>
             <% } %>
           </div>
           <div class="form__field">
-            <label class="form__field__label" for="password">Password</label>
+            <label
+              class="form__field__label"
+              id="register__password"
+              for="password"
+              ><%= translations.password%></label
+            >
             <input
               class="form__input-field"
               type="password"
@@ -65,14 +93,25 @@
             />
           </div>
           <% if (errorDB) { %>
-          <span class="error-message" role="alert"> <%= errorDB %> </span>
+          <span class="error-message" id="error-db" role="alert">
+            <%= translations.errorDb%>
+          </span>
           <% } %>
-          <button type="submit" class="submit-btn">Create account</button>
+          <button type="submit" class="submit-btn" id="register__create-btn">
+            <%= translations.createAccount%>
+          </button>
         </form>
 
         <div class="form__login-link">
-          <span>Already have an account?</span>
-          <a href="/login" class="form__login-link__link">Login</a>
+          <span id="register__have-account"
+            ><%= translations.haveAnAccount%></span
+          >
+          <a
+            href="/<%=translations.lang %>/login"
+            class="form__login-link__link"
+            id="register__login-link"
+            ><%= translations.login%></a
+          >
         </div>
       </div>
     </div>

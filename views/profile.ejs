@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= translations.lang %>">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,7 +15,7 @@
             <div class="logo-book">BOOK</div>
           </div>
         </a>
-        <a href="/profile">
+        <a href="/<%= translations.lang %>/profile">
           <button class="submit-btn submit-btn--navbar">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,10 @@
         <div class="sidebar" id="container">
           <h2 class="heading heading--bold">Navigation</h2>
           <div class="sidebar__link-container">
-            <a class="sidebar__link sidebar__link--active" href="/profile">
+            <a
+              class="sidebar__link sidebar__link--active"
+              href="/<%= translations.lang %>/profile"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -52,7 +55,10 @@
               <p class="subheading subheading--regular">Saved books</p>
             </a>
 
-            <a class="sidebar__link" href="/profile/edit">
+            <a
+              class="sidebar__link"
+              href="/<%= translations.lang %>/profile/edit"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
@@ -66,7 +72,11 @@
               <p class="subheading subheading--regular">Personal data</p>
             </a>
           </div>
-          <form class="profile__log-out" action="/auth/logout" method="POST">
+          <form
+            class="profile__log-out"
+            action="/<%= translations.lang %>/auth/logout"
+            method="POST"
+          >
             <button
               class="profile__submit-btn submit-btn submit-btn--outline submit-btn--red"
               type="submit"
@@ -98,7 +108,10 @@
                   onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
-                <form action="/remove-book" method="POST">
+                <form
+                  action="/<%= translations.lang %>/remove-book"
+                  method="POST"
+                >
                   <input
                     type="hidden"
                     name="book_id"

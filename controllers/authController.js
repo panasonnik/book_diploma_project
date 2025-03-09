@@ -1,6 +1,9 @@
 import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, getUsers, hasCompletedQuiz } from '../models/userModel.js';
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
 
+import en from '../locales/en.js';
+import uk from '../locales/uk.js';
+
 export async function allUsers(req, res) {
     try {
         const users = await getUsers();
@@ -13,15 +16,17 @@ export async function allUsers(req, res) {
 
 export async function registerUser(req, res) {
     const { username, email, password } = req.body;
+    let currentLang = req.cookies.lang || 'uk';
+    const translations = currentLang === 'uk' ? uk : en;
     try {
         const existingUsername = await getUserByUsername(username);
         if (existingUsername) {
-            return res.render('register', {errorDB:null, errorUsername: 'Username already in use', errorEmail:null, data: {username, email}});
+            return res.render('register', {translations, errorDB:null, errorUsername: 'Username already in use', errorEmail:null, data: {username, email}});
         }
 
         const existingEmail = await getUserByEmail(email);
         if (existingEmail) {
-            return res.render('register', {errorDB:null, errorUsername:null, errorEmail: 'Email already in use', data: {username, email}});
+            return res.render('register', {translations, errorDB:null, errorUsername:null, errorEmail: 'Email already in use', data: {username, email}});
         }
 
         const hashedPassword = hashPassword(password);
@@ -29,10 +34,10 @@ export async function registerUser(req, res) {
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
         
-        res.status(201).redirect('/quiz');
+        res.status(201).redirect(`${currentLang}/quiz`);
     } catch (err) {
         console.error(err);
-        return res.render('register', {errorDB: 'Database error. Please try again later', errorUsername:null, errorEmail: null, data: null});
+        return res.render('register', {translations, errorDB: 'Database error. Please try again later', errorUsername:null, errorEmail: null, data: null});
     }
 }
 

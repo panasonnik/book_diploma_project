@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= translations.lang %>">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,13 +9,13 @@
   <body>
     <div class="container">
       <nav class="navbar">
-        <a href="/home">
+        <a href="/<%= translations.lang %>/home">
           <div class="logo">
             <div class="logo-good">GOOD</div>
             <div class="logo-book">BOOK</div>
           </div>
         </a>
-        <a href="/profile">
+        <a href="/<%= translations.lang %>/profile">
           <button class="submit-btn submit-btn--navbar">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@
         <div class="sidebar" id="container">
           <h2 class="heading heading--bold">Navigation</h2>
           <div class="sidebar__link-container">
-            <a class="sidebar__link" href="/profile">
+            <a class="sidebar__link" href="/<%= translations.lang %>/profile">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -53,7 +53,10 @@
               <p class="subheading subheading--regular">Saved books</p>
             </a>
 
-            <a class="sidebar__link sidebar__link--active" href="/profile/edit">
+            <a
+              class="sidebar__link sidebar__link--active"
+              href="/<%= translations.lang %>/profile/edit"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
@@ -66,7 +69,11 @@
               <p class="subheading subheading--regular">Personal data</p>
             </a>
           </div>
-          <form class="profile__log-out" action="/auth/logout" method="POST">
+          <form
+            class="profile__log-out"
+            action="/<%= translations.lang %>/auth/logout"
+            method="POST"
+          >
             <button
               class="profile__submit-btn submit-btn submit-btn--outline submit-btn--red"
               type="submit"
@@ -88,7 +95,7 @@
           <h2 class="heading heading--bold">Edit profile</h2>
           <form
             class="form mt-5 profile__form"
-            action="/profile/save-changes"
+            action="/<%= translations.lang %>/profile/save-changes"
             method="POST"
           >
             <div class="form__row">
@@ -138,13 +145,15 @@
                   name="languages"
                   value="<%= languages[i] %>"
                   class="genre-checkbox"
-                  <%if(user.languages.includes(languages[i])){ %>
+                  <%if(user.languages.includes(languages[i])){
+                  %
+                />
                 checked <% } %> /> <%= languages[i] %>
               </label>
               <% } %>
             </div>
             <div class="form__button-container">
-              <form action="/profile" method="GET">
+              <form action="/<%= translations.lang %>/profile" method="GET">
                 <button class="submit-btn submit-btn--outline">Cancel</button>
               </form>
               <button type="submit" class="submit-btn">Save</button>

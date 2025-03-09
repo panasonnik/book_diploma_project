@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import navigationRoutes from './routes/navigationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-
+import langRoutes from './routes/languageRoutes.js';
 
 const app = express();
 
@@ -21,8 +21,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', navigationRoutes);
-app.use('/auth', authRoutes);
+app.get('/', (req, res) => {
+  let currentLang = req.cookies.lang || 'uk';
+  res.redirect(`/${currentLang}`);
+});
+
+app.use('/:lang', navigationRoutes);
+app.use('/:lang/auth', authRoutes);
+app.use('/lang', langRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

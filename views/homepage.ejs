@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= translations.lang %>">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,13 +9,13 @@
   <body>
     <div class="container">
       <nav class="navbar">
-        <a href="/home">
+        <a href="/<%= translations.lang %>/home">
           <div class="logo">
             <div class="logo-good">GOOD</div>
             <div class="logo-book">BOOK</div>
           </div>
         </a>
-        <a href="/profile">
+        <a href="/<%= translations.lang %>/profile">
           <button class="submit-btn submit-btn--navbar">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,10 @@
         <div class="sidebar" id="container">
           <h2 class="heading heading--bold">Navigation</h2>
           <div class="sidebar__link-container">
-            <a class="sidebar__link sidebar__link--active" href="/profile">
+            <a
+              class="sidebar__link sidebar__link--active"
+              href="/<%= translations.lang %>/profile"
+            >
               <p class="subheading subheading--regular">For you</p>
             </a>
             <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre]
@@ -65,7 +68,10 @@
         </div>
         <div class="for-you__container">
           <h1 class="heading heading--bold mb">Top picks for you!</h1>
-          <form action="/update-book-scores" method="POST">
+          <form
+            action="/<%= translations.lang %>/update-book-scores"
+            method="POST"
+          >
             <input type="hidden" />
             <button type="submit">Update recs</button>
           </form>
@@ -80,7 +86,10 @@
                   onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
-                <form action="/save-book" method="POST">
+                <form
+                  action="/<%= translations.lang %>/save-book"
+                  method="POST"
+                >
                   <input
                     type="hidden"
                     name="book_id"
@@ -143,7 +152,10 @@
                   onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
-                <form action="/save-book" method="POST">
+                <form
+                  action="/<%= translations.lang %>/save-book"
+                  method="POST"
+                >
                   <input
                     type="hidden"
                     name="book_id"

@@ -4,10 +4,15 @@ import { showQuiz, submitQuiz } from "../controllers/quizController.js";
 import { saveBook, removeBook } from "../controllers/bookController.js";
 import { authenticateToken, checkQuizCompletion } from '../middleware/authMiddleware.js';
 
+import en from '../locales/en.js';
+import uk from '../locales/uk.js';
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.render('register', {errorDB:null, errorUsername:null, errorEmail:null, data:null});
+    let currentLang = req.cookies.lang || 'uk';
+    const translations = currentLang === 'uk' ? uk : en;
+    res.render('register', {translations, errorDB:null, errorUsername:null, errorEmail:null, data:null});
 });
 router.get('/login', (req, res) => {
     res.render('login', {errorDB:null, errorUsername: null, errorPassword:null, data: null});
