@@ -339,6 +339,18 @@ html {
   border-radius: 50%;
   background-color: #eeecec;
 }
+.navbar__language-switch {
+  margin-left: auto;
+}
+.navbar__language__link {
+  color: #fff;
+}
+.navbar__language__link--dark {
+  color: #1C1F73;
+}
+.navbar__language__link.active {
+  font-weight: bold;
+}
 
 @media (max-width: 991px) {
   .navbar {

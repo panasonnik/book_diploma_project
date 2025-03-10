@@ -17,6 +17,22 @@
         border-radius: 50%;
         background-color: $light-color;
     }
+
+    &__language-switch {
+        margin-left: auto;
+    }
+
+    &__language__link {
+        color: $white-color;
+
+        &--dark {
+            color: $secondary-color;
+        }
+
+        &.active {
+            font-weight: bold;
+        }
+    }
 }
 
 @media (max-width: 991px) {

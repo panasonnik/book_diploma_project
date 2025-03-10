@@ -16,12 +16,24 @@
           </div>
 
           <h1 class="heading heading--bold form__header__heading">
-            <%= translations.createAccount%>
+            <%= translations.register.createAccount%>
           </h1>
-        </div>
+          <div class="navbar__language-switch">
+            <a
+              href="/lang/switch/uk"
+              class="navbar__language__link navbar__language__link--dark <%= translations.lang == 'uk' ? 'active' : '' %>"
+            >
+              Українська
+            </a>
 
-        <a href="/lang/switch/uk" class="switch-lang-btn">Українська</a> |
-        <a href="/lang/switch/en" class="switch-lang-btn">English</a>
+            |
+            <a
+              href="/lang/switch/en"
+              class="navbar__language__link navbar__language__link--dark <%= translations.lang == 'en' ? 'active' : '' %>"
+              >English</a
+            >
+          </div>
+        </div>
 
         <form
           class="form mt-5"
@@ -33,7 +45,7 @@
               class="form__field__label"
               for="username"
               id="register__username"
-              ><%= translations.username%></label
+              ><%= translations.register.username%></label
             >
             <input
               class="form__input-field"
@@ -50,13 +62,13 @@
               id="username-error register__username-error"
               role="alert"
             >
-              <%= translations.errorUsername%>
+              <%= translations.register.errorUsername%>
             </span>
             <% } %>
           </div>
           <div class="form__field">
             <label class="form__field__label" id="register__email" for="email"
-              ><%= translations.email%></label
+              ><%= translations.register.email%></label
             >
             <input
               class="form__input-field"
@@ -73,7 +85,7 @@
               id="email-error register__email-error"
               role="alert"
             >
-              <%= translations.errorEmail%>
+              <%= translations.register.errorEmail%>
             </span>
             <% } %>
           </div>
@@ -82,7 +94,7 @@
               class="form__field__label"
               id="register__password"
               for="password"
-              ><%= translations.password%></label
+              ><%= translations.register.password%></label
             >
             <input
               class="form__input-field"
@@ -98,19 +110,19 @@
           </span>
           <% } %>
           <button type="submit" class="submit-btn" id="register__create-btn">
-            <%= translations.createAccount%>
+            <%= translations.register.createAccount%>
           </button>
         </form>
 
         <div class="form__login-link">
           <span id="register__have-account"
-            ><%= translations.haveAnAccount%></span
+            ><%= translations.register.haveAnAccount%></span
           >
           <a
             href="/<%=translations.lang %>/login"
             class="form__login-link__link"
             id="register__login-link"
-            ><%= translations.login%></a
+            ><%= translations.register.login%></a
           >
         </div>
       </div>

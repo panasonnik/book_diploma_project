@@ -1,23 +1,10 @@
 import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, getUsers, hasCompletedQuiz } from '../models/userModel.js';
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
-
-import en from '../locales/en.js';
-import uk from '../locales/uk.js';
-
-export async function allUsers(req, res) {
-    try {
-        const users = await getUsers();
-        res.json(users);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Database error");
-    }
-}
+import { getTranslations } from '../utils/getTranslations.js';
 
 export async function registerUser(req, res) {
     const { username, email, password } = req.body;
-    let currentLang = req.cookies.lang || 'uk';
-    const translations = currentLang === 'uk' ? uk : en;
+    const translations = getTranslations(req);
     try {
         const existingUsername = await getUserByUsername(username);
         if (existingUsername) {
@@ -34,7 +21,7 @@ export async function registerUser(req, res) {
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
         
-        res.status(201).redirect(`${currentLang}/quiz`);
+        res.status(201).redirect(`${translations.lang}/quiz`);
     } catch (err) {
         console.error(err);
         return res.render('register', {translations, errorDB: 'Database error. Please try again later', errorUsername:null, errorEmail: null, data: null});
@@ -43,35 +30,37 @@ export async function registerUser(req, res) {
 
 export async function loginUser(req, res) {
     const { usernameOrEmail, password } = req.body;
+    const translations = getTranslations(req);
     try {
         const user = await getUserByEmailOrUsername(usernameOrEmail);
         if (!user) {
-            return res.render('login', {errorDB:null, errorUsername: 'Username/email not found', errorPassword:null, data: {usernameOrEmail}});
+            return res.render('login', {translations, errorDB:null, errorUsername: 'Username/email not found', errorPassword:null, data: {usernameOrEmail}});
         }
         const isPasswordValid = comparePassword(password, user.password);
         if (!isPasswordValid) {
-            return res.render('login', {errorDB:null, errorUsername: null, errorPassword: 'Incorrect password', data: {usernameOrEmail}});
+            return res.render('login', {translations, errorDB:null, errorUsername: null, errorPassword: 'Incorrect password', data: {usernameOrEmail}});
         }
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
         const hasCompleted = await hasCompletedQuiz(user.user_id);
         if (hasCompleted) {
-            return res.status(201).redirect('/home');
+            return res.status(201).redirect(`/${translations.lang}/home`);
         } else {
-            return res.status(201).redirect('/quiz');
+            return res.status(201).redirect(`/${translations.lang}/quiz`);
         }
     } catch (err) {
         console.error(err);
-        return res.render('login', {errorDB : 'Database error. Try again later', errorUsername: null, errorPassword:null, data: null});
+        return res.render('login', {translations, errorDB : 'Database error. Try again later', errorUsername: null, errorPassword:null, data: null});
     }
 }
 
 export async function logoutUser(req, res) {
     try {
-      res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-      res.redirect('/');
+        const translations = getTranslations(req);
+        res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        res.redirect(`/${translations.lang}`);
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Error logging out");
+        console.error(err);
+        res.status(500).send("Error logging out");
     }
 }

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import navigationRoutes from './routes/navigationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import langRoutes from './routes/languageRoutes.js';
+import { saveLastPage } from './middleware/saveLastPage.js';
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
   let currentLang = req.cookies.lang || 'uk';
   res.redirect(`/${currentLang}`);
 });
-
+app.use(saveLastPage);
 app.use('/:lang', navigationRoutes);
 app.use('/:lang/auth', authRoutes);
 app.use('/lang', langRoutes);

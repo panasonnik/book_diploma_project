@@ -96,7 +96,8 @@ export async function getUserBooks(userId) {
     try {
         const [rows] = await pool.query(`
             SELECT b.*, ubs.book_score, 
-            GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
+            GROUP_CONCAT(g.genre_name_uk ORDER BY g.genre_name_uk SEPARATOR ', ') AS genre_name_uk
             FROM books b
             INNER JOIN user_book_scores ubs ON b.book_id = ubs.book_id
             LEFT JOIN books_genres bg ON b.book_id = bg.book_id

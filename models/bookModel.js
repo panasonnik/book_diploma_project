@@ -32,7 +32,8 @@ export async function getBooksByGenre() {
         for (const genre of genres) {
             const [books] = await pool.query(`
                 SELECT b.*, 
-                GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name 
+                GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
+                GROUP_CONCAT(g.genre_name_uk ORDER BY g.genre_name_uk SEPARATOR ', ') AS genre_name_uk
                 FROM books b
                 JOIN books_genres bg ON b.book_id = bg.book_id
                 JOIN genres g ON bg.genre_id = g.genre_id
@@ -40,7 +41,7 @@ export async function getBooksByGenre() {
                 GROUP BY b.book_id
                 `, [genre.genre_id]);
             
-            booksByGenre[genre.genre_name] = books;
+            booksByGenre[genre.genre_name_en] = books;
         }
         return booksByGenre;
     } catch (error) {
@@ -50,8 +51,9 @@ export async function getBooksByGenre() {
 }
 export async function getBooksWithGenres() {
     const rows = await pool.query(`
-        SELECT b.book_id, b.title, b.author, b.description, b.image_url, b.number_of_pages, b.language, b.year_published,
-        GROUP_CONCAT(g.genre_name ORDER BY g.genre_name SEPARATOR ', ') AS genre_name
+        SELECT b.*, 
+            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
+            GROUP_CONCAT(g.genre_name_uk ORDER BY g.genre_name_uk SEPARATOR ', ') AS genre_name_uk
         FROM books b
         JOIN books_genres bg ON b.book_id = bg.book_id
         JOIN genres g ON bg.genre_id = g.genre_id

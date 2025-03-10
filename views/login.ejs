@@ -14,7 +14,22 @@
             <div class="logo-good">GOOD</div>
             <div class="logo-book">BOOK</div>
           </div>
-          <h1 class="heading heading--bold">Login</h1>
+          <h1 class="heading heading--bold"><%= translations.login.login %></h1>
+          <div class="navbar__language-switch">
+            <a
+              href="/lang/switch/uk"
+              class="navbar__language__link navbar__language__link--dark <%= translations.lang == 'uk' ? 'active' : '' %>"
+            >
+              Українська
+            </a>
+
+            |
+            <a
+              href="/lang/switch/en"
+              class="navbar__language__link navbar__language__link--dark <%= translations.lang == 'en' ? 'active' : '' %>"
+              >English</a
+            >
+          </div>
         </div>
         <form
           class="form mt-5"
@@ -23,7 +38,7 @@
         >
           <div class="form__field">
             <label class="form__field__label" for="usernameOrEmail"
-              >Username or Email:</label
+              ><%= translations.login.loginData %>:</label
             >
             <input
               class="form__input-field"
@@ -35,12 +50,14 @@
             />
             <% if (errorUsername) { %>
             <span class="error-message" id="username-error" role="alert">
-              <%= errorUsername %>
+              <%= translations.login.errorUsername %>
             </span>
             <% } %>
           </div>
           <div class="form__field">
-            <label class="form__field__label" for="password">Password:</label>
+            <label class="form__field__label" for="password"
+              ><%= translations.login.password %>:</label
+            >
             <input
               class="form__input-field"
               type="password"
@@ -50,19 +67,23 @@
             />
             <% if (errorPassword) { %>
             <span class="error-message" id="password-error" role="alert">
-              <%= errorPassword %>
+              <%= translations.login.errorPassword %>
             </span>
             <% } %>
           </div>
           <% if (errorDB) { %>
-          <span class="error-message" role="alert"> <%= errorDB %> </span>
+          <span class="error-message" role="alert">
+            <%= translations.errorDb %>
+          </span>
           <% } %>
-          <button type="submit" class="submit-btn">Login</button>
+          <button type="submit" class="submit-btn">
+            <%= translations.login.login %>
+          </button>
         </form>
         <div class="form__login-link">
-          <span>Do not have an account?</span>
+          <span><%= translations.login.doNotHaveAccount %></span>
           <a href="/<%= translations.lang %>" class="form__login-link__link"
-            >Register</a
+            ><%= translations.register.createAccount %></a
           >
         </div>
       </div>

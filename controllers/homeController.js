@@ -2,11 +2,13 @@ import { getUserBooks, getSavedBooks, getUserById, updateUser, getUserByUsername
 import { getBooksByGenre, isBookLiked, getLanguages, getBooksWithGenres } from '../models/bookModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId, updateQuizAnswerPreferences} from '../models/quizAnswerModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
+import { getTranslations } from '../utils/getTranslations.js';
 
 export async function showHomepage(req, res) {
     try {
         const userId = req.user.userId;
-
+        const translations = getTranslations(req);
+        const lang = translations.lang;
         const books = await getUserBooks(userId);
         const booksByGenre = await getBooksByGenre();
 
@@ -22,7 +24,7 @@ export async function showHomepage(req, res) {
             }
         }
 
-        res.render('homepage', { books: books.slice(0,4), booksByGenre });
+        res.render('homepage', { translations, books: books.slice(0,4), booksByGenre });
 
     } catch (err) {
         console.error("Error rendering homepage:", err);

@@ -15,6 +15,10 @@
             <div class="logo-book">BOOK</div>
           </div>
         </a>
+        <div class="navbar__language-switch">
+          <a href="/lang/switch/uk">Українська</a> |
+          <a href="/lang/switch/en">English</a>
+        </div>
         <a href="/<%= translations.lang %>/profile">
           <button class="submit-btn submit-btn--navbar">
             <svg
@@ -27,7 +31,7 @@
                 d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
               />
             </svg>
-            Profile
+            <%= translations.home.profile %>
           </button>
         </a>
       </nav>
@@ -50,30 +54,38 @@
       </button>
       <div class="content content--flexbox">
         <div class="sidebar" id="container">
-          <h2 class="heading heading--bold">Navigation</h2>
+          <h2 class="heading heading--bold">
+            <%= translations.home.navigation %>
+          </h2>
           <div class="sidebar__link-container">
             <a
               class="sidebar__link sidebar__link--active"
               href="/<%= translations.lang %>/profile"
             >
-              <p class="subheading subheading--regular">For you</p>
+              <p class="subheading subheading--regular">
+                <%= translations.home.forYou %>
+              </p>
             </a>
             <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre]
             && booksByGenre[genre].length > 0) { %>
             <a class="sidebar__link" href="#<%= genre%>">
-              <p class="subheading subheading--regular"><%= genre %></p>
+              <p class="subheading subheading--regular">
+                <%= translations.home[genre]%>
+              </p>
             </a>
             <% } %> <% } %>
           </div>
         </div>
         <div class="for-you__container">
-          <h1 class="heading heading--bold mb">Top picks for you!</h1>
+          <h1 class="heading heading--bold mb">
+            <%= translations.home.topPicks %>
+          </h1>
           <form
             action="/<%= translations.lang %>/update-book-scores"
             method="POST"
           >
             <input type="hidden" />
-            <button type="submit">Update recs</button>
+            <button type="submit"><%= translations.home.updateRecs %></button>
           </form>
           <div class="book-grid colored-background" id="bookGrid">
             <% if (books && books.length > 0) { %> <% books.forEach(book => { %>
@@ -83,7 +95,7 @@
                   src="<%= book.image_url %>"
                   alt="<%= book.title %> cover"
                   class="book-card__cover-image book-cover"
-                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
+                  onclick="openModal('<%= book[`title_${translations.lang}`] %>', '<%= book[`author_${translations.lang}`] %>', '<%= book[`description_${translations.lang}`] %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book[`genre_name_${translations.lang}`] %>', '<%= book[`language_${translations.lang}`] %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
                 <form
@@ -127,16 +139,18 @@
               </div>
             </div>
             <% }); %> <% } else { %>
-            <p>No books available at the moment.</p>
+            <p><%= translations.home.noBooks%></p>
             <% } %>
           </div>
 
-          <h1 class="heading heading--bold mt-5">Books by Genre</h1>
+          <h1 class="heading heading--bold mt-5">
+            <%= translations.home.booksByGenre%>
+          </h1>
           <% for (let genre in booksByGenre) { %> <% if (booksByGenre[genre] &&
           booksByGenre[genre].length > 0) { %>
           <div class="heading-with-divider" id="<%=genre%>">
             <h2 class="heading mt mb heading-with-divider__heading">
-              <%= genre %>
+              <%= translations.home[genre]%>
             </h2>
             <span class="divider"></span>
           </div>
@@ -147,9 +161,9 @@
               <div class="book-card__image-container">
                 <img
                   src="<%= book.image_url %>"
-                  alt="<%= book.title %> cover"
+                  alt="<%= book[`title_${translations.lang}`] %> cover"
                   class="book-card__cover-image book-cover"
-                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
+                  onclick="openModal('<%= book[`title_${translations.lang}`] %>', '<%= book[`author_${translations.lang}`] %>', '<%= book[`description_${translations.lang}`] %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book[`genre_name_${translations.lang}`] %>', '<%= book[`language_${translations.lang}`] %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
                 <form
@@ -185,10 +199,10 @@
               </div>
               <div class="book-card__details">
                 <h3 class="subheading subheading--regular">
-                  <%= book.title %>
+                  <%= book[`title_${translations.lang}`] %>
                 </h3>
                 <p class="subheading subheading--small subheading--light">
-                  <%= book.author %>
+                  <%= book[`author_${translations.lang}`] %>
                 </p>
               </div>
             </div>
@@ -221,7 +235,9 @@
               </div>
               <div class="modal__book-details">
                 <div class="modal__book-details__section">
-                  <h3 class="subheading subheading--bold">Author</h3>
+                  <h3 class="subheading subheading--bold">
+                    <%= translations.home.author%>
+                  </h3>
                   <p
                     class="subheading subheading--light subheading--small"
                     id="modalAuthorName"
@@ -230,7 +246,9 @@
                 <div
                   class="modal__book-details__section modal__book-details__section--description"
                 >
-                  <h3 class="subheading subheading--bold">Description</h3>
+                  <h3 class="subheading subheading--bold">
+                    <%= translations.home.description%>
+                  </h3>
                   <p
                     class="subheading subheading--light subheading--small"
                     id="modalBookDescription"
@@ -239,25 +257,25 @@
                 <div class="modal__book-additional-details">
                   <div class="detail-item">
                     <h4 class="subheading subheading--bold subheading--small">
-                      Genre
+                      <%= translations.home.genre%>
                     </h4>
                     <p class="text text--muted" id="modalGenres"></p>
                   </div>
                   <div class="detail-item">
                     <h4 class="subheading subheading--bold subheading--small">
-                      Year
+                      <%= translations.home.year%>
                     </h4>
                     <p class="text text--muted" id="modalYear"></p>
                   </div>
                   <div class="detail-item">
                     <h4 class="subheading subheading--bold subheading--small">
-                      Pages
+                      <%= translations.home.pages%>
                     </h4>
                     <p class="text text--muted" id="modalPages"></p>
                   </div>
                   <div class="detail-item">
                     <h4 class="subheading subheading--bold subheading--small">
-                      Language
+                      <%= translations.home.language%>
                     </h4>
                     <p class="text text--muted" id="modalLanguage"></p>
                   </div>
