@@ -13,10 +13,25 @@
           <div class="logo-good">GOOD</div>
           <div class="logo-book">BOOK</div>
         </div>
+        <div class="navbar__language-switch">
+          <a
+            href="/lang/switch/uk"
+            class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
+          >
+            Українська
+          </a>
+
+          |
+          <a
+            href="/lang/switch/en"
+            class="navbar__language__link <%= translations.lang == 'en' ? 'active' : '' %>"
+            >English</a
+          >
+        </div>
       </nav>
       <div class="content">
         <h1 class="heading heading--bold heading--muted">
-          Complete the quiz to finish your registration
+          <%= translations.quiz.heading %>
         </h1>
         <form
           id="quizForm"
@@ -25,7 +40,7 @@
           method="POST"
         >
           <label class="likert__question"
-            >Book of which length do you prefer?</label
+            ><%= translations.quiz.questionBookLength %></label
           >
           <input
             class="likert__scale__item__input"
@@ -35,7 +50,20 @@
             value="shortBook"
             required
           />
-          <label for="bookLengthShort">Short</label><br />
+          <label for="bookLengthShort"
+            ><%= translations.quiz.answer1BookLength %></label
+          ><br />
+          <input
+            class="likert__scale__item__input"
+            id="bookLengthShort"
+            type="radio"
+            name="bookLength"
+            value="mediumBook"
+            required
+          />
+          <label for="bookLengthShort"
+            ><%= translations.quiz.answer2BookLength %></label
+          ><br />
           <input
             class="likert__scale__item__input"
             id="bookLengthLong"
@@ -43,9 +71,11 @@
             name="bookLength"
             value="longBook"
           />
-          <label for="bookLengthLong">Long</label><br />
+          <label for="bookLengthLong"
+            ><%= translations.quiz.answer3BookLength %></label
+          ><br />
           <label class="likert__question"
-            >Which year of publishing do you prefer?</label
+            ><%= translations.quiz.questionBookYear %></label
           >
           <input
             class="likert__scale__item__input"
@@ -55,7 +85,20 @@
             value="oldBook"
             required
           />
-          <label for="bookYearOld">Old</label><br />
+          <label for="bookYearOld"
+            ><%= translations.quiz.answer1BookYear %></label
+          ><br />
+          <input
+            class="likert__scale__item__input"
+            id="bookYearClassic"
+            type="radio"
+            name="bookYear"
+            value="classicBook"
+            required
+          />
+          <label for="bookYearClassic"
+            ><%= translations.quiz.answer2BookYear %></label
+          ><br />
           <input
             class="likert__scale__item__input"
             id="bookYearNew"
@@ -63,19 +106,23 @@
             name="bookYear"
             value="newBook"
           />
-          <label for="bookYearNew">New</label><br />
+          <label for="bookYearNew"
+            ><%= translations.quiz.answer3BookYear %></label
+          ><br />
 
-          <h2 class="likert__question">Select your preferred genres:</h2>
+          <h2 class="likert__question">
+            <%= translations.quiz.questionGenres %>
+          </h2>
           <div class="checkbox-grid">
             <% for (let i = 0; i < genres.length; i++) { %>
             <label class="checkbox-option">
               <input
                 type="checkbox"
                 name="genre_preferences"
-                value="<%= genres[i].genre_name %>"
+                value="<%= genres[i].genre_name_en %>"
                 class="genre-checkbox"
               />
-              <%= genres[i].genre_name %>
+              <%= genres[i][`genre_name_${translations.lang}`] %>
             </label>
             <% } %>
           </div>
@@ -84,9 +131,11 @@
             class="error-message error-message--hidden"
             role="alert"
           >
-            Please select at least one genre.
+            <%= translations.quiz.genreError %>
           </p>
-          <h2 class="likert__question">Choose your language preferences:</h2>
+          <h2 class="likert__question">
+            <%= translations.quiz.questionLanguages %>
+          </h2>
           <div class="checkbox-grid">
             <% for (let i = 0; i < languages.length; i++) { %>
             <label class="checkbox-option">
@@ -96,7 +145,7 @@
                 value="<%= languages[i] %>"
                 class="language-checkbox"
               />
-              <%= languages[i] %>
+              <%= languages[i][`language_${translations.lang}`] %>
             </label>
             <% } %>
           </div>
@@ -105,10 +154,12 @@
             class="error-message error-message--hidden"
             role="alert"
           >
-            Please select at least one language.
+            <%= translations.quiz.languageError %>
           </p>
 
-          <button type="submit" class="mt submit-btn">Submit Quiz</button>
+          <button type="submit" class="mt submit-btn">
+            <%= translations.quiz.submit %>
+          </button>
         </form>
       </div>
     </div>

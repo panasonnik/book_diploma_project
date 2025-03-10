@@ -51,6 +51,27 @@ const uk = {
             pages:"Сторінок",
             language:"Мова"
       },
+      quiz: {
+            heading: "Пройдіть опитування для завершення реєстрації",
+            questionBookLength: "Яка довжина книги ідеальна для Вас?",
+            answer1BookLength: "Короткі книги (менше 200 сторінок)",
+            answer2BookLength: "Середні книги (200 - 400 сторінок)",
+            answer3BookLength: "Довгі книги (більше 400 сторінок)",
+            questionBookYear: "Книги якого року видання любите?",
+            answer1BookYear: "Стара класика (до 1900)",
+            answer2BookYear: "Класика (1900 - 1970)",
+            answer3BookYear: "Сучасна (after 1970)",
+            questionGenres: "Оберіть улюблені жанри:",
+            genreError: "Будь ласка, оберіть хоч один жанр.",
+            questionLanguages: "Оберіть мови:",
+            English: "Англійська",
+            Ukrainian: "Українська",
+            Dutch: "Датська",
+            French: "Французька",
+            Portugese: "Португальська",
+            languageError: "Будь ласка, оберіть хоч одну мову.",
+            submit: "Завершити опитування"
+      },
   };
   
   export default uk;

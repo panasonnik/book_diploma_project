@@ -7,10 +7,27 @@ import { getTranslations } from '../utils/getTranslations.js';
 
 export async function showQuiz(req, res) {
     try {
+        const translations = getTranslations(req);
         const genres = await getGenres();
         const languagesObj = await getLanguages();
-        const languages = [...new Set(languagesObj.map(item => item.language))];
-        res.render('quiz', { genres, languages });
+        let languages = [];
+
+        for (let i = 0; i < languagesObj.length; i++) {
+          let isDuplicate = false;
+
+          for (let j = 0; j < languages.length; j++) {
+            if (languagesObj[i].language_en === languages[j].language_en &&
+                languagesObj[i].language_uk === languages[j].language_uk) {
+              isDuplicate = true;
+              break;
+            }
+          }
+        
+          if (!isDuplicate) {
+            languages.push(languagesObj[i]);
+          }
+        }
+        res.render('quiz', { translations, genres, languages });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading quiz");

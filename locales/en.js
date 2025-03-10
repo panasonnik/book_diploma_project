@@ -51,6 +51,27 @@ const en = {
             pages:"Pages",
             language:"Language"
       },
+      quiz: {
+            heading: "Complete the quiz to finish your registration",
+            questionBookLength: "Book of which length do you prefer?",
+            answer1BookLength: "Short (under 200)",
+            answer2BookLength: "Medium (200 - 400)",
+            answer3BookLength: "Long (over 400)",
+            questionBookYear: "Which era of books do you prefer?",
+            answer1BookYear: "Old classic (before 1900)",
+            answer2BookYear: "Classic (1900 - 1970)",
+            answer3BookYear: "Modern (after 1970)",
+            questionGenres: "Select your preferred genres:",
+            genreError: "Please select at least one genre.",
+            questionLanguages: "Choose your language preferences:",
+            English: "English",
+            Ukrainian: "Ukrainian",
+            Dutch: "Dutch",
+            French: "French",
+            Portugese: "Portugese",
+            languageError: "Please select at least one language.",
+            submit: "Submit quiz"
+      },
 };
   
   

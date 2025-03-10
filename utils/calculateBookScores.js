@@ -1,7 +1,7 @@
 import { getBooksWithGenres } from "../models/bookModel.js";
 import { addBookScore } from "../models/userBookScoreModel.js";
 
-//initial book score calculation (each criteria weights = 0.25)
+//initial book score calculation (each criteria weight = 0.25)
 export async function calculateBookScores(quizAnswer) {
     const resolvedQuizAnswer = await quizAnswer;
     const booksByGenre = await getBooksWithGenres();

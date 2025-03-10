@@ -16,8 +16,19 @@
           </div>
         </a>
         <div class="navbar__language-switch">
-          <a href="/lang/switch/uk">Українська</a> |
-          <a href="/lang/switch/en">English</a>
+          <a
+            href="/lang/switch/uk"
+            class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
+          >
+            Українська
+          </a>
+
+          |
+          <a
+            href="/lang/switch/en"
+            class="navbar__language__link <%= translations.lang == 'en' ? 'active' : '' %>"
+            >English</a
+          >
         </div>
         <a href="/<%= translations.lang %>/profile">
           <button class="submit-btn submit-btn--navbar">
