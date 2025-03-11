@@ -43,12 +43,12 @@ export async function submitQuiz (req, res) {
         const numOfSelectedLanguages = getLength(language_preferences);
         const bookLengthWeights = 0.25;
         const bookYearWeights = 0.25;
-        let genreWeights = 0.25/numOfSelectedGenres;
-        let languageWeights = 0.25/numOfSelectedLanguages;
+        // let genreWeights = 0.25/numOfSelectedGenres;
+        // let languageWeights = 0.25/numOfSelectedLanguages;
         let muYear = 0;
         let muPages = 0;
-        // const genreWeights = 0.25;
-        // const languageWeights = 0.25;
+        const genreWeights = 0.25;
+        const languageWeights = 0.25;
 
         // let flagShortBook = false;
         // let flagOldBook = false;

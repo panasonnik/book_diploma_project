@@ -7,10 +7,9 @@ import { calculateBookScores } from './calculateBookScores.js';
 export async function updateBookScores(req, res) {
     const userId = req.user.userId;
     const translations = getTranslations(req);
-    const quizAnswer = await getQuizAnswerByUserId(userId);
     const savedBooks = await getSavedBooks(userId);
     await updateMuValues(userId, savedBooks);
+    const quizAnswer = await getQuizAnswerByUserId(userId);
     let scoredBooks = await calculateBookScores(quizAnswer);
-    console.log(scoredBooks);
     res.redirect(`/${translations.lang}/home`);
 }

@@ -172,9 +172,10 @@
                 <input
                   type="checkbox"
                   name="languages"
-                  value="<%= languages[i] %>"
+                  value="<%= languages[i][`language_${translations.lang}`] %>"
                   class="genre-checkbox"
-                  <%if(user.languages.includes(languages[i])){ %>
+                  <%if(user.languages.includes(languages[i][`language_uk`])
+                      || user.languages.includes(languages[i][`language_en`])  ){ %>
                 checked <% } %> /> <%=
                 languages[i][`language_${translations.lang}`] %>
               </label>

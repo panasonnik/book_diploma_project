@@ -1,5 +1,5 @@
 import { getSavedBooks } from '../models/userModel.js';
-import { normalizeData, getMinMax, normalize } from "../utils/bookScoreUtils.js";
+import { normalizeData, getMinMax, normalize, findMostFrequent } from "../utils/bookScoreUtils.js";
 import { updateQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { getTranslations } from './getTranslations.js';
 
@@ -71,14 +71,3 @@ export async function recalculateWeights(req, res) {
     await updateQuizAnswer(userId, normWeightPages, normWeightYear, normGenresWeight, normLangsWeight, genresWithoutDuplicates, languagesWithoutDuplicates);
     res.redirect(`/${translations.lang}/home`);
 }
-
-function findMostFrequent(books, key) {
-    const genres = books.flatMap(book => book[key].split(',').map(genre => genre.trim()));
-    const genreCounts = genres.reduce((counts, genre) => {
-    counts[genre] = (counts[genre] || 0) + 1;
-    return counts;
-  }, {});
-
-  const maxCount = Math.max(...Object.values(genreCounts));
-  return Object.keys(genreCounts).filter(genre => genreCounts[genre] === maxCount);
-  }

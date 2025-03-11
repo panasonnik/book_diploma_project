@@ -7,13 +7,16 @@ export async function calculateBookScores(quizAnswer) {
     const resolvedQuizAnswer = await quizAnswer;
     console.log(resolvedQuizAnswer);
     const booksByGenre = await getBooksWithGenres();
+
     let userGenrePreferences = resolvedQuizAnswer.genre_preferences
     .split(',')
     .map(genre => genre.trim());
+    let eachGenreWeights = resolvedQuizAnswer.weights_genre / userGenrePreferences.length;
 
     let userLanguagePreferences = resolvedQuizAnswer.language_preferences
     .split(',')
     .map(genre => genre.trim());
+    let eachLanguageWeights = resolvedQuizAnswer.weights_language / userLanguagePreferences.length;
 
     const scoredBooks = [];
     const minMaxPages = getMinMax(booksByGenre, 'number_of_pages');
@@ -28,7 +31,7 @@ export async function calculateBookScores(quizAnswer) {
         let numOfMatchingGenres = userGenrePreferences.filter(genre => genreWords.includes(genre)).length;
         let languageWords = book.language_en.split(',').map(word => word.trim());
         let numOfMatchingLanguages = userLanguagePreferences.filter(genre => languageWords.includes(genre)).length;
-        score = (normPages * resolvedQuizAnswer.weights_number_of_pages) + (normYear * resolvedQuizAnswer.weights_year_published) + (numOfMatchingGenres * resolvedQuizAnswer.weights_genre) + (numOfMatchingLanguages * resolvedQuizAnswer.weights_language);
+        score = (normPages * resolvedQuizAnswer.weights_number_of_pages) + (normYear * resolvedQuizAnswer.weights_year_published) + (numOfMatchingGenres * eachGenreWeights) + (numOfMatchingLanguages * eachLanguageWeights);
         // if(!weights.languagePreferences.includes(book.language)) {
         //     score = 0;
         // }

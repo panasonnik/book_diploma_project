@@ -58,6 +58,25 @@ export async function updateQuizAnswerLanguages(user_id, languages) {
     return updatedQuizAnswer;
 }
 
+export async function updateGenreLanguagePreferences(user_id, genres, languages) {
+    console.log("HERE");
+    console.log(genres);
+    if (Array.isArray(languages)) {
+        languages = languages.join(', ');
+    }
+    if (Array.isArray(genres)) {
+        genres = genres.join(', ');
+    }
+
+    const [updatedQuizAnswer] = await pool.query(`
+        UPDATE quiz_answers 
+        SET genre_preferences = ?, language_preferences = ?
+        WHERE user_id = ?
+        `, [genres, languages, user_id]
+    );
+    return updatedQuizAnswer;
+}
+
 export async function getQuizAnswerByUserId(id) {
     const [quizAnswerById] = await pool.query(`
         SELECT * 
