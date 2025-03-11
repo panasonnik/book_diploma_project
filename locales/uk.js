@@ -72,6 +72,17 @@ const uk = {
             languageError: "Будь ласка, оберіть хоч одну мову.",
             submit: "Завершити опитування"
       },
+      profile: {
+            savedBooks: "Обрані книги",
+            personalData: "Особисті дані",
+            logOut: "Вийти",
+            yourSavedBooks: "Ваші обрані книги",
+            noBooks: "Ви ще не додали жодну книгу до обраного...",
+            edit: "Редагувати профіль",
+            languagePrefs: "Вподобання мови: ",
+            cancel: "Скасувати",
+            save: "Зберегти",
+      }
   };
   
   export default uk;

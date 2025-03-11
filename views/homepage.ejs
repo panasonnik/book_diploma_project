@@ -104,7 +104,7 @@
               <div class="book-card__image-container">
                 <img
                   src="<%= book.image_url %>"
-                  alt="<%= book.title %> cover"
+                  alt="<%= book[`title_${translations.lang}`] %> cover"
                   class="book-card__cover-image book-cover"
                   onclick="openModal('<%= book[`title_${translations.lang}`] %>', '<%= book[`author_${translations.lang}`] %>', '<%= book[`description_${translations.lang}`] %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book[`genre_name_${translations.lang}`] %>', '<%= book[`language_${translations.lang}`] %>')"
                   onerror="this.src='/images/onerror_image.jpg';"
@@ -142,10 +142,10 @@
               </div>
               <div class="book-card__details">
                 <h3 class="subheading subheading--regular">
-                  <%= book.title %>
+                  <%= book[`title_${translations.lang}`] %>
                 </h3>
                 <p class="subheading subheading--small subheading--light">
-                  <%= book.author %>
+                  <%= book[`author_${translations.lang}`] %>
                 </p>
               </div>
             </div>

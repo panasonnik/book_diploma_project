@@ -72,6 +72,17 @@ const en = {
             languageError: "Please select at least one language.",
             submit: "Submit quiz"
       },
+      profile: {
+            savedBooks: "Saved books",
+            personalData: "Personal data",
+            logOut: "Log out",
+            yourSavedBooks: "Your saved books",
+            noBooks: "You haven't saved books yet...",
+            edit: "Edit profile",
+            languagePrefs: "Language preferences: ",
+            cancel: "Cancel",
+            save: "Save",
+      }
 };
   
   

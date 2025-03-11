@@ -15,6 +15,21 @@
             <div class="logo-book">BOOK</div>
           </div>
         </a>
+        <div class="navbar__language-switch">
+          <a
+            href="/lang/switch/uk"
+            class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
+          >
+            Українська
+          </a>
+
+          |
+          <a
+            href="/lang/switch/en"
+            class="navbar__language__link <%= translations.lang == 'en' ? 'active' : '' %>"
+            >English</a
+          >
+        </div>
         <a href="/<%= translations.lang %>/profile">
           <button class="submit-btn submit-btn--navbar">
             <svg
@@ -27,13 +42,15 @@
                 d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
               />
             </svg>
-            Profile
+            <%= translations.home.profile %>
           </button>
         </a>
       </nav>
       <div class="content profile__content">
         <div class="sidebar" id="container">
-          <h2 class="heading heading--bold">Navigation</h2>
+          <h2 class="heading heading--bold">
+            <%= translations.home.navigation %>
+          </h2>
           <div class="sidebar__link-container">
             <a class="sidebar__link" href="/<%= translations.lang %>/profile">
               <svg
@@ -50,7 +67,9 @@
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 ></path>
               </svg>
-              <p class="subheading subheading--regular">Saved books</p>
+              <p class="subheading subheading--regular">
+                <%= translations.profile.savedBooks %>
+              </p>
             </a>
 
             <a
@@ -66,7 +85,9 @@
                   d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"
                 />
               </svg>
-              <p class="subheading subheading--regular">Personal data</p>
+              <p class="subheading subheading--regular">
+                <%= translations.profile.personalData %>
+              </p>
             </a>
           </div>
           <form
@@ -87,12 +108,14 @@
                   d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"
                 />
               </svg>
-              Log out
+              <%= translations.profile.logOut %>
             </button>
           </form>
         </div>
         <div class="profile__container">
-          <h2 class="heading heading--bold">Edit profile</h2>
+          <h2 class="heading heading--bold">
+            <%= translations.profile.edit %>
+          </h2>
           <form
             class="form mt-5 profile__form"
             action="/<%= translations.lang %>/profile/save-changes"
@@ -101,7 +124,7 @@
             <div class="form__row">
               <div class="form__field">
                 <label class="form__field__label" for="username"
-                  >Username</label
+                  ><%= translations.register.username %></label
                 >
                 <input
                   class="form__input-field"
@@ -114,12 +137,14 @@
                 />
                 <% if (errorUsername) { %>
                 <span class="error-message" id="username-error" role="alert">
-                  <%= errorUsername %>
+                  <%= translations.register.errorUsername %>
                 </span>
                 <% } %>
               </div>
               <div class="form__field">
-                <label class="form__field__label" for="email">Email</label>
+                <label class="form__field__label" for="email"
+                  ><%= translations.register.email %></label
+                >
                 <input
                   class="form__input-field"
                   type="email"
@@ -131,12 +156,14 @@
                 />
                 <% if (errorEmail) { %>
                 <span class="error-message" id="email-error" role="alert">
-                  <%= errorEmail %>
+                  <%= translations.register.errorEmail %>
                 </span>
                 <% } %>
               </div>
             </div>
-            <h4 class="form__field__label">Language preferences:</h4>
+            <h4 class="form__field__label">
+              <%= translations.profile.languagePrefs %>
+            </h4>
             <div class="form__field checkbox-grid">
               <% for (let i = 0; i < languages.length; i++) { %>
               <label class="checkbox-option">
@@ -145,18 +172,21 @@
                   name="languages"
                   value="<%= languages[i] %>"
                   class="genre-checkbox"
-                  <%if(user.languages.includes(languages[i])){
-                  %
-                />
-                checked <% } %> /> <%= languages[i] %>
+                  <%if(user.languages.includes(languages[i])){ %>
+                checked <% } %> /> <%=
+                languages[i][`language_${translations.lang}`] %>
               </label>
               <% } %>
             </div>
             <div class="form__button-container">
               <form action="/<%= translations.lang %>/profile" method="GET">
-                <button class="submit-btn submit-btn--outline">Cancel</button>
+                <button class="submit-btn submit-btn--outline">
+                  <%= translations.profile.cancel %>
+                </button>
               </form>
-              <button type="submit" class="submit-btn">Save</button>
+              <button type="submit" class="submit-btn">
+                <%= translations.profile.save %>
+              </button>
             </div>
           </form>
         </div>
