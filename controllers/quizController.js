@@ -37,36 +37,51 @@ export async function showQuiz(req, res) {
 export async function submitQuiz (req, res) {
     try {
         const { bookLength, bookYear, genre_preferences, language_preferences } = req.body;
+        const translations = getTranslations(req);
         const userId = req.user.userId;
-        console.log(req.body);
         const numOfSelectedGenres = getLength(genre_preferences);
         const numOfSelectedLanguages = getLength(language_preferences);
         const bookLengthWeights = 0.25;
         const bookYearWeights = 0.25;
         let genreWeights = 0.25/numOfSelectedGenres;
         let languageWeights = 0.25/numOfSelectedLanguages;
+        let muYear = 0;
+        let muPages = 0;
         // const genreWeights = 0.25;
         // const languageWeights = 0.25;
 
-        let flagShortBook = false;
-        let flagOldBook = false;
+        // let flagShortBook = false;
+        // let flagOldBook = false;
 
-        if(bookLength !== 'longBook') {
-            flagShortBook = true;
+        // if(bookLength !== 'longBook') {
+        //     flagShortBook = true;
+        // }
+        // if(bookYear !== 'newBook') {
+        //     flagOldBook = true;
+        // }
+        if(bookLength == 'shortBook') {
+          muPages = 100;
+        } else if (bookLength == 'mediumBook') {
+          muPages = 300;
+        } else if (bookLength == 'longBook') {
+          muPages = 700;
         }
-        if(bookYear !== 'newBook') {
-            flagOldBook = true;
+        if(bookYear == 'oldBook') {
+          muYear = 1800;
+        } else if (bookYear == 'classicBook') {
+          muYear = 1935;
+        } else if (bookYear == 'newBook') {
+          muYear = 1990;
         }
-
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
         const languagePreferencesString = Array.isArray(language_preferences) ? language_preferences.join(', ') : language_preferences;
 
-        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesString, languagePreferencesString, flagOldBook, flagShortBook);
+        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesString, languagePreferencesString, muYear, muPages);
         
         req.user = await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
         await calculateBookScores(quizAnswer);
-        res.redirect('/home');
+        res.redirect(`/${translations.lang}/home`);
     } catch (error) {
         console.error(error);
         res.status(500).send("Error saving quiz data.");

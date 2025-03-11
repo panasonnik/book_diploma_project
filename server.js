@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import navigationRoutes from './routes/navigationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 import langRoutes from './routes/languageRoutes.js';
 import { saveLastPage } from './middleware/saveLastPage.js';
 
@@ -29,7 +30,9 @@ app.get('/', (req, res) => {
 app.use(saveLastPage);
 app.use('/:lang', navigationRoutes);
 app.use('/:lang/auth', authRoutes);
+app.use('/:lang/profile', profileRoutes);
 app.use('/lang', langRoutes);
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

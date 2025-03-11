@@ -1,8 +1,8 @@
 import pool from "../config/db.js";
 
-export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, likes_old_books, likes_short_books) {
+export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages) {
     const [newQuizAnswer] = await pool.query(`
-    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, likes_old_books, likes_short_books, created_at)
+    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
     ON DUPLICATE KEY UPDATE 
     weights_number_of_pages = VALUES(weights_number_of_pages),
@@ -11,14 +11,14 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
     weights_language = VALUES(weights_language),
     genre_preferences = VALUES(genre_preferences),
     language_preferences = VALUES(language_preferences),
-    likes_old_books = VALUES(likes_old_books),
-    likes_short_books = VALUES (likes_short_books),
+    mu_year = VALUES(mu_year),
+    mu_pages = VALUES(mu_pages),
     created_at = NOW()
-    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, likes_old_books, likes_short_books]);
+    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages]);
     return newQuizAnswer.insertId;
 }
 
-export async function updateQuizAnswerPreferences(user_id, weights_genre, weights_language, likes_old_books, likes_short_books, genres, languages) {
+export async function updateQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genres, languages) {
     if (Array.isArray(genres)) {
         genres = genres.join(', ');
     }
@@ -27,9 +27,19 @@ export async function updateQuizAnswerPreferences(user_id, weights_genre, weight
     }
     const [updatedQuizAnswer] = await pool.query(`
         UPDATE quiz_answers 
-        SET weights_genre = ?, weights_language = ?, likes_old_books = ?, likes_short_books = ?, genre_preferences = ?, language_preferences = ?
+        SET weights_number_of_pages = ?, weights_year_published = ?, weights_genre = ?, weights_language = ?, genre_preferences = ?, language_preferences = ?
         WHERE user_id = ?
-        `, [weights_genre, weights_language, likes_old_books, likes_short_books, genres, languages, user_id]
+        `, [weights_number_of_pages, weights_year_published, weights_genre, weights_language, genres, languages, user_id]
+    );
+    return updatedQuizAnswer;
+}
+
+export async function updateMuValuesQuizAnswer(user_id, mu_year, mu_pages) {
+    const [updatedQuizAnswer] = await pool.query(`
+        UPDATE quiz_answers 
+        SET mu_year = ?, mu_pages = ?
+        WHERE user_id = ?
+        `, [mu_year, mu_pages, user_id]
     );
     return updatedQuizAnswer;
 }

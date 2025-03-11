@@ -21,7 +21,7 @@ export async function registerUser(req, res) {
         const token = generateToken(user.user_id);
         const cookie = setCookie(res, token);
         
-        res.status(201).redirect(`${translations.lang}/quiz`);
+        res.status(201).redirect(`/${translations.lang}/quiz`);
     } catch (err) {
         console.error(err);
         return res.render('register', {translations, errorDB: 'Database error. Please try again later', errorUsername:null, errorEmail: null, data: null});

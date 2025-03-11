@@ -9,13 +9,14 @@
   <body>
     <div class="container">
       <nav class="navbar">
-        <a href="/home">
+        <a href="/<%= translations.lang %>/home">
           <div class="logo">
             <div class="logo-good">GOOD</div>
             <div class="logo-book">BOOK</div>
           </div>
         </a>
-        <div class="navbar__language-switch">
+        <div class="navbar__align-right">
+        <div>
           <a
             href="/lang/switch/uk"
             class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
@@ -45,6 +46,7 @@
             <%= translations.home.profile %>
           </button>
         </a>
+      </div>
       </nav>
       <div class="content profile__content">
         <div class="sidebar" id="container">

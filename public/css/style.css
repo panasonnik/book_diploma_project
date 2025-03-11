@@ -339,6 +339,12 @@ html {
   border-radius: 50%;
   background-color: #eeecec;
 }
+.navbar__align-right {
+  display: flex;
+  margin-left: auto;
+  gap: 3rem;
+  align-items: center;
+}
 .navbar__language-switch {
   margin-left: auto;
 }
