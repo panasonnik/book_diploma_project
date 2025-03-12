@@ -16,37 +16,37 @@
           </div>
         </a>
         <div class="navbar__align-right">
-        <div>
-          <a
-            href="/lang/switch/uk"
-            class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
-          >
-            Українська
-          </a>
-
-          |
-          <a
-            href="/lang/switch/en"
-            class="navbar__language__link <%= translations.lang == 'en' ? 'active' : '' %>"
-            >English</a
-          >
-        </div>
-        <a href="/<%= translations.lang %>/profile">
-          <button class="submit-btn submit-btn--navbar">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 448 512"
-              class="icon log-out-icon"
+          <div>
+            <a
+              href="/lang/switch/uk"
+              class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
             >
-              <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-              <path
-                d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
-              />
-            </svg>
-            <%= translations.home.profile %>
-          </button>
-        </a>
-      </div>
+              Українська
+            </a>
+
+            |
+            <a
+              href="/lang/switch/en"
+              class="navbar__language__link <%= translations.lang == 'en' ? 'active' : '' %>"
+              >English</a
+            >
+          </div>
+          <a href="/<%= translations.lang %>/profile">
+            <button class="submit-btn submit-btn--navbar">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                class="icon log-out-icon"
+              >
+                <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                <path
+                  d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
+                />
+              </svg>
+              <%= translations.home.profile %>
+            </button>
+          </a>
+        </div>
       </nav>
       <button
         class="round-btn to-top-btn"
@@ -94,62 +94,80 @@
             <%= translations.home.topPicks %>
           </h1>
           <form
-            action="/<%= translations.lang %>/update-book-scores"
+            action="/<%= translations.lang %>/update-book-scores-read"
             method="POST"
           >
             <input type="hidden" />
-            <button type="submit"><%= translations.home.updateRecs %></button>
+            <button type="submit">
+              <%= translations.home.updateRecsRead %>
+            </button>
+          </form>
+          <form
+            action="/<%= translations.lang %>/update-book-scores-liked"
+            method="POST"
+          >
+            <input type="hidden" />
+            <button type="submit">
+              <%= translations.home.updateRecsLiked %>
+            </button>
           </form>
           <div class="book-grid colored-background" id="bookGrid">
             <% if (books && books.length > 0) { %> <% books.forEach(book => { %>
             <div class="book-card">
-              <div class="book-card__image-container">
-                <img
-                  src="<%= book.image_url %>"
-                  alt="<%= book[`title_${translations.lang}`] %> cover"
-                  class="book-card__cover-image book-cover"
-                  onclick="openModal('<%= book[`title_${translations.lang}`] %>', '<%= book[`author_${translations.lang}`] %>', '<%= book[`description_${translations.lang}`] %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book[`genre_name_${translations.lang}`] %>', '<%= book[`language_${translations.lang}`] %>')"
-                  onerror="this.src='/images/onerror_image.jpg';"
-                />
-                <form
-                  action="/<%= translations.lang %>/save-book"
-                  method="POST"
-                >
-                  <input
-                    type="hidden"
-                    name="book_id"
-                    value="<%= book.book_id %>"
+              <div class="book-card__content">
+                <div class="book-card__image-container">
+                  <img
+                    src="<%= book.image_url %>"
+                    alt="<%= book[`title_${translations.lang}`] %> cover"
+                    class="book-card__cover-image book-cover"
+                    onclick="openModal('<%= book[`title_${translations.lang}`] %>', '<%= book[`author_${translations.lang}`] %>', '<%= book[`description_${translations.lang}`] %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book[`genre_name_${translations.lang}`] %>', '<%= book[`language_${translations.lang}`] %>')"
+                    onerror="this.src='/images/onerror_image.jpg';"
                   />
-                  <button
-                    type="submit"
-                    class="round-btn like-btn <%= book.is_liked ? 'liked' : '' %>"
-                    data-book-id="<%= book.book_id %>"
+                  <form
+                    action="/<%= translations.lang %>/save-book"
+                    method="POST"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      class="like-icon"
+                    <input
+                      type="hidden"
+                      name="book_id"
+                      value="<%= book.book_id %>"
+                    />
+                    <button
+                      type="submit"
+                      class="round-btn like-btn <%= book.is_liked ? 'liked' : '' %>"
+                      data-book-id="<%= book.book_id %>"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      ></path>
-                    </svg>
-                  </button>
-                </form>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        class="like-icon"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+                <div class="book-card__details">
+                  <h3 class="subheading subheading--regular">
+                    <%= book[`title_${translations.lang}`] %>
+                  </h3>
+                  <p class="subheading subheading--small subheading--light">
+                    <%= book[`author_${translations.lang}`] %>
+                  </p>
+                </div>
               </div>
-              <div class="book-card__details">
-                <h3 class="subheading subheading--regular">
-                  <%= book[`title_${translations.lang}`] %>
-                </h3>
-                <p class="subheading subheading--small subheading--light">
-                  <%= book[`author_${translations.lang}`] %>
-                </p>
-              </div>
+              <a
+                href="/<%= translations.lang %>/book/<%= book.title_en %>"
+                class="submit-btn submit-btn--outline"
+                ><%= translations.home.read %></a
+              >
             </div>
             <% }); %> <% } else { %>
             <p><%= translations.home.noBooks%></p>
@@ -171,53 +189,60 @@
           <div class="book-grid">
             <% booksByGenre[genre].forEach(book => { %>
             <div class="book-card">
-              <div class="book-card__image-container">
-                <img
-                  src="<%= book.image_url %>"
-                  alt="<%= book[`title_${translations.lang}`] %> cover"
-                  class="book-card__cover-image book-cover"
-                  onclick="openModal('<%= book[`title_${translations.lang}`] %>', '<%= book[`author_${translations.lang}`] %>', '<%= book[`description_${translations.lang}`] %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book[`genre_name_${translations.lang}`] %>', '<%= book[`language_${translations.lang}`] %>')"
-                  onerror="this.src='/images/onerror_image.jpg';"
-                />
-                <form
-                  action="/<%= translations.lang %>/save-book"
-                  method="POST"
-                >
-                  <input
-                    type="hidden"
-                    name="book_id"
-                    value="<%= book.book_id %>"
+              <div class="book-card__content">
+                <div class="book-card__image-container">
+                  <img
+                    src="<%= book.image_url %>"
+                    alt="<%= book[`title_${translations.lang}`] %> cover"
+                    class="book-card__cover-image book-cover"
+                    onclick="openModal('<%= book[`title_${translations.lang}`] %>', '<%= book[`author_${translations.lang}`] %>', '<%= book[`description_${translations.lang}`] %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book[`genre_name_${translations.lang}`] %>', '<%= book[`language_${translations.lang}`] %>')"
+                    onerror="this.src='/images/onerror_image.jpg';"
                   />
-                  <button
-                    type="submit"
-                    class="round-btn like-btn <%= book.is_liked ? 'liked' : '' %>"
-                    data-book-id="<%= book.book_id %>"
+                  <form
+                    action="/<%= translations.lang %>/save-book"
+                    method="POST"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      class="like-icon"
+                    <input
+                      type="hidden"
+                      name="book_id"
+                      value="<%= book.book_id %>"
+                    />
+                    <button
+                      type="submit"
+                      class="round-btn like-btn <%= book.is_liked ? 'liked' : '' %>"
+                      data-book-id="<%= book.book_id %>"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      ></path>
-                    </svg>
-                  </button>
-                </form>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        class="like-icon"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+                <div class="book-card__details">
+                  <h3 class="subheading subheading--regular">
+                    <%= book[`title_${translations.lang}`] %>
+                  </h3>
+                  <p class="subheading subheading--small subheading--light">
+                    <%= book[`author_${translations.lang}`] %>
+                  </p>
+                </div>
               </div>
-              <div class="book-card__details">
-                <h3 class="subheading subheading--regular">
-                  <%= book[`title_${translations.lang}`] %>
-                </h3>
-                <p class="subheading subheading--small subheading--light">
-                  <%= book[`author_${translations.lang}`] %>
-                </p>
-              </div>
+              <a
+                href="/<%= translations.lang %>/book/<%= book.title_en %>"
+                class="submit-btn submit-btn--outline"
+                ><%= translations.home.read %></a
+              >
             </div>
             <% }); %>
           </div>

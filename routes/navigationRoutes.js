@@ -3,7 +3,7 @@ import { showHomepage } from "../controllers/homeController.js";
 import { showQuiz, submitQuiz } from "../controllers/quizController.js";
 import { saveBook, removeBook } from "../controllers/bookController.js";
 import { authenticateToken, checkQuizCompletion } from '../middleware/authMiddleware.js';
-import { updateBookScores } from '../utils/updateBookScores.js';
+import { updateBookScoresReadBooks, updateBookScoresLikedBooks } from '../utils/updateBookScores.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 const router = express.Router();
@@ -20,7 +20,8 @@ router.get('/login', (req, res) => {
 router.get('/home', authenticateToken, checkQuizCompletion, showHomepage);
 router.get('/quiz', authenticateToken, showQuiz);
 router.post('/quiz/submit', authenticateToken, submitQuiz);
-router.post('/update-book-scores', authenticateToken, updateBookScores);
+router.post('/update-book-scores-read', authenticateToken, updateBookScoresReadBooks);
+router.post('/update-book-scores-liked', authenticateToken, updateBookScoresLikedBooks);
 router.post('/save-book', authenticateToken, saveBook);
 router.post('/remove-book', authenticateToken, removeBook);
 

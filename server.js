@@ -1,4 +1,5 @@
 import express from 'express';
+import fetch from 'node-fetch';
 import path from 'path';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -7,6 +8,7 @@ import navigationRoutes from './routes/navigationRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import langRoutes from './routes/languageRoutes.js';
+import bookRoutes from './routes/bookRoutes.js';
 import { saveLastPage } from './middleware/saveLastPage.js';
 
 const app = express();
@@ -31,6 +33,7 @@ app.use(saveLastPage);
 app.use('/:lang', navigationRoutes);
 app.use('/:lang/auth', authRoutes);
 app.use('/:lang/profile', profileRoutes);
+app.use('/:lang/book', bookRoutes);
 app.use('/lang', langRoutes);
 
 

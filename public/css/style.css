@@ -372,9 +372,13 @@ html {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 100%;
 }
 .book-card__image-container {
   position: relative;
+}
+.book-card__content {
+  flex-grow: 1;
 }
 .book-card__cover-image {
   width: 100%;

@@ -1,5 +1,6 @@
 export function normalizeData(current, mu, max, min) {
-    return 1 - Math.abs(current - mu) / Math.max(1, (max - min));
+    if (min === max) return 1;
+    return Math.exp(-Math.abs((current - mu) / (max - min)));
 }
 export function normalize(current, sum) {
     return current/sum;

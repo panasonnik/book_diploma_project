@@ -1,11 +1,11 @@
 import { getBooksWithGenres } from "../models/bookModel.js";
 import { addBookScore } from "../models/userBookScoreModel.js";
-import { normalizeData, getMinMax } from "../utils/bookScoreUtils.js";
+import { normalizeData, getMinMax } from "../utils/mathOperationsUtils.js";
 
 //initial book score calculation (each criteria weight = 0.25)
 export async function calculateBookScores(quizAnswer) {
     const resolvedQuizAnswer = await quizAnswer;
-    console.log(resolvedQuizAnswer);
+    
     const booksByGenre = await getBooksWithGenres();
 
     let userGenrePreferences = resolvedQuizAnswer.genre_preferences

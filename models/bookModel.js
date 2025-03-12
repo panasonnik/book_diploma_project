@@ -16,6 +16,15 @@ export async function getBookById(id) {
     return bookById[0];
 }
 
+export async function getBookByTitle(title) {
+    const [bookById] = await pool.query(`
+        SELECT * 
+        FROM books
+        WHERE title_en = ?
+        `, [title]);
+    return bookById[0];
+}
+
 export async function addBook(title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing) {
     const [newBook] = await pool.query(`
     INSERT INTO books (title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing)
