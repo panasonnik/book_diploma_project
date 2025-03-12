@@ -1,4 +1,4 @@
-import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle } from '../models/bookModel.js';
+import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle, addReadBook } from '../models/bookModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
 
@@ -42,6 +42,7 @@ export async function showReadBookPage (req, res) {
         const userId = req.user.userId;
         const translations = getTranslations(req);
         const book = await getBookByTitle(title);
+        await addReadBook(userId, book.book_id);
         const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
         book.is_liked = await isBookLiked(userId, book.book_id);
         

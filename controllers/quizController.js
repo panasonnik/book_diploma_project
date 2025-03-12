@@ -60,18 +60,18 @@ export async function submitQuiz (req, res) {
         //     flagOldBook = true;
         // }
         if(bookLength == 'shortBook') {
-          muPages = 100;
+          muPages = 200;
         } else if (bookLength == 'mediumBook') {
-          muPages = 300;
+          muPages = 400;
         } else if (bookLength == 'longBook') {
-          muPages = 700;
+          muPages = 800;
         }
         if(bookYear == 'oldBook') {
-          muYear = 1800;
+          muYear = 1850;
         } else if (bookYear == 'classicBook') {
-          muYear = 1935;
+          muYear = 1950;
         } else if (bookYear == 'newBook') {
-          muYear = 1990;
+          muYear = 2025;
         }
         const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
         const languagePreferencesString = Array.isArray(language_preferences) ? language_preferences.join(', ') : language_preferences;

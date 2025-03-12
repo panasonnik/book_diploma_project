@@ -105,3 +105,12 @@ export async function getLanguages() {
     return languagesList;
 }
 
+export async function addReadBook(userId, bookId) {
+    const [newBookRead] = await pool.query(`
+    INSERT INTO user_book_read (user_id, book_id)
+    VALUES (?, ?) 
+    ON DUPLICATE KEY UPDATE read_id = read_id;
+    `, [userId, bookId]);
+    return getBookById(newBookRead.insertId);
+}
+

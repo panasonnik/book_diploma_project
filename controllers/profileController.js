@@ -1,4 +1,4 @@
-import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail } from '../models/userModel.js';
+import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail, getReadBooks } from '../models/userModel.js';
 import { getLanguages } from '../models/bookModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
@@ -15,6 +15,20 @@ export async function showProfilePage(req, res) {
         console.error("Error rendering profile page:", err);
         res.status(500).send("Error loading profile page");
     }
+}
+
+export async function showReadBooksPage(req, res) {
+    try {
+      const userId = req.user.userId;
+      const translations = getTranslations(req);
+      const readBooks = await getReadBooks(userId);
+      const user = await getUserById(userId);
+
+      res.render('read-books-profile', { translations, readBooks, user });
+  } catch (err) {
+      console.error("Error rendering profile page:", err);
+      res.status(500).send("Error loading profile page");
+  }
 }
 
 export async function showEditProfilePage(req, res) {

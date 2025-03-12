@@ -19,10 +19,10 @@ export async function updateMuValues(userId, readBooks) {
     let avgSavedYear = sumOfYears/resolvedReadBooks.length;
     let avgSavedPages = sumOfPages/resolvedReadBooks.length;
 
-    let mostFrequentAddedGenre = findMostFrequent(savedBooks, 'genre_name_en');
+    let mostFrequentAddedGenre = findMostFrequent(resolvedReadBooks, 'genre_name_en');
     let genresWithoutDuplicates = [...new Set(Array(genres).concat(mostFrequentAddedGenre))];
 
-    let mostFrequentAddedLanguage = findMostFrequent(savedBooks, 'language_en');
+    let mostFrequentAddedLanguage = findMostFrequent(resolvedReadBooks, 'language_en');
     let languagesWithoutDuplicates = [...new Set(Array(languages).concat(mostFrequentAddedLanguage))];
 
     let newMuYear = oldMuYear + learningRate * (avgSavedYear - oldMuYear);

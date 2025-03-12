@@ -1,4 +1,4 @@
-import { getSavedBooks } from '../models/userModel.js';
+import { getSavedBooks, getReadBooks } from '../models/userModel.js';
 import { getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { getTranslations } from './getTranslations.js';
 import { updateMuValues } from './updateMuValues.js';
@@ -9,12 +9,11 @@ import { recalculateWeights } from "./recalculateWeights.js";
 export async function updateBookScoresReadBooks(req, res) {
     const userId = req.user.userId;
     const translations = getTranslations(req);
-    //fetch read books from DB, not saved!!!
-    const savedBooks = await getSavedBooks(userId);
+    const readBooks = await getReadBooks(userId);
 
-    await updateMuValues(userId, savedBooks);
+    await updateMuValues(userId, readBooks);
     
-    await recalculateWeights(userId, 1.5, savedBooks); // 1.5 - action intensity factor. Для прочитаних книг більше. Для просто "Обраних книг" = 0.5 (менша зміна вагів).
+    await recalculateWeights(userId, 1.5, readBooks); // 1.5 - action intensity factor. Для прочитаних книг більше. Для просто "Обраних книг" = 0.5 (менша зміна вагів).
     const quizAnswer = await getQuizAnswerByUserId(userId);
     let scoredBooks = await calculateBookScores(quizAnswer);
     res.redirect(`/${translations.lang}/home`);
