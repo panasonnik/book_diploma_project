@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
     const translations = getTranslations(req);
     res.render('register', {translations, errorDB:null, errorUsername:null, errorEmail:null, data:null});
 });
+
 router.get('/login', (req, res) => {
     const translations = getTranslations(req);
     res.render('login', {translations, errorDB:null, errorUsername: null, errorPassword:null, data: null});
@@ -19,11 +20,11 @@ router.get('/login', (req, res) => {
 
 router.get('/home', authenticateToken, checkQuizCompletion, showHomepage);
 router.get('/quiz', authenticateToken, showQuiz);
-router.post('/quiz/submit', authenticateToken, submitQuiz);
-router.post('/update-book-scores-read', authenticateToken, updateBookScoresReadBooks);
-router.post('/update-book-scores-liked', authenticateToken, updateBookScoresLikedBooks);
-router.post('/save-book', authenticateToken, saveBook);
-router.post('/remove-book', authenticateToken, removeBook);
+router.post('/quiz/submit',authenticateToken, submitQuiz);
+router.post('/update-book-scores-read',authenticateToken, updateBookScoresReadBooks);
+router.post('/update-book-scores-liked',authenticateToken, updateBookScoresLikedBooks);
+router.post('/save-book',authenticateToken, saveBook);
+router.post('/remove-book',authenticateToken, removeBook);
 
 export default router;
 

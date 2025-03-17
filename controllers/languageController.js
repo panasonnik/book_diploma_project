@@ -7,6 +7,7 @@ export async function switchLanguage (req, res) {
     res.cookie("lang", newLang, { maxAge: 60 * 60 * 1000, httpOnly: true });
     //res.status(200).send({ message: "Language switched", lang: newLang});
     let redirectUrl = req.cookies.lastPage || "/";
+    console.log(req.cookies);
     redirectUrl = redirectUrl.replace(/^\/(uk|en)/, `/${newLang}`);
     res.redirect(redirectUrl);
 }

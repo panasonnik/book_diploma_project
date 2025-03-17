@@ -1,4 +1,4 @@
-import { getUserBooks } from '../models/userModel.js';
+import { getUserBooks, getSavedBooks } from '../models/userModel.js';
 import { getBooksByGenre, isBookLiked } from '../models/bookModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
@@ -7,8 +7,9 @@ export async function showHomepage(req, res) {
         const userId = req.user.userId;
         const translations = getTranslations(req);
         const books = await getUserBooks(userId);
+        const savedBooks = await getSavedBooks(userId);
         const booksByGenre = await getBooksByGenre();
-
+        let showUpdateButton = false;
         for (let book of books) {
             book.is_liked = await isBookLiked(userId, book.book_id);
         }
@@ -21,7 +22,10 @@ export async function showHomepage(req, res) {
             }
         }
 
-        res.render('homepage', { translations, books: books.slice(0,4), booksByGenre });
+        if (savedBooks.length >= 5) {
+            showUpdateButton = true;
+        }        
+        res.render('homepage', { translations, showUpdateButton, books: books.slice(0,4), booksByGenre });
 
     } catch (err) {
         console.error("Error rendering homepage:", err);

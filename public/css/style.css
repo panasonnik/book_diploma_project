@@ -272,6 +272,9 @@ html {
   color: #ff4444;
   border: 2px solid #ff4444;
 }
+.submit-btn--small {
+  width: 20%;
+}
 
 .like-btn {
   position: absolute;

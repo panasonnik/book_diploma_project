@@ -6,21 +6,16 @@ import { getTranslations } from './getTranslations.js';
 export async function recalculateWeights(userId, actionIntensityFactor, books) {
     
     const quizAnswer = await getQuizAnswerByUserId(userId);
-    console.log("Quiz answer: ", quizAnswer);
 
     const savedBooks = await books;
-
-    console.log("Saved books", savedBooks);
     
     let genres = quizAnswer.genre_preferences;
     genres = genres.split(', ').map(genre => genre.trim());
     const oldGenresWeight = Number(quizAnswer.weights_genre);
-    console.log("Old genres weight: ", oldGenresWeight);
 
     let languages = quizAnswer.language_preferences;
     languages = languages.split(', ').map(genre => genre.trim());
     const oldLanguagesWeight = Number(quizAnswer.weights_language);
-    console.log("Old language weght: ", oldLanguagesWeight);
 
     const learningRate = 0.2;
     let sumOfYears = 0;
@@ -69,13 +64,6 @@ export async function recalculateWeights(userId, actionIntensityFactor, books) {
     let normWeightYear = normalize(newYearWeight, totalWeights);
     let normGenresWeight = normalize(oldGenresWeight, totalWeights);
     let normLangsWeight = normalize(oldLanguagesWeight, totalWeights);
-    console.log("Total weights: ", totalWeights);
-
-    console.log("Normalized weights normalization: ");
-    console.log("Pages: ", normWeightPages);
-    console.log("Year: ", normWeightYear);
-    console.log("Genres: ", normGenresWeight);
-    console.log("Languages: ", normLangsWeight);
 
     await updateQuizAnswer(userId, normWeightPages, normWeightYear, normGenresWeight, normLangsWeight, genresWithoutDuplicates, languagesWithoutDuplicates);
 }

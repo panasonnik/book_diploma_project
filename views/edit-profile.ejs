@@ -3,51 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
     <title>Profile</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
     <div class="container">
-      <nav class="navbar">
-        <a href="/<%= translations.lang %>/home">
-          <div class="logo">
-            <div class="logo-good">GOOD</div>
-            <div class="logo-book">BOOK</div>
-          </div>
-        </a>
-        <div class="navbar__align-right">
-          <div>
-            <a
-              href="/lang/switch/uk"
-              class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
-            >
-              Українська
-            </a>
-
-            |
-            <a
-              href="/lang/switch/en"
-              class="navbar__language__link <%= translations.lang == 'en' ? 'active' : '' %>"
-              >English</a
-            >
-          </div>
-          <a href="/<%= translations.lang %>/profile">
-            <button class="submit-btn submit-btn--navbar">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-                class="icon log-out-icon"
-              >
-                <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                <path
-                  d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
-                />
-              </svg>
-              <%= translations.home.profile %>
-            </button>
-          </a>
-        </div>
-      </nav>
+      <%- include('partials/navbar', { translations }) %>
       <div class="content profile__content">
         <div class="sidebar" id="container">
           <h2 class="heading heading--bold">
@@ -191,8 +153,9 @@
                   name="languages"
                   value="<%= languages[i][`language_${translations.lang}`] %>"
                   class="genre-checkbox"
-                  <%if(user.languages.includes(languages[i][`language_uk`]) || user.languages.includes(languages[i][`language_en`]) ){ %>
-                checked <% } %> /> <%=
+                  <%if(user.languages.includes(languages[i][`language_uk`]) ||user.languages.includes(languages[i][`language_en`])){%>
+                checked 
+                <% } %> /> <%=
                 languages[i][`language_${translations.lang}`] %>
               </label>
               <% } %>

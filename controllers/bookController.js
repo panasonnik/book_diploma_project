@@ -15,7 +15,7 @@ export async function saveBook(req, res) {
             await saveBookPreference(userId, bookId);
             // await updateBookScores(userId, bookId);
         }
-
+        
         res.redirect(`/${translations.lang}/home`);
     } catch (err) {
         console.error("Error saving book:", err);
@@ -45,7 +45,7 @@ export async function showReadBookPage (req, res) {
         await addReadBook(userId, book.book_id);
         const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
         book.is_liked = await isBookLiked(userId, book.book_id);
-        
+        req.session.isBooksReadModified = true;
 
         res.render('read-book', { translations, book, bookPreviewUrl });
     } catch (err) {

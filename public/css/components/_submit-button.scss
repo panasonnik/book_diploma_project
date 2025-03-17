@@ -37,4 +37,7 @@
         color: $error-color;
         border: 2px solid $error-color;
     }
+    &--small {
+        width:20%;
+    }
 }

@@ -43,7 +43,7 @@ const en = {
             topPicks:"Top picks for you!",
             read: "Read book",
             updateRecsRead:"Update book recs based on read",
-            updateRecsLiked:"Update book recs based on liked (just adjust weights)",
+            updateRecsLiked:"Update recommendations",
             noBooks:"No books available at the moment.",
             booksByGenre:"Books by genres",
             author:"Author",

@@ -1,8 +1,9 @@
 import { addQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { completeQuizUser } from '../models/userModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
-import { getGenres } from '../models/genreModel.js';
+import { getGenres, getGenreIdByName } from '../models/genreModel.js';
 import { getLanguages } from '../models/bookModel.js';
+import {  getGenresWithWeightsByUserId, saveGenreWeight } from '../models/userGenreWeights.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 export async function showQuiz(req, res) {
@@ -78,6 +79,15 @@ export async function submitQuiz (req, res) {
 
         await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesString, languagePreferencesString, muYear, muPages);
         
+        let genres = await getGenres();
+        console.log(genrePreferencesString);  
+        const oneGenreWeight = genreWeights/genrePreferencesString.split(',').length;
+        for (let genre of genres) {
+          if (genrePreferencesString.includes(genre.genre_name_en)) {
+            let genreId = await getGenreIdByName(genre.genre_name_en);
+            await saveGenreWeight(userId, genreId.genre_id, oneGenreWeight);
+          }
+        }
         req.user = await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
         await calculateBookScores(quizAnswer);

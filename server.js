@@ -10,6 +10,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import langRoutes from './routes/languageRoutes.js';
 import bookRoutes from './routes/bookRoutes.js';
 import { saveLastPage } from './middleware/saveLastPage.js';
+import { authenticateToken } from './middleware/authMiddleware.js';
 
 const app = express();
 
@@ -29,7 +30,9 @@ app.get('/', (req, res) => {
   let currentLang = req.cookies.lang || 'uk';
   res.redirect(`/${currentLang}`);
 });
+
 app.use(saveLastPage);
+
 app.use('/:lang', navigationRoutes);
 app.use('/:lang/auth', authRoutes);
 app.use('/:lang/profile', profileRoutes);

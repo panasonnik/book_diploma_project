@@ -1,7 +1,6 @@
 import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail, getReadBooks } from '../models/userModel.js';
 import { getLanguages } from '../models/bookModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
-import { calculateBookScores } from '../utils/calculateBookScores.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 export async function showProfilePage(req, res) {
@@ -54,7 +53,6 @@ export async function showEditProfilePage(req, res) {
             languages.push(languagesObj[i]);
           }
         }
-        console.log(languages);
         res.render('edit-profile', { translations, user, languages, errorUsername:null, errorEmail:null });
     } catch (err) {
         console.error("Error rendering edit profile page:", err);

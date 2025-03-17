@@ -17,3 +17,12 @@ export async function getBookGenre (bookId) {
         `, [bookId]);
     return bookGenre;
 }
+
+export async function getGenreIdByName (genreName) {
+    const [genreId] = await pool.query(`
+        SELECT g.genre_id
+        FROM genres g
+        WHERE g.genre_name_en = ? OR g.genre_name_uk = ?;
+        `, [genreName, genreName]);
+    return genreId[0];
+}

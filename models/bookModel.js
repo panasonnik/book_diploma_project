@@ -25,14 +25,6 @@ export async function getBookByTitle(title) {
     return bookById[0];
 }
 
-export async function addBook(title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing) {
-    const [newBook] = await pool.query(`
-    INSERT INTO books (title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?) 
-    `, [title, author, description, imageUrl, genre, numberOfPages, language, dateOfPublishing]);
-    return getBookById(newBook.insertId);
-}
-
 export async function getBooksByGenre() {
     try {
         const genres = await getGenres();
