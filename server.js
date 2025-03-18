@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import fetch from 'node-fetch';
 import path from 'path';
 import bodyParser from 'body-parser';
@@ -13,6 +14,12 @@ import { saveLastPage } from './middleware/saveLastPage.js';
 import { authenticateToken } from './middleware/authMiddleware.js';
 
 const app = express();
+
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true 
+}));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));

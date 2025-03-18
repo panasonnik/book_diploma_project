@@ -3,8 +3,8 @@ import { completeQuizUser } from '../models/userModel.js';
 import { calculateBookScores } from '../utils/calculateBookScores.js';
 import { getGenres, getGenreIdByName } from '../models/genreModel.js';
 import { getLanguages } from '../models/bookModel.js';
-import {  getGenresWithWeightsByUserId, saveGenreWeight } from '../models/userGenreWeights.js';
 import { getTranslations } from '../utils/getTranslations.js';
+import { addUserGenresScore } from '../models/userGenresWeightsModel.js';
 
 export async function showQuiz(req, res) {
     try {
@@ -74,20 +74,21 @@ export async function submitQuiz (req, res) {
         } else if (bookYear == 'newBook') {
           muYear = 2025;
         }
-        const genrePreferencesString = Array.isArray(genre_preferences) ? genre_preferences.join(', ') : genre_preferences;
-        const languagePreferencesString = Array.isArray(language_preferences) ? language_preferences.join(', ') : language_preferences;
-
-        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesString, languagePreferencesString, muYear, muPages);
         
-        let genres = await getGenres();
-        console.log(genrePreferencesString);  
-        const oneGenreWeight = genreWeights/genrePreferencesString.split(',').length;
-        for (let genre of genres) {
-          if (genrePreferencesString.includes(genre.genre_name_en)) {
-            let genreId = await getGenreIdByName(genre.genre_name_en);
-            await saveGenreWeight(userId, genreId.genre_id, oneGenreWeight);
-          }
-        }
+
+        
+        const genrePreferencesArray = Array.isArray(genre_preferences) ? genre_preferences : genre_preferences.split(', ');
+        const languagePreferencesArray = Array.isArray(language_preferences) ? language_preferences : language_preferences.split(', ');
+
+        const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
+            console.log("Genre: ", element);
+            const genreId = await getGenreIdByName(element);
+            await addUserGenresScore(userId, genreId, genreWeights/genrePreferencesArray.length, 1);
+        }));
+
+        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesArray, languagePreferencesArray, muYear, muPages);
+        
+
         req.user = await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
         await calculateBookScores(quizAnswer);

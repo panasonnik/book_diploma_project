@@ -15,12 +15,19 @@ export function getMinMax(array, key) {
 }
 
 export function findMostFrequent(books, key) {
-    const values = books.flatMap(book => book[key].split(',').map(value => value.trim()));
-    const valueCount = values.reduce((counts, value) => {
-    counts[value] = (counts[value] || 0) + 1;
-    return counts;
-  }, {});
+    const genreCounts = {};
 
-  const maxCount = Math.max(...Object.values(valueCount));
-  return Object.keys(valueCount).filter(genre => valueCount[genre] === maxCount);
+    books.forEach(book => {
+        if (book[key]) {
+            book[key].split(',').forEach(name => {
+                name = name.trim();
+                genreCounts[name] = (genreCounts[name] || 0) + 1;
+            });
+        }
+    });
+
+    return Object.entries(genreCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => ({ name, count }));
 }
+

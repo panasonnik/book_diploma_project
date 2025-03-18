@@ -1,14 +1,12 @@
-import { getSavedBooks } from '../models/userModel.js';
 import { normalizeData, getMinMax, normalize, findMostFrequent } from "../utils/mathOperationsUtils.js";
 import { updateQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
-import { getTranslations } from './getTranslations.js';
 
 export async function recalculateWeights(userId, actionIntensityFactor, books) {
     
     const quizAnswer = await getQuizAnswerByUserId(userId);
 
     const savedBooks = await books;
-    
+
     let genres = quizAnswer.genre_preferences;
     genres = genres.split(', ').map(genre => genre.trim());
     const oldGenresWeight = Number(quizAnswer.weights_genre);
@@ -45,15 +43,16 @@ export async function recalculateWeights(userId, actionIntensityFactor, books) {
 
     
     let mostFrequentGenres = findMostFrequent(savedBooks, 'genre_name_en');
-    let genresWithoutDuplicates = [...new Set(genres.concat(mostFrequentGenres))];
-    genresWithoutDuplicates = genresWithoutDuplicates.slice(0,4);
+    console.log("Most frequent genres: ", mostFrequentGenres);
+    console.log("")
+    let genresWithoutDuplicates = [...new Set(genres.concat(mostFrequentGenres[0].name))];
     // let newGenreWeight = oldGenresWeight/genresWithoutDuplicates.length;
 
     // console.log("Most frequent genres with previous: ", genresWithoutDuplicates);
     // console.log("Weights of genres: ", newGenreWeight);
 
     let mostFrequentLanguages = findMostFrequent(savedBooks, 'language_en');
-    let languagesWithoutDuplicates = [...new Set(languages.concat(mostFrequentLanguages))];
+    let languagesWithoutDuplicates = [...new Set(languages.concat(mostFrequentLanguages[0].name))];
     // let newLanguageWeight = oldLanguagesWeight/languagesWithoutDuplicates.length;
     // console.log("Most frequent languages with previous: ", languagesWithoutDuplicates);
     // console.log("Weights of languages: ", newLanguageWeight);

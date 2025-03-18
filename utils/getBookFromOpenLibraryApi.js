@@ -1,24 +1,23 @@
 import fetch from 'node-fetch';
 
 export async function getBookFromOpenLibraryApi(title) {
-    const apiUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=5`;
+    const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=title:${title}`;
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
-
-        if (data.docs.length === 0) {
-            return null;
+        
+        if (data.items && data.items.length > 0) {
+          const book = data.items[0];
+          const bookId = book.id;
+          return `https://books.google.com/books?id=${bookId}&printsec=frontcover&output=embed`;
+        } else {
+          console.log('No books found for the given title.');
+          return null;
         }
-
-        const book = data.docs.find(b => b.language?.includes('uk') || b.language?.includes('eng')) || data.docs[0];
-
-        if (!book) {
-            return null;
-        }
-        return `https://openlibrary.org${book.key}/preview`;
-    } catch (error) {
-        console.error('Error fetching book:', error);
+      } catch (error) {
+        console.error('Error fetching book data:', error);
         return null;
+      
     }
 
 }

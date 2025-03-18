@@ -1,21 +1,21 @@
 import { getSavedBooks, getReadBooks } from '../models/userModel.js';
 import { getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { getTranslations } from './getTranslations.js';
-import { updateMuValues } from './updateMuValues.js';
+import { updateMuValues, updateGenreLanguage } from './updateUserPreferences.js';
 import { calculateBookScores } from './calculateBookScores.js';
 import { recalculateWeights } from "./recalculateWeights.js";
 
-//юзер прочитав кілька книг - запускаємо цю функцію для оновлення медіанного значення року та довжини книги
+//викликаємо цю функцію для оновлення медіанного значення року та довжини книги
 export async function updateBookScoresReadBooks(userId) {
     //const userId = req.user.userId;
     //const translations = getTranslations(req);
     const readBooks = await getReadBooks(userId);
     if(readBooks.length > 0) {
         await updateMuValues(userId, readBooks);
-    
-    await recalculateWeights(userId, 1.5, readBooks); // 1.5 - action intensity factor. Для прочитаних книг більше. Для просто "Обраних книг" = 0.5 (менша зміна вагів).
-    const quizAnswer = await getQuizAnswerByUserId(userId);
-    let scoredBooks = await calculateBookScores(quizAnswer);
+        await updateGenreLanguage(userId, readBooks);
+        await recalculateWeights(userId, 1.5, readBooks); // 1.5 - action intensity factor. Для прочитаних книг більше. Для просто "Обраних книг" = 0.5 (менша зміна вагів).
+        const quizAnswer = await getQuizAnswerByUserId(userId);
+        await calculateBookScores(quizAnswer);
     }
     
     //res.redirect(`/${translations.lang}/home`);
@@ -29,6 +29,6 @@ export async function updateBookScoresLikedBooks(req, res) {
     
     await recalculateWeights(userId, 1.0, savedBooks); // 1.5 - action intensity factor. Для прочитаних книг більше. Для просто "Обраних книг" = 0.5 (менша зміна вагів).
     const quizAnswer = await getQuizAnswerByUserId(userId);
-    let scoredBooks = await calculateBookScores(quizAnswer);
+    await calculateBookScores(quizAnswer);
     res.redirect(`/${translations.lang}/home`);
 }

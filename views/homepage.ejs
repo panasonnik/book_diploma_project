@@ -120,10 +120,12 @@
                 </div>
               </div>
               <a
-                href="/<%= translations.lang %>/book/<%= book.title_en %>"
-                class="submit-btn submit-btn--outline"
-                ><%= translations.home.read %></a
+                  href="<%= book.is_read ? `#` : `/${translations.lang}/book/${book.title_en}` %>"
+                  class="submit-btn submit-btn--outline <%= book.is_read ? 'disabled' : '' %>"
+                  <%= book.is_read ? 'aria-disabled="true" style="pointer-events: none;"' : '' %>
               >
+                  <%= translations.home.read %>
+              </a>
             </div>
             <% }); %> <% } else { %>
             <p><%= translations.home.noBooks%></p>
@@ -195,10 +197,11 @@
                 </div>
               </div>
               <a
-                href="/<%= translations.lang %>/book/<%= book.title_en %>"
-                class="submit-btn submit-btn--outline"
-                ><%= translations.home.read %></a
+                  href="<%= book.is_read ? `#` : `/${translations.lang}/book/${book.title_en}` %>"
+                  class="submit-btn submit-btn--outline <%= book.is_read ? 'disabled' : '' %>"
               >
+                  <%= translations.home.read %>
+              </a>
             </div>
             <% }); %>
           </div>
