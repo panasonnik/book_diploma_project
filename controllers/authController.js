@@ -59,7 +59,7 @@ export async function logoutUser(req, res) {
     try {
         const translations = getTranslations(req);
         if (req.session.isBooksReadModified) {
-            await updateBookScoresReadBooks(req.user.userId);
+            await updateBookScoresReadBooks(req.user.userId, req.session.userGenres);
         }
         Object.keys(req.cookies).forEach(cookieName => {
             res.clearCookie(cookieName, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });

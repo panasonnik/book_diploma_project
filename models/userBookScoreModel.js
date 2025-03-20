@@ -18,7 +18,6 @@ export async function updateBookScore(user_id, book_id, score) {
 
     return updatedBookScore;
 }
-
 export async function bookScoreExists(user_id, book_id) {
     const [rows] = await pool.query(`
         SELECT * FROM user_book_scores

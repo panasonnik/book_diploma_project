@@ -24,5 +24,5 @@ export async function getGenreIdByName (name) {
         FROM genres g
         WHERE g.genre_name_en = ? OR g.genre_name_uk = ?;
         `, [name, name]);
-    return genreId[0].genre_id;
+    return genreId[0];
 }

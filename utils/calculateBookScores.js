@@ -1,5 +1,6 @@
 import { getBooksWithGenres } from "../models/bookModel.js";
 import { addBookScore } from "../models/userBookScoreModel.js";
+import { getUserGenresScore } from "../models/userGenresWeightsModel.js";
 import { normalizeData, getMinMax } from "../utils/mathOperationsUtils.js";
 
 //initial book score calculation (each criteria weight = 0.25)
@@ -7,7 +8,7 @@ export async function calculateBookScores(quizAnswer) {
     const resolvedQuizAnswer = await quizAnswer;
     
     const booksByGenre = await getBooksWithGenres();
-
+    const userGenresScore = await getUserGenresScore(resolvedQuizAnswer.user_id);
     let userGenrePreferences = resolvedQuizAnswer.genre_preferences
     .split(',')
     .map(genre => genre.trim());
@@ -28,10 +29,30 @@ export async function calculateBookScores(quizAnswer) {
 
         let genreWords = book.genre_name_en.split(',').map(word => word.trim());
 
-        let numOfMatchingGenres = userGenrePreferences.filter(genre => genreWords.includes(genre)).length;
         let languageWords = book.language_en.split(',').map(word => word.trim());
         let numOfMatchingLanguages = userLanguagePreferences.filter(genre => languageWords.includes(genre)).length;
-        score = (normPages * resolvedQuizAnswer.weights_number_of_pages) + (normYear * resolvedQuizAnswer.weights_year_published) + (numOfMatchingGenres * eachGenreWeights) + (numOfMatchingLanguages * eachLanguageWeights);
+        let results = [];
+        userGenrePreferences.forEach(userGenre => {
+            const genre = userGenresScore.find(g => g.genre_name_en === userGenre);
+            
+            if (genre) {
+                let calculatedWeight = genre.weight;
+                
+                results.push({ genre: userGenre, weight: calculatedWeight });
+            }
+        });
+        let totalWeight = 0;
+
+        genreWords.forEach(genre => {
+            const matchingGenre = results.find(result => result.genre === genre);
+
+            if (matchingGenre) {
+                totalWeight += parseFloat(matchingGenre.weight);
+            }
+        });
+        //let numOfMatchingGenres = userGenrePreferences.filter(genre => genreWords.includes(genre)).length;
+        
+        score = (normPages * resolvedQuizAnswer.weights_number_of_pages) + (normYear * resolvedQuizAnswer.weights_year_published) + totalWeight + (numOfMatchingLanguages * eachLanguageWeights);
         // if(!weights.languagePreferences.includes(book.language)) {
         //     score = 0;
         // }

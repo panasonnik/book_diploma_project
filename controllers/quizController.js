@@ -61,16 +61,16 @@ export async function submitQuiz (req, res) {
         //     flagOldBook = true;
         // }
         if(bookLength == 'shortBook') {
-          muPages = 200;
+          muPages = 100;
         } else if (bookLength == 'mediumBook') {
-          muPages = 400;
+          muPages = 500;
         } else if (bookLength == 'longBook') {
           muPages = 800;
         }
         if(bookYear == 'oldBook') {
-          muYear = 1850;
+          muYear = 1800;
         } else if (bookYear == 'classicBook') {
-          muYear = 1950;
+          muYear = 1900;
         } else if (bookYear == 'newBook') {
           muYear = 2025;
         }
@@ -81,9 +81,8 @@ export async function submitQuiz (req, res) {
         const languagePreferencesArray = Array.isArray(language_preferences) ? language_preferences : language_preferences.split(', ');
 
         const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
-            console.log("Genre: ", element);
             const genreId = await getGenreIdByName(element);
-            await addUserGenresScore(userId, genreId, genreWeights/genrePreferencesArray.length, 1);
+            await addUserGenresScore(userId, genreId.genre_id, genreWeights/genrePreferencesArray.length, 1);
         }));
 
         await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesArray, languagePreferencesArray, muYear, muPages);

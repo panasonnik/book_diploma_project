@@ -1,6 +1,12 @@
 import pool from "../config/db.js";
 
 export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages) {
+    if (Array.isArray(genre_preferences)) {
+        genre_preferences = genre_preferences.join(', ');
+    }
+    if (Array.isArray(language_preferences)) {
+        language_preferences = language_preferences.join(', ');
+    }
     const [newQuizAnswer] = await pool.query(`
     INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
@@ -59,8 +65,7 @@ export async function updateQuizAnswerLanguages(user_id, languages) {
 }
 
 export async function updateGenreLanguagePreferences(user_id, genres, languages) {
-    console.log("HERE");
-    console.log(genres);
+    
     if (Array.isArray(languages)) {
         languages = languages.join(', ');
     }
