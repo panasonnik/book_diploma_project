@@ -9,14 +9,9 @@ export async function calculateBookScores(quizAnswer) {
     
     const booksByGenre = await getBooksWithGenres();
     const userGenresScore = await getUserGenresScore(resolvedQuizAnswer.user_id);
-    let userGenrePreferences = resolvedQuizAnswer.genre_preferences
-    .split(',')
-    .map(genre => genre.trim());
-    let eachGenreWeights = resolvedQuizAnswer.weights_genre / userGenrePreferences.length;
+    let userGenrePreferences = resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim());
 
-    let userLanguagePreferences = resolvedQuizAnswer.language_preferences
-    .split(',')
-    .map(genre => genre.trim());
+    let userLanguagePreferences = resolvedQuizAnswer.language_preferences.split(',').map(genre => genre.trim());
     let eachLanguageWeights = resolvedQuizAnswer.weights_language / userLanguagePreferences.length;
 
     const scoredBooks = [];
@@ -24,20 +19,19 @@ export async function calculateBookScores(quizAnswer) {
     const minMaxYear = getMinMax(booksByGenre, 'year_published');
     let score = 0;
     for (let book of booksByGenre) {
-        let normPages = normalizeData(book.number_of_pages, resolvedQuizAnswer.mu_pages,minMaxPages.max, minMaxPages.min);
-        let normYear = normalizeData(book.year_published, resolvedQuizAnswer.mu_year,minMaxYear.max, minMaxYear.min);
+        let normPages = normalizeData(book.number_of_pages,minMaxPages.max, minMaxPages.min, resolvedQuizAnswer.goal_pages);
+        let normYear = normalizeData(book.year_published, minMaxYear.max, minMaxYear.min, resolvedQuizAnswer.goal_year);
 
         let genreWords = book.genre_name_en.split(',').map(word => word.trim());
 
         let languageWords = book.language_en.split(',').map(word => word.trim());
         let numOfMatchingLanguages = userLanguagePreferences.filter(genre => languageWords.includes(genre)).length;
         let results = [];
+        
         userGenrePreferences.forEach(userGenre => {
             const genre = userGenresScore.find(g => g.genre_name_en === userGenre);
-            
             if (genre) {
                 let calculatedWeight = genre.weight;
-                
                 results.push({ genre: userGenre, weight: calculatedWeight });
             }
         });

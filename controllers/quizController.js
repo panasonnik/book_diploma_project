@@ -40,41 +40,22 @@ export async function submitQuiz (req, res) {
         const { bookLength, bookYear, genre_preferences, language_preferences } = req.body;
         const translations = getTranslations(req);
         const userId = req.user.userId;
-        const numOfSelectedGenres = getLength(genre_preferences);
-        const numOfSelectedLanguages = getLength(language_preferences);
         const bookLengthWeights = 0.25;
         const bookYearWeights = 0.25;
         // let genreWeights = 0.25/numOfSelectedGenres;
         // let languageWeights = 0.25/numOfSelectedLanguages;
-        let muYear = 0;
-        let muPages = 0;
+        let goalYear = 'max';
+        let goalPages = 'max';
         const genreWeights = 0.25;
         const languageWeights = 0.25;
 
-        // let flagShortBook = false;
-        // let flagOldBook = false;
+        if(bookLength === 'shortBook') {
+          goalPages = 'min';
+        }
 
-        // if(bookLength !== 'longBook') {
-        //     flagShortBook = true;
-        // }
-        // if(bookYear !== 'newBook') {
-        //     flagOldBook = true;
-        // }
-        if(bookLength == 'shortBook') {
-          muPages = 100;
-        } else if (bookLength == 'mediumBook') {
-          muPages = 500;
-        } else if (bookLength == 'longBook') {
-          muPages = 800;
-        }
-        if(bookYear == 'oldBook') {
-          muYear = 1800;
-        } else if (bookYear == 'classicBook') {
-          muYear = 1900;
-        } else if (bookYear == 'newBook') {
-          muYear = 2025;
-        }
-        
+        if(bookYear === 'oldBook') {
+          goalYear = 'min';
+        }   
 
         
         const genrePreferencesArray = Array.isArray(genre_preferences) ? genre_preferences : genre_preferences.split(', ');
@@ -85,7 +66,7 @@ export async function submitQuiz (req, res) {
             await addUserGenresScore(userId, genreId.genre_id, genreWeights/genrePreferencesArray.length, 1);
         }));
 
-        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesArray, languagePreferencesArray, muYear, muPages);
+        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesArray, languagePreferencesArray, goalYear, goalPages);
         
 
         req.user = await completeQuizUser(userId);

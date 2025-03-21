@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages) {
+export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages) {
     if (Array.isArray(genre_preferences)) {
         genre_preferences = genre_preferences.join(', ');
     }
@@ -8,7 +8,7 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
         language_preferences = language_preferences.join(', ');
     }
     const [newQuizAnswer] = await pool.query(`
-    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages, created_at)
+    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
     ON DUPLICATE KEY UPDATE 
     weights_number_of_pages = VALUES(weights_number_of_pages),
@@ -17,10 +17,10 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
     weights_language = VALUES(weights_language),
     genre_preferences = VALUES(genre_preferences),
     language_preferences = VALUES(language_preferences),
-    mu_year = VALUES(mu_year),
-    mu_pages = VALUES(mu_pages),
+    goal_year = VALUES(goal_year),
+    goal_pages = VALUES(goal_pages),
     created_at = NOW()
-    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, mu_year, mu_pages]);
+    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages]);
     return newQuizAnswer.insertId;
 }
 
@@ -40,12 +40,12 @@ export async function updateQuizAnswer(user_id, weights_number_of_pages, weights
     return updatedQuizAnswer;
 }
 
-export async function updateMuValuesQuizAnswer(user_id, mu_year, mu_pages) {
+export async function updateCriteriaDirectionQuizAnswer(user_id, goal_year, goal_pages) {
     const [updatedQuizAnswer] = await pool.query(`
         UPDATE quiz_answers 
-        SET mu_year = ?, mu_pages = ?
+        SET goal_year = ?, goal_pages = ?
         WHERE user_id = ?
-        `, [mu_year, mu_pages, user_id]
+        `, [goal_year, goal_pages, user_id]
     );
     return updatedQuizAnswer;
 }

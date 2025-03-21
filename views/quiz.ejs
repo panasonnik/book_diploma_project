@@ -45,13 +45,13 @@
           >
           <input
             class="likert__scale__item__input"
-            id="bookLengthShort"
+            id="bookLengthLong"
             type="radio"
             name="bookLength"
-            value="shortBook"
+            value="longBook"
             required
           />
-          <label for="bookLengthShort"
+          <label for="bookLengthLong"
             ><%= translations.quiz.answer1BookLength %></label
           ><br />
           <input
@@ -59,22 +59,13 @@
             id="bookLengthShort"
             type="radio"
             name="bookLength"
-            value="mediumBook"
+            value="shortBook"
             required
           />
           <label for="bookLengthShort"
             ><%= translations.quiz.answer2BookLength %></label
           ><br />
-          <input
-            class="likert__scale__item__input"
-            id="bookLengthLong"
-            type="radio"
-            name="bookLength"
-            value="longBook"
-          />
-          <label for="bookLengthLong"
-            ><%= translations.quiz.answer3BookLength %></label
-          ><br />
+
           <label class="likert__question"
             ><%= translations.quiz.questionBookYear %></label
           >
@@ -94,21 +85,11 @@
             id="bookYearClassic"
             type="radio"
             name="bookYear"
-            value="classicBook"
+            value="modernBook"
             required
           />
           <label for="bookYearClassic"
             ><%= translations.quiz.answer2BookYear %></label
-          ><br />
-          <input
-            class="likert__scale__item__input"
-            id="bookYearNew"
-            type="radio"
-            name="bookYear"
-            value="newBook"
-          />
-          <label for="bookYearNew"
-            ><%= translations.quiz.answer3BookYear %></label
           ><br />
 
           <h2 class="likert__question">
