@@ -31,3 +31,16 @@ export function findMostFrequent(books, key) {
         .map(([name, count]) => ({ name, count }));
 }
 
+export function getAverage (books, key) {
+    const userBookSet = books.map(book => book[key]);
+    return userBookSet.reduce((sum, value) => sum + value, 0) / userBookSet.length;
+}
+
+export function findMedian(values) {
+    values.sort((a, b) => a - b);
+    const mid = Math.floor(values.length / 2);
+    return values.length % 2 === 0 
+      ? (values[mid - 1] + values[mid]) / 2
+      : values[mid];
+}
+

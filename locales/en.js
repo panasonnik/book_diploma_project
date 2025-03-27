@@ -43,6 +43,7 @@ const en = {
             topPicks:"Top picks for you!",
             read: "Read book",
             updateRecsRead:"Update book recs based on read",
+            updateQuiz: "Retake quiz",
             updateRecsLiked:"Update recommendations",
             noBooks:"No books available at the moment.",
             booksByGenre:"Books by genres",
@@ -66,6 +67,14 @@ const en = {
             questionLanguages: "Choose your language preferences:",
             languageError: "Please select at least one language.",
             submit: "Submit quiz"
+      },
+      quizReevaluation: {
+            heading: "Improve recommendations by taking quiz!",  
+            questionWeightLength: "How important is book length for you?",
+            questionWeightHint: "1 - not important, 10 - very important",
+            questionWeightYear: "How important is book year for you?",
+            questionWeightGenre: "How important is book genre for you?",
+            questionWeightLanguage: "How important is book language for you?",
       },
       profile: {
             savedBooks: "Saved books",

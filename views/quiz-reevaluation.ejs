@@ -32,12 +32,12 @@
       </nav>
       <div class="content">
         <h1 class="heading heading--bold heading--muted">
-          <%= translations.quiz.heading %>
+          <%= translations.quizReevaluation.heading %>
         </h1>
         <form
           id="quizForm"
           class="likert"
-          action="/<%= translations.lang %>/quiz/submit"
+          action="/<%= translations.lang %>/quiz/update-preferences/submit"
           method="POST"
         >
           <label class="likert__question"
@@ -65,6 +65,12 @@
           <label class="likert__scale__item" for="bookLengthShort"
             ><%= translations.quiz.answer2BookLength %></label
           ><br />
+          <label class="likert__question"
+            ><%= translations.quizReevaluation.questionWeightLength %></label
+          >
+
+          <%- include('partials/1to10scale', { translations, id:
+          "bookLengthWeights"}) %>
 
           <label class="likert__question"
             ><%= translations.quiz.questionBookYear %></label
@@ -91,7 +97,11 @@
           <label class="likert__scale__item" for="bookYearClassic"
             ><%= translations.quiz.answer2BookYear %></label
           ><br />
-
+          <label class="likert__question"
+            ><%= translations.quizReevaluation.questionWeightYear %></label
+          >
+          <%- include('partials/1to10scale', { translations, id:
+          "bookYearWeights"}) %>
           <h2 class="likert__question">
             <%= translations.quiz.questionGenres %>
           </h2>
@@ -115,6 +125,11 @@
           >
             <%= translations.quiz.genreError %>
           </p>
+          <label class="likert__question"
+            ><%= translations.quizReevaluation.questionWeightGenre %></label
+          >
+          <%- include('partials/1to10scale', { translations, id:
+          "genreWeights"}) %>
           <h2 class="likert__question">
             <%= translations.quiz.questionLanguages %>
           </h2>
@@ -138,7 +153,11 @@
           >
             <%= translations.quiz.languageError %>
           </p>
-
+          <label class="likert__question"
+            ><%= translations.quizReevaluation.questionWeightLanguage %></label
+          >
+          <%- include('partials/1to10scale', { translations, id:
+          "languageWeights"}) %>
           <button type="submit" class="mt submit-btn">
             <%= translations.quiz.submit %>
           </button>
@@ -146,5 +165,6 @@
       </div>
     </div>
     <script src="/js/checkCheckboxSelection.js"></script>
+    <script src="/js/selectWeightScale.js"></script>
   </body>
 </html>

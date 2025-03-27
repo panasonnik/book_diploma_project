@@ -9,6 +9,14 @@
         margin: 1rem 0;
     }
 
+    &__scale__item {
+        font-size: 18px;
+
+        &__input {
+            margin-bottom: 1rem;
+        }
+    }
+
     // &__scale {
     //     list-style: none;
     //     width: 100%;
@@ -50,5 +58,28 @@
     //     height: 4px;
     //     width: 78%;
     // }
+}
 
+.chart-scale {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid $light-gray-color;
+}
+
+.btn-scale {
+    padding: 0.5rem 2rem;
+    border-radius: 8px;
+    border: 1px solid $light-gray-color;
+    background: transparent;
+
+    &:hover {
+        cursor: pointer;
+        background: $light-color;
+    }
+
+    &.selected {
+        background: $primary-color;
+    }
 }

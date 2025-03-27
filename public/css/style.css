@@ -421,6 +421,34 @@ html {
   font-weight: bold;
   margin: 1rem 0;
 }
+.likert__scale__item {
+  font-size: 18px;
+}
+.likert__scale__item__input {
+  margin-bottom: 1rem;
+}
+
+.chart-scale {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #dddddd;
+}
+
+.btn-scale {
+  padding: 0.5rem 2rem;
+  border-radius: 8px;
+  border: 1px solid #dddddd;
+  background: transparent;
+}
+.btn-scale:hover {
+  cursor: pointer;
+  background: #eeecec;
+}
+.btn-scale.selected {
+  background: #B6AAEE;
+}
 
 .modal-overlay {
   background-color: #fff;

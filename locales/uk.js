@@ -43,6 +43,7 @@ const uk = {
             topPicks:"Підібране для Вас!",
             read: "Читати книгу",
             updateRecsRead:"Оновити реокмендації (за прочитаним)",
+            updateQuiz: "Пройти опитування",
             updateRecsLiked:"Оновити рекомендації за вподобаннями",
             noBooks:"Рекомендації літератури недоступні",
             booksByGenre:"Література за жанрами",
@@ -66,6 +67,14 @@ const uk = {
             questionLanguages: "Оберіть мови:",
             languageError: "Будь ласка, оберіть хоч одну мову.",
             submit: "Завершити опитування"
+      },
+      quizReevaluation: {
+            heading: "Отримайте більш точні рекомендації, пройшовши опитування!",
+            questionWeightLength: "Наскільки важливий обсяг книги для Вас?",
+            questionWeightHint: "1 - мало важливий, 10 - дуже важливий",
+            questionWeightYear: "Наскільки важливий рік видання книги?",
+            questionWeightGenre: "Наскільки важливий жанр книги?",
+            questionWeightLanguage: "Наскільки важлива мова книги?",  
       },
       profile: {
             savedBooks: "Обрані книги",
