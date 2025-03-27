@@ -83,6 +83,7 @@ const en = {
             personalData: "Personal data",
             logOut: "Log out",
             yourSavedBooks: "Your saved books",
+            yourReadBooks: "Your read books",
             noBooks: "You haven't saved books yet...",
             edit: "Edit profile",
             languagePrefs: "Language preferences: ",

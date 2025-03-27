@@ -287,10 +287,15 @@ html {
   right: 1rem;
   background-color: #fff;
 }
+.like-btn.colored {
+  fill: #1C1F73;
+  stroke: #1C1F73;
+  transform: scale(1.1);
+}
 
 .like-btn.liked .like-icon {
-  fill: #FF4444;
-  stroke: #FF4444;
+  fill: #ff4444;
+  stroke: #ff4444;
   transform: scale(1.1);
 }
 

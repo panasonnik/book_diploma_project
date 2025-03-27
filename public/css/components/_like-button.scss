@@ -1,13 +1,21 @@
+@import '../abstracts/variables';
+
 .like-btn {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
     background-color: #fff;
+
+    &.colored {
+        fill: $secondary-color;
+        stroke: $secondary-color;
+        transform: scale(1.1);
+    }
 }
 
 .like-btn.liked .like-icon {
-    fill: #FF4444;
-    stroke: #FF4444;
+    fill: $error-color;
+    stroke: $error-color;
     transform: scale(1.1);
 }
 

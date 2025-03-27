@@ -116,3 +116,11 @@ export async function addReadBook(userId, bookId) {
     return getBookById(newBookRead.insertId);
 }
 
+export async function deleteReadBook (userId, bookId) {
+    const [deletedReadBook] = await pool.query(`
+        DELETE FROM user_book_read
+        WHERE user_id = ? AND book_id = ?
+        `, [userId, bookId]);
+        return deletedReadBook;
+}
+

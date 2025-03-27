@@ -1,4 +1,4 @@
-import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle, addReadBook } from '../models/bookModel.js';
+import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle, addReadBook, deleteReadBook } from '../models/bookModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
@@ -15,6 +15,7 @@ export async function saveBook(req, res) {
             await deleteBookPreference(userId, bookId);
         } else {
             await saveBookPreference(userId, bookId);
+            
             // await updateBookScores(userId, bookId);
         }
         
@@ -31,7 +32,20 @@ export async function removeBook(req, res) {
         const translations = getTranslations(req);
         const userId = req.user.userId;
         await deleteBookPreference(userId, bookId);
-        res.redirect(`/${translations.lang}/home`);
+        res.redirect(req.get('Referer'));
+    } catch (err) {
+        console.error("Error removing book:", err);
+        res.status(500).send("Error removing book");
+    }
+}
+
+export async function removeReadBook(req, res) {
+    try {
+        const bookId = req.body.book_id;
+        const translations = getTranslations(req);
+        const userId = req.user.userId;
+        await deleteReadBook(userId, bookId);
+        res.redirect(req.get('Referer'));
     } catch (err) {
         console.error("Error removing book:", err);
         res.status(500).send("Error removing book");

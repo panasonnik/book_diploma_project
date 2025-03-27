@@ -83,6 +83,7 @@ const uk = {
             personalData: "Особисті дані",
             logOut: "Вийти",
             yourSavedBooks: "Ваші обрані книги",
+            yourReadBooks: "Ваші прочитані книги",
             noBooks: "Ви ще не додали жодну книгу до обраного...",
             edit: "Редагувати профіль",
             languagePrefs: "Вподобання мови: ",

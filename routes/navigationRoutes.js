@@ -1,7 +1,7 @@
 import express from "express";
 import { showHomepage } from "../controllers/homeController.js";
 import { showQuiz, submitQuiz, showRetakeQuiz, submitRetakeQuiz } from "../controllers/quizController.js";
-import { saveBook, removeBook } from "../controllers/bookController.js";
+import { saveBook, removeBook, removeReadBook} from "../controllers/bookController.js";
 import { authenticateToken, checkQuizCompletion } from '../middleware/authMiddleware.js';
 import { updateBookScoresReadBooks, updateBookScoresLikedBooks } from '../utils/updateBookScores.js';
 import { getTranslations } from '../utils/getTranslations.js';
@@ -27,6 +27,7 @@ router.post('/update-book-scores-read',authenticateToken, updateBookScoresReadBo
 router.post('/update-book-scores-liked',authenticateToken, updateBookScoresLikedBooks);
 router.post('/save-book',authenticateToken, saveBook);
 router.post('/remove-book',authenticateToken, removeBook);
+router.post('/remove-read-book',authenticateToken, removeReadBook);
 
 export default router;
 
