@@ -39,6 +39,7 @@
           class="likert"
           action="/<%= translations.lang %>/quiz/update-preferences/submit"
           method="POST"
+          onsubmit="return validate(event)"
         >
           <label class="likert__question"
             ><%= translations.quiz.questionBookLength %></label
@@ -165,6 +166,7 @@
       </div>
     </div>
     <script src="/js/checkCheckboxSelection.js"></script>
-    <script src="/js/selectWeightScale.js"></script>
+    <script src="/js/weightScale.js"></script>
+    <script src="/js/validate.js"></script>
   </body>
 </html>

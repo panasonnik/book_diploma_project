@@ -75,6 +75,7 @@ const uk = {
             questionWeightYear: "Наскільки важливий рік видання книги?",
             questionWeightGenre: "Наскільки важливий жанр книги?",
             questionWeightLanguage: "Наскільки важлива мова книги?",  
+            unselectedError: "Виберіть опцію"
       },
       profile: {
             savedBooks: "Обрані книги",

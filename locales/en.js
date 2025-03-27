@@ -75,6 +75,7 @@ const en = {
             questionWeightYear: "How important is book year for you?",
             questionWeightGenre: "How important is book genre for you?",
             questionWeightLanguage: "How important is book language for you?",
+            unselectedError: "Choose an option"
       },
       profile: {
             savedBooks: "Saved books",

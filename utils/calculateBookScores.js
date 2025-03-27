@@ -50,8 +50,6 @@ export async function calculateBookScores(quizAnswer) {
         // if(!weights.languagePreferences.includes(book.language)) {
         //     score = 0;
         // }
-        console.log("Calculating book score for book ", book.title_en);
-        console.log(`pages ${(normPages)} * ${resolvedQuizAnswer.weights_number_of_pages} + year ${normYear} * ${resolvedQuizAnswer.weights_year_published} + genre ${totalWeight} + lang ${numOfMatchingLanguages} * ${eachLanguageWeights}`);
         await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
         scoredBooks.push({ ...book, score });
     }

@@ -6,7 +6,6 @@ import { getLanguages } from '../models/bookModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 import { addUserGenresScore } from '../models/userGenresWeightsModel.js';
 import { topsis } from '../utils/topsis.js';
-import { promethee } from '../utils/promethee.js';
 import { normalize } from "../utils/mathOperationsUtils.js";
 
 export async function showQuiz(req, res) {
@@ -76,8 +75,6 @@ export async function submitQuiz (req, res) {
         const quizAnswer = await getQuizAnswerByUserId(userId);
         await calculateBookScores(quizAnswer);
         await topsis(quizAnswer);
-        console.log("PROMETHEE\n\n");
-        await promethee(quizAnswer);
         res.redirect(`/${translations.lang}/home`);
     } catch (error) {
         console.error(error);
@@ -152,8 +149,6 @@ export async function submitRetakeQuiz (req, res) {
       const quizAnswer = await getQuizAnswerByUserId(userId);
       await calculateBookScores(quizAnswer);
       await topsis(quizAnswer);
-      console.log("PROMETHEE\n\n");
-      await promethee(quizAnswer);
       res.redirect(`/${translations.lang}/home`);
   } catch (error) {
       console.error(error);

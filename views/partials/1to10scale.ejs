@@ -2,6 +2,13 @@
 <p class="text text--muted">
   <%= translations.quizReevaluation.questionWeightHint %>
 </p>
+<p
+  id="errorMessage-<%= id %>"
+  class="error-message error-message--hidden"
+  role="alert"
+>
+  <%= translations.quizReevaluation.unselectedError %>
+</p>
 <div class="chart-scale" data-input="<%= id %>">
   <div class="btn-scale" data-value="1">1</div>
   <div class="btn-scale" data-value="2">2</div>
