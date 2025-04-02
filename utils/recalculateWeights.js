@@ -1,9 +1,7 @@
 import { normalizeData, getMinMax, normalize, findMostFrequent } from "../utils/mathOperationsUtils.js";
 import { updateQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
-import { getGenreIdByName } from "../models/genreModel.js";
-import { getUserGenresScore, addUserGenresScore } from "../models/userGenresWeightsModel.js";
 
-export async function recalculateWeights(userId, actionIntensityFactor, books, userGenres) {
+export async function recalculateWeights(userId, actionIntensityFactor, books) {
     const quizAnswer = await getQuizAnswerByUserId(userId);
     const savedBooks = await books;
     // let genres = quizAnswer.genre_preferences;
@@ -14,7 +12,7 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, u
     languages = languages.split(', ').map(genre => genre.trim());
     const oldLanguagesWeight = Number(quizAnswer.weights_language);
 
-    const learningRate = 0.2;
+    const learningRate = 0.4;
     let sumOfYears = 0;
     let sumOfPages = 0;
     for(let book of savedBooks) {

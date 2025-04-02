@@ -142,24 +142,6 @@
                 <% } %>
               </div>
             </div>
-            <h4 class="form__field__label">
-              <%= translations.profile.languagePrefs %>
-            </h4>
-            <div class="form__field checkbox-grid">
-              <% for (let i = 0; i < languages.length; i++) { %>
-              <label class="checkbox-option">
-                <input
-                  type="checkbox"
-                  name="languages"
-                  value="<%= languages[i][`language_${translations.lang}`] %>"
-                  class="genre-checkbox"
-                  <%if(user.languages.includes(languages[i][`language_uk`]) ||user.languages.includes(languages[i][`language_en`])){%>
-                checked 
-                <% } %> /> <%=
-                languages[i][`language_${translations.lang}`] %>
-              </label>
-              <% } %>
-            </div>
             <div class="form__button-container">
               <form action="/<%= translations.lang %>/profile" method="GET">
                 <button class="submit-btn submit-btn--outline">

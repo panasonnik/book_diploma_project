@@ -24,7 +24,7 @@ export async function showHomepage(req, res) {
             }
         }
 
-        if (savedBooks.length >= 5) {
+        if (savedBooks.length >= 3) {
             showUpdateButton = true;
         }
         

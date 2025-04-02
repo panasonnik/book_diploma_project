@@ -72,6 +72,25 @@ export async function updateGenreWeights (userId, userGenres, quizAnswer) {
         });
 }
 
+export async function modifyGenreWeights (userId, deletedGenre) {
+    const userGenreScore = await getUserGenresScore(userId);
+    const quizAnswer = await getQuizAnswerByUserId(userId);
+    const weightsGenre = quizAnswer.weights_genre;
+    const genresFromDb = userGenreScore.map(item => ({
+        name: item.genre_name_en,
+        count: item.genre_name_en === deletedGenre ? Math.max(0, item.books_read_count - 1) : item.books_read_count
+    }));
+        let newBooksReadByUser = genresFromDb.reduce((sum, item) => sum + item.count, 0);
+        genresFromDb.forEach(async (genre) => {
+            let genreProportion = genre.count / newBooksReadByUser;
+            let genreWeightPart = weightsGenre * genreProportion;
+            
+            const genreItem = await getGenreIdByName(genre.name);
+            const genreId = genreItem.genre_id;
+            await addUserGenresScore(userId, genreId, genreWeightPart, genre.count);
+        });
+}
+
 function mergeGenres(array1, array2) {
     let genreMap = new Map();
     [...array1, ...array2].forEach(genre => {

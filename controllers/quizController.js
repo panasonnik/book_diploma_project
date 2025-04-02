@@ -74,7 +74,6 @@ export async function submitQuiz (req, res) {
         req.user = await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
         await calculateBookScores(quizAnswer);
-        await topsis(quizAnswer);
         res.redirect(`/${translations.lang}/home`);
     } catch (error) {
         console.error(error);

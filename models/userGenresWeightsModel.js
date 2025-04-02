@@ -30,10 +30,8 @@ export async function getUserGenreScoreByGenreName (userId, genre_name_en) {
 }
 
 export async function addUserGenresScore (userId, genreId, weight, count) {
-    // Delete existing rows for the given user_id before inserting new data
 await pool.query(`DELETE FROM user_genres_weights WHERE user_id = ?`, [userId]);
 
-// Insert new row (or update if it exists)
 const [newRow] = await pool.query(`
     INSERT INTO user_genres_weights (user_id, genre_id, weight, books_read_count)
     VALUES (?, ?, ?, ?) 
@@ -44,3 +42,15 @@ const [newRow] = await pool.query(`
 
     return newRow;
 }
+
+export async function updateUserGenreScore (userId, genreId, weight, count) {
+    const [newRow] = await pool.query(`
+        INSERT INTO user_genres_weights (user_id, genre_id, weight, books_read_count)
+        VALUES (?, ?, ?, ?) 
+        ON DUPLICATE KEY UPDATE
+        weight = VALUES(weight),
+        books_read_count = VALUES(books_read_count);
+    `, [userId, genreId, weight, count]);
+    
+        return newRow;
+    }

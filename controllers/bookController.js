@@ -4,6 +4,8 @@ import { getTranslations } from '../utils/getTranslations.js';
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
 import { getBookGenre } from '../models/genreModel.js';
 
+import { modifyGenreWeights } from '../utils/updateUserPreferences.js';
+
 export async function saveBook(req, res) {
     try {
         const bookId = req.body.book_id;
@@ -45,6 +47,8 @@ export async function removeReadBook(req, res) {
         const translations = getTranslations(req);
         const userId = req.user.userId;
         await deleteReadBook(userId, bookId);
+        const deletedBookGenre = await getBookGenre (bookId);
+        await modifyGenreWeights(userId, deletedBookGenre);
         res.redirect(req.get('Referer'));
     } catch (err) {
         console.error("Error removing book:", err);
