@@ -1,7 +1,7 @@
 import { getBooksWithGenres } from "../models/bookModel.js";
 import { addBookScore } from "../models/userBookScoreModel.js";
 import { getUserGenresScore } from "../models/userGenresWeightsModel.js";
-import { normalizeData, getMinMax } from "../utils/mathOperationsUtils.js";
+import { normalizeData, getMinMax, getLengthCategory, normalizeUsingMedian, getLengthValue, getYearCategory, getYearValue } from "../utils/mathOperationsUtils.js";
 
 //initial book score calculation (each criteria weight = 0.25)
 export async function calculateBookScores(quizAnswer) {
@@ -11,16 +11,22 @@ export async function calculateBookScores(quizAnswer) {
     const userGenresScore = await getUserGenresScore(resolvedQuizAnswer.user_id);
     let userGenrePreferences = resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim());
 
-    let userLanguagePreferences = resolvedQuizAnswer.language_preferences.split(',').map(genre => genre.trim());
+    let userLanguagePreferences = resolvedQuizAnswer.language_preferences.split(',').map(lang => lang.trim());
     let eachLanguageWeights = resolvedQuizAnswer.weights_language / userLanguagePreferences.length;
 
     const scoredBooks = [];
     const minMaxPages = getMinMax(booksByGenre, 'number_of_pages');
     const minMaxYear = getMinMax(booksByGenre, 'year_published');
+
+    console.log("Min max: ", minMaxPages);
+    console.log("Min max: ", minMaxYear);
     let score = 0;
     for (let book of booksByGenre) {
-        let normPages = normalizeData(book.number_of_pages,minMaxPages.max, minMaxPages.min, resolvedQuizAnswer.goal_pages);
-        let normYear = normalizeData(book.year_published, minMaxYear.max, minMaxYear.min, resolvedQuizAnswer.goal_year);
+        if (getLengthCategory(book.number_of_pages) === resolvedQuizAnswer.preferred_length && getYearCategory(book.year_published) === resolvedQuizAnswer.preferred_year) { //якщо книга підходить за довжиною
+        // let normPages = normalizeData(book.number_of_pages,minMaxPages.max, minMaxPages.min, resolvedQuizAnswer.goal_pages);
+        let normPages = normalizeUsingMedian(booksByGenre, book.number_of_pages, getLengthValue(resolvedQuizAnswer.preferred_length), 'number_of_pages');
+        // let normYear = normalizeData(book.year_published, minMaxYear.max, minMaxYear.min, resolvedQuizAnswer.goal_year);
+        let normYear = normalizeUsingMedian(booksByGenre, book.year_published, getYearValue(resolvedQuizAnswer.preferred_year), 'year_published');
 
         let genreWords = book.genre_name_en.split(',').map(word => word.trim());
 
@@ -45,13 +51,20 @@ export async function calculateBookScores(quizAnswer) {
             }
         });
         //let numOfMatchingGenres = userGenrePreferences.filter(genre => genreWords.includes(genre)).length;
-        
+        console.log("")
+        console.log("Nomr pages * weoghts: ", normPages * resolvedQuizAnswer.weights_number_of_pages);
+        console.log("Nomr year * weights: ", normYear * resolvedQuizAnswer.weights_year_published);
+        console.log("Is book has language: ", numOfMatchingLanguages);
+        console.log("Language weight: ", eachLanguageWeights);
+        console.log("Genre score: ", totalWeight);
+        console.log("----------");
         score = (normPages * resolvedQuizAnswer.weights_number_of_pages) + (normYear * resolvedQuizAnswer.weights_year_published) + totalWeight + (numOfMatchingLanguages * eachLanguageWeights);
         // if(!weights.languagePreferences.includes(book.language)) {
         //     score = 0;
         // }
         await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
         scoredBooks.push({ ...book, score });
+    }
     }
     return scoredBooks.sort((a, b) => b.score - a.score);
 }

@@ -59,7 +59,6 @@ export async function submitQuiz (req, res) {
           goalYear = 'min';
         }   
 
-        
         const genrePreferencesArray = Array.isArray(genre_preferences) ? genre_preferences : genre_preferences.split(', ');
         const languagePreferencesArray = Array.isArray(language_preferences) ? language_preferences : language_preferences.split(', ');
 
@@ -68,7 +67,10 @@ export async function submitQuiz (req, res) {
             await addUserGenresScore(userId, genreId.genre_id, genreWeights/genrePreferencesArray.length, 1);
         }));
 
-        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesArray, languagePreferencesArray, goalYear, goalPages);
+        let bookLengthPreference = bookLength.replace("Book", "");
+        let bookYearPreference = bookYear.replace("Book", "");
+
+        await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesArray, languagePreferencesArray, goalYear, goalPages, bookLengthPreference, bookYearPreference);
         
 
         req.user = await completeQuizUser(userId);
@@ -86,6 +88,7 @@ export async function showRetakeQuiz(req, res) {
       const translations = getTranslations(req);
       const genres = await getGenres();
       const languagesObj = await getLanguages();
+      const quizAnswer = await getQuizAnswerByUserId(req.user.userId);
       let languages = [];
 
       for (let i = 0; i < languagesObj.length; i++) {
@@ -103,7 +106,19 @@ export async function showRetakeQuiz(req, res) {
           languages.push(languagesObj[i]);
         }
       }
-      res.render('quiz-reevaluation', { translations, genres, languages });
+      let weights = {
+        numberOfPages: quizAnswer.weights_number_of_pages,
+        yearPublished: quizAnswer.weights_year_published,
+        genre: quizAnswer.weights_genre,
+        language: quizAnswer.weights_language,
+      };
+      let preferences = {
+        numberOfPages: quizAnswer.preferred_length,
+        yearPublished: quizAnswer.preferred_year,
+        genre: quizAnswer.genre_preferences,
+        language: quizAnswer.language_preferences,
+      };
+      res.render('quiz-reevaluation', { translations, genres, languages, weights, preferences });
   } catch (err) {
       console.error(err);
       res.status(500).send("Error loading quiz");

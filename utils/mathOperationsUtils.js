@@ -3,7 +3,7 @@ export function normalizeData(current, max, min, direction) {
     if(direction === 'min') return ((max - current)/(max-min));
 }
 export function normalize(current, sum) {
-    return current/sum;
+    return sum > 0 ? current/sum : 0;
 }
 
 export function getMinMax(array, key) {
@@ -13,6 +13,14 @@ export function getMinMax(array, key) {
         max: Math.max(...minMax)
     };
 }
+
+export function normalizeUsingMedian(array, current, median, key) { 
+    return 1 - Math.abs(current - median) / maxDeviation(array, key, median);
+}
+function maxDeviation (array, key, median) {
+    const values = array.map(item => item[key]);
+    return Math.max(...values.map(v => Math.abs(v - median)));
+} 
 
 export function findMostFrequent(books, key) {
     const genreCounts = {};
@@ -43,4 +51,28 @@ export function findMedian(values) {
       ? (values[mid - 1] + values[mid]) / 2
       : values[mid];
 }
+
+export function getLengthCategory(value) {
+    if (value <= 300) return 'short';
+    if (value > 300 && value <= 600) return 'medium';
+    return 'long';
+}
+
+export function getLengthValue(category) {
+    if (category === 'short') return 150;
+    if (category === 'medium') return 450;
+    return 750;
+}
+
+export function getYearCategory(value) {
+    if (value <= 1900) return 'old';
+    if (value > 1900 && value <= 2000) return 'medium';
+    return 'new';
+}
+export function getYearValue(category) {
+    if (category === 'new') return 2012;
+    if (category === 'medium') return 1950;
+    return 1850;
+}
+  
 

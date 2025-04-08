@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages) {
+export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, preferred_length, preferred_year) {
     if (Array.isArray(genre_preferences)) {
         genre_preferences = genre_preferences.join(', ');
     }
@@ -8,8 +8,8 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
         language_preferences = language_preferences.join(', ');
     }
     const [newQuizAnswer] = await pool.query(`
-    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
+    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, preferred_length, preferred_year, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
     ON DUPLICATE KEY UPDATE 
     weights_number_of_pages = VALUES(weights_number_of_pages),
     weights_year_published = VALUES(weights_year_published),
@@ -19,8 +19,10 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
     language_preferences = VALUES(language_preferences),
     goal_year = VALUES(goal_year),
     goal_pages = VALUES(goal_pages),
+    preferred_length = VALUES(preferred_length),
+    preferred_year = VALUES(preferred_year),
     created_at = NOW()
-    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages]);
+    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, preferred_length, preferred_year]);
     return newQuizAnswer.insertId;
 }
 

@@ -29,9 +29,10 @@ export async function getUserGenreScoreByGenreName (userId, genre_name_en) {
     return rows;
 }
 
+export async function clearUserGenresScore (userId) {
+    await pool.query(`DELETE FROM user_genres_weights WHERE user_id = ?`, [userId]);
+}
 export async function addUserGenresScore (userId, genreId, weight, count) {
-await pool.query(`DELETE FROM user_genres_weights WHERE user_id = ?`, [userId]);
-
 const [newRow] = await pool.query(`
     INSERT INTO user_genres_weights (user_id, genre_id, weight, books_read_count)
     VALUES (?, ?, ?, ?) 

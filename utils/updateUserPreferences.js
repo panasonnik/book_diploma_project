@@ -1,7 +1,7 @@
 import { getBooks } from "../models/bookModel.js";
 import { getGenreIdByName } from "../models/genreModel.js";
 import { getQuizAnswerByUserId, updateGenreLanguagePreferences, updateCriteriaDirectionQuizAnswer } from "../models/quizAnswerModel.js";
-import { getUserGenresScore, addUserGenresScore } from "../models/userGenresWeightsModel.js";
+import { getUserGenresScore, addUserGenresScore, clearUserGenresScore } from "../models/userGenresWeightsModel.js";
 import { findMostFrequent, getAverage, findMedian } from "./mathOperationsUtils.js";
 
 export async function updateGenreLanguage(userId, readBooks) {
@@ -55,17 +55,19 @@ export async function updateCriteriaDirection (userId, readBooks) {
 export async function updateGenreWeights (userId, userGenres, quizAnswer) {
     const userGenreScore = await getUserGenresScore(userId);
     const resolvedQuizAnswer = await quizAnswer;
+    await clearUserGenresScore(userId);
     const weightsGenre = resolvedQuizAnswer.weights_genre;
         const genresFromDb = userGenreScore.map(item => ({
             name: item.genre_name_en,
             count: item.books_read_count
           }));
+        console.log("Genre from DB: ", genresFromDb);
         let mergedGenres = mergeGenres(genresFromDb, userGenres); 
+        console.log("Merged genres: ", mergedGenres);
         let newBooksReadByUser = mergedGenres.reduce((sum, item) => sum + item.count, 0);
         mergedGenres.forEach(async (genre) => {
             let genreProportion = genre.count / newBooksReadByUser;
             let genreWeightPart = weightsGenre * genreProportion;
-            
             const genreItem = await getGenreIdByName(genre.name);
             const genreId = genreItem.genre_id;
             await addUserGenresScore(userId, genreId, genreWeightPart, genre.count);
@@ -75,10 +77,31 @@ export async function updateGenreWeights (userId, userGenres, quizAnswer) {
 export async function modifyGenreWeights (userId, deletedGenre) {
     const userGenreScore = await getUserGenresScore(userId);
     const quizAnswer = await getQuizAnswerByUserId(userId);
+    
     const weightsGenre = quizAnswer.weights_genre;
     const genresFromDb = userGenreScore.map(item => ({
         name: item.genre_name_en,
         count: item.genre_name_en === deletedGenre ? Math.max(0, item.books_read_count - 1) : item.books_read_count
+    }));
+        let newBooksReadByUser = genresFromDb.reduce((sum, item) => sum + item.count, 0);
+        await clearUserGenresScore(userId);
+        genresFromDb.forEach(async (genre) => {
+            let genreProportion = genre.count / newBooksReadByUser;
+            let genreWeightPart = weightsGenre * genreProportion;
+            
+            const genreItem = await getGenreIdByName(genre.name);
+            const genreId = genreItem.genre_id;
+            await addUserGenresScore(userId, genreId, genreWeightPart, genre.count);
+        });
+}
+
+export async function distributeGenreWeights (userId) {
+    const userGenreScore = await getUserGenresScore(userId);
+    const quizAnswer = await getQuizAnswerByUserId(userId);
+    const weightsGenre = quizAnswer.weights_genre;
+    const genresFromDb = userGenreScore.map(item => ({
+        name: item.genre_name_en,
+        count: item.books_read_count
     }));
         let newBooksReadByUser = genresFromDb.reduce((sum, item) => sum + item.count, 0);
         genresFromDb.forEach(async (genre) => {

@@ -44,24 +44,23 @@
           <label class="likert__question"
             ><%= translations.quiz.questionBookLength %></label
           >
-          <input
-            class="likert__scale__item__input"
-            id="bookLengthLong"
-            type="radio"
-            name="bookLength"
-            value="longBook"
-            required
+          <input class="likert__scale__item__input" id="bookLengthLong"
+          type="radio" name="bookLength" value="longBook"
+          <%=preferences.numberOfPages === "long" ? "checked" : "" %> required
           />
           <label class="likert__scale__item" for="bookLengthLong"
             ><%= translations.quiz.answer1BookLength %></label
           ><br />
-          <input
-            class="likert__scale__item__input"
-            id="bookLengthShort"
-            type="radio"
-            name="bookLength"
-            value="shortBook"
-            required
+          <input class="likert__scale__item__input" id="bookLengthMedium"
+          type="radio" name="bookLength" value="mediumBook"
+          <%=preferences.numberOfPages === "medium" ? "checked" : "" %> required
+          />
+          <label class="likert__scale__item" for="bookLengthMedium"
+            >Середня (300-600) </label
+          ><br />
+          <input class="likert__scale__item__input" id="bookLengthShort"
+          type="radio" name="bookLength" value="shortBook"
+          <%=preferences.numberOfPages === "short" ? "checked" : "" %> required
           />
           <label class="likert__scale__item" for="bookLengthShort"
             ><%= translations.quiz.answer2BookLength %></label
@@ -71,7 +70,7 @@
           >
 
           <%- include('partials/1to10scale', { translations, id:
-          "bookLengthWeights"}) %>
+          "bookLengthWeights", matchingValue: weights.numberOfPages }) %>
 
           <label class="likert__question"
             ><%= translations.quiz.questionBookYear %></label
@@ -102,7 +101,7 @@
             ><%= translations.quizReevaluation.questionWeightYear %></label
           >
           <%- include('partials/1to10scale', { translations, id:
-          "bookYearWeights"}) %>
+          "bookYearWeights", matchingValue: weights.yearPublished}) %>
           <h2 class="likert__question">
             <%= translations.quiz.questionGenres %>
           </h2>
@@ -129,8 +128,8 @@
           <label class="likert__question"
             ><%= translations.quizReevaluation.questionWeightGenre %></label
           >
-          <%- include('partials/1to10scale', { translations, id:
-          "genreWeights"}) %>
+          <%- include('partials/1to10scale', { translations, id: "genreWeights",
+          matchingValue: weights.genre}) %>
           <h2 class="likert__question">
             <%= translations.quiz.questionLanguages %>
           </h2>
@@ -158,7 +157,7 @@
             ><%= translations.quizReevaluation.questionWeightLanguage %></label
           >
           <%- include('partials/1to10scale', { translations, id:
-          "languageWeights"}) %>
+          "languageWeights", matchingValue: weights.language}) %>
           <button type="submit" class="mt submit-btn">
             <%= translations.quiz.submit %>
           </button>

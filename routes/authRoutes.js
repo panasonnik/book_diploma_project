@@ -8,5 +8,6 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/logout', authenticateToken, logoutUser);
 
+
 export default router;
 

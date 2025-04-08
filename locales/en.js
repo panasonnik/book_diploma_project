@@ -57,11 +57,13 @@ const en = {
       quiz: {
             heading: "Complete the quiz to finish your registration",
             questionBookLength: "Book of which length do you prefer?",
-            answer1BookLength: "Long books",
-            answer2BookLength: "Short books",
+            answer1BookLength: "Up to 300 pages",
+            answer2BookLength: "300 - 600 pages",
+            answer3BookLength: "More than 600 pages",
             questionBookYear: "Which era of books do you prefer?",
-            answer1BookYear: "Old classic",
-            answer2BookYear: "Modern",
+            answer1BookYear: "1800 - 1900",
+            answer2BookYear: "1901 - 2000",
+            answer3BookYear: "2001 - 2025",
             questionGenres: "Select your preferred genres:",
             genreError: "Please select at least one genre.",
             questionLanguages: "Choose your language preferences:",
@@ -89,6 +91,22 @@ const en = {
             languagePrefs: "Language preferences: ",
             cancel: "Cancel",
             save: "Save",
+      },
+      dbGenres: {
+            Mystery: "Mystery",
+            Romance: "Romance",
+            Adventure: "Adventure",
+            Fantasy: "Fantasy",
+            Historical: "Historical",
+      },
+      dbLanguages: {
+            English: "English",
+            Ukrainian: "Ukrainian"
+      },
+      "The Great Gatsby" : {
+            title: "The Great Gatsby",
+            author: "F. Scott Fitzgerald",
+            description: "A novel set in the Roaring Twenties about wealth, love, and the American Dream."
       }
 };
   

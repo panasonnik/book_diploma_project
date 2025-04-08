@@ -45,17 +45,6 @@
           >
           <input
             class="likert__scale__item__input"
-            id="bookLengthLong"
-            type="radio"
-            name="bookLength"
-            value="longBook"
-            required
-          />
-          <label class="likert__scale__item" for="bookLengthLong"
-            ><%= translations.quiz.answer1BookLength %></label
-          ><br />
-          <input
-            class="likert__scale__item__input"
             id="bookLengthShort"
             type="radio"
             name="bookLength"
@@ -63,7 +52,29 @@
             required
           />
           <label class="likert__scale__item" for="bookLengthShort"
+            ><%= translations.quiz.answer1BookLength %></label
+          ><br />
+          <input
+            class="likert__scale__item__input"
+            id="bookLengthMedium"
+            type="radio"
+            name="bookLength"
+            value="mediumBook"
+            required
+          />
+          <label class="likert__scale__item" for="bookLengthMedium"
             ><%= translations.quiz.answer2BookLength %></label
+          ><br />
+          <input
+            class="likert__scale__item__input"
+            id="bookLengthLong"
+            type="radio"
+            name="bookLength"
+            value="longBook"
+            required
+          />
+          <label class="likert__scale__item" for="bookLengthLong"
+            ><%= translations.quiz.answer3BookLength %></label
           ><br />
 
           <label class="likert__question"
@@ -82,14 +93,25 @@
           ><br />
           <input
             class="likert__scale__item__input"
-            id="bookYearClassic"
+            id="bookYearMedium"
             type="radio"
             name="bookYear"
-            value="modernBook"
+            value="mediumBook"
             required
           />
-          <label class="likert__scale__item" for="bookYearClassic"
+          <label class="likert__scale__item" for="bookYearMedium"
             ><%= translations.quiz.answer2BookYear %></label
+          ><br />
+          <input
+            class="likert__scale__item__input"
+            id="bookYearNew"
+            type="radio"
+            name="bookYear"
+            value="newBook"
+            required
+          />
+          <label class="likert__scale__item" for="bookYearNew"
+            ><%= translations.quiz.answer3BookYear %></label
           ><br />
 
           <h2 class="likert__question">
@@ -104,7 +126,7 @@
                 value="<%= genres[i].genre_name_en %>"
                 class="genre-checkbox"
               />
-              <%= genres[i][`genre_name_${translations.lang}`] %>
+              <%= translations.dbGenres[genres[i].genre_name_en] %>
             </label>
             <% } %>
           </div>
@@ -127,7 +149,7 @@
                 value="<%= languages[i].language_en %>"
                 class="language-checkbox"
               />
-              <%= languages[i][`language_${translations.lang}`] %>
+              <%= translations.dbLanguages[languages[i].language_en] %>
             </label>
             <% } %>
           </div>
