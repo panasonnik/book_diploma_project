@@ -86,7 +86,6 @@
                     alt="<%= book.title %> cover"
                     class="book-card__cover-image book-cover"
                     onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>', '<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
-                    onerror="this.src='/images/onerror_image.jpg';"
                   />
                   <form
                     action="/<%= translations.lang %>/save-book"

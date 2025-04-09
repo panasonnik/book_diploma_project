@@ -1,8 +1,8 @@
 import { getBooks } from "../models/bookModel.js";
 import { getGenreIdByName } from "../models/genreModel.js";
-import { getQuizAnswerByUserId, updateGenreLanguagePreferences, updateCriteriaDirectionQuizAnswer } from "../models/quizAnswerModel.js";
+import { getQuizAnswerByUserId, updateGenreLanguagePreferences, updateQuantitativeCriterionsQuizAnswer } from "../models/quizAnswerModel.js";
 import { getUserGenresScore, addUserGenresScore, clearUserGenresScore } from "../models/userGenresWeightsModel.js";
-import { findMostFrequent, getAverage, findMedian } from "./mathOperationsUtils.js";
+import { findMostFrequent, getAverage, getLengthCategory, getYearCategory } from "./mathOperationsUtils.js";
 
 export async function updateGenreLanguage(userId, readBooks) {
     const resolvedReadBooks = await readBooks;
@@ -23,33 +23,45 @@ export async function updateGenreLanguage(userId, readBooks) {
 
 
 
-export async function updateCriteriaDirection (userId, readBooks) {
+// export async function updateCriteriaDirection (userId, readBooks) {
+//     const resolvedReadBooks = await readBooks;
+//     const books = await getBooks();
+//     const quizAnswer = await getQuizAnswerByUserId(userId);
+//     let newGoalYear = quizAnswer.goal_year;
+//     let newGoalPages = quizAnswer.goal_pages;
+    
+//     const avgBookYear = getAverage(resolvedReadBooks, 'year_published');
+//     const allYears = books.map(book => book.year_published);
+//     const medianYear = findMedian(allYears);
+
+//     const avgBookPages = getAverage(resolvedReadBooks, 'number_of_pages');
+//     const allPages = books.map(book => book.number_of_pages);
+//     const medianPages = findMedian(allPages);
+
+//     if (avgBookYear > medianYear) {
+//         newGoalYear = 'max';
+//     } else {
+//         newGoalYear = 'min';
+//     }
+
+//     if (avgBookPages > medianPages) {
+//         newGoalPages = 'max';
+//     } else {
+//         newGoalPages = 'min';
+//     }
+//     await updateCriteriaDirectionQuizAnswer(userId, newGoalYear, newGoalPages);
+// }  
+
+export async function updateQuantitativeCriterions (userId, readBooks) {
     const resolvedReadBooks = await readBooks;
-    const books = await getBooks();
-    const quizAnswer = await getQuizAnswerByUserId(userId);
-    let newGoalYear = quizAnswer.goal_year;
-    let newGoalPages = quizAnswer.goal_pages;
     
     const avgBookYear = getAverage(resolvedReadBooks, 'year_published');
-    const allYears = books.map(book => book.year_published);
-    const medianYear = findMedian(allYears);
 
     const avgBookPages = getAverage(resolvedReadBooks, 'number_of_pages');
-    const allPages = books.map(book => book.number_of_pages);
-    const medianPages = findMedian(allPages);
 
-    if (avgBookYear > medianYear) {
-        newGoalYear = 'max';
-    } else {
-        newGoalYear = 'min';
-    }
-
-    if (avgBookPages > medianPages) {
-        newGoalPages = 'max';
-    } else {
-        newGoalPages = 'min';
-    }
-    await updateCriteriaDirectionQuizAnswer(userId, newGoalYear, newGoalPages);
+    let newPreferredLength = getLengthCategory(avgBookPages);
+    let newPreferredYear = getYearCategory(avgBookYear);
+    await updateQuantitativeCriterionsQuizAnswer(userId, newPreferredLength, newPreferredYear);
 }  
 
 export async function updateGenreWeights (userId, userGenres, quizAnswer) {

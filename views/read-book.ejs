@@ -34,7 +34,7 @@
               <div class="book-card__image-container">
                 <img
                   src="<%= book.image_url %>"
-                  alt="<%= book[`title_${translations.lang}`] %> cover"
+                  alt="<%= book.title %> cover"
                   class="book-card__cover-image book-cover"
                   onerror="this.src='/images/onerror_image.jpg';"
                 />
@@ -71,19 +71,17 @@
               </div>
               <div class="book-card__details">
                 <h3 class="subheading subheading--regular">
-                  <%= book[`title_${translations.lang}`] %>
+                  <%= book.title %>
                 </h3>
                 <p class="subheading subheading--small subheading--light">
-                  <%= book[`author_${translations.lang}`] %>
+                  <%= book.author %>
                 </p>
               </div>
             </div>
           </div>
         </div>
         <div class="profile__container">
-          <h1 class="heading heading--bold">
-            <%= book[`title_${translations.lang}`] %>
-          </h1>
+          <h1 class="heading heading--bold"><%= book.title %></h1>
           <% if (bookPreviewUrl) { %>
           <iframe
             src="<%= bookPreviewUrl %>"

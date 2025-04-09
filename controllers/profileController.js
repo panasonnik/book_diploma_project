@@ -24,8 +24,11 @@ export async function showReadBooksPage(req, res) {
     try {
       const userId = req.user.userId;
       const translations = getTranslations(req);
-      const readBooks = await getReadBooks(userId);
+      let readBooks = await getReadBooks(userId);
       const user = await getUserById(userId);
+      readBooks = readBooks.map(book => {
+        return translateBook(translations, book);
+      });
 
       res.render('read-books-profile', { translations, readBooks, user });
   } catch (err) {

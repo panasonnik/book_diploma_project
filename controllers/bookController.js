@@ -5,6 +5,7 @@ import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js
 import { getBookGenre } from '../models/genreModel.js';
 
 import { modifyGenreWeights } from '../utils/updateUserPreferences.js';
+import { translateBook } from '../utils/translationUtils.js';
 
 export async function saveBook(req, res) {
     try {
@@ -60,11 +61,12 @@ export async function showReadBookPage (req, res) {
         const { title } = req.params;
         const userId = req.user.userId;
         const translations = getTranslations(req);
-        const book = await getBookByTitle(title);
+        let book = await getBookByTitle(title);
         const bookGenre = await getBookGenre(book.book_id);
         await addReadBook(userId, book.book_id);
         const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
         book.is_liked = await isBookLiked(userId, book.book_id);
+        book = translateBook(translations, book);
         req.session.isBooksReadModified = true;
         if (!req.session.userGenres) {
             req.session.userGenres = [];

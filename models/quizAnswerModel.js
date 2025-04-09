@@ -52,6 +52,16 @@ export async function updateCriteriaDirectionQuizAnswer(user_id, goal_year, goal
     return updatedQuizAnswer;
 }
 
+export async function updateQuantitativeCriterionsQuizAnswer(user_id, preferred_length, preferred_year) {
+    const [updatedQuizAnswer] = await pool.query(`
+        UPDATE quiz_answers 
+        SET preferred_length = ?, preferred_year = ?
+        WHERE user_id = ?
+        `, [preferred_length, preferred_year, user_id]
+    );
+    return updatedQuizAnswer;
+}
+
 export async function updateQuizAnswerLanguages(user_id, languages) {
     if (Array.isArray(languages)) {
         languages = languages.join(', ');

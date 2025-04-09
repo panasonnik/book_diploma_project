@@ -49,8 +49,8 @@ export async function submitQuiz (req, res) {
         // let languageWeights = 0.25/numOfSelectedLanguages;
         let goalYear = 'max';
         let goalPages = 'max';
-        const genreWeights = 0.4;
-        const languageWeights = 0.1;
+        const genreWeights = 0.25;
+        const languageWeights = 0.25;
 
         if(bookLength === 'shortBook') {
           goalPages = 'min';
@@ -62,7 +62,7 @@ export async function submitQuiz (req, res) {
 
         const genrePreferencesArray = Array.isArray(genre_preferences) ? genre_preferences : genre_preferences.split(', ');
         const languagePreferencesArray = Array.isArray(language_preferences) ? language_preferences : language_preferences.split(', ');
-
+        await clearUserGenresScore(userId);
         const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
             const genreId = await getGenreIdByName(element);
             await addUserGenresScore(userId, genreId.genre_id, genreWeights/genrePreferencesArray.length, 1);

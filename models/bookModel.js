@@ -18,9 +18,13 @@ export async function getBookById(id) {
 
 export async function getBookByTitle(title) {
     const [bookById] = await pool.query(`
-        SELECT * 
-        FROM books
-        WHERE title_en = ?
+        SELECT b.*,
+        GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en 
+        FROM books b
+        JOIN books_genres bg ON b.book_id = bg.book_id
+        JOIN genres g ON bg.genre_id = g.genre_id
+        WHERE b.title_en = ?
+        GROUP BY b.book_id
         `, [title]);
     return bookById[0];
 }

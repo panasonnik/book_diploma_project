@@ -63,10 +63,7 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, f
 
     const totalWeights = newNumberOfPagesWeight + newYearWeight + newGenresWeight + oldLanguagesWeight;
 
-    let normWeightPages = normalize(newNumberOfPagesWeight, totalWeights);
-    let normWeightYear = normalize(newYearWeight, totalWeights);
-    let normGenresWeight = normalize(newGenresWeight, totalWeights);
-    let normLangsWeight = normalize(oldLanguagesWeight, totalWeights);
+    let [normWeightPages,normWeightYear,normGenresWeight,normLangsWeight] = normalize(Number(newNumberOfPagesWeight), Number(newYearWeight), Number(newGenresWeight), Number(oldLanguagesWeight));
 
     await updateQuizAnswer(userId, normWeightPages, normWeightYear, normGenresWeight, normLangsWeight, quizAnswer.genre_preferences, languagesWithoutDuplicates);
 }
