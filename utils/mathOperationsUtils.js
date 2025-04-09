@@ -54,15 +54,15 @@ export function findMedian(values) {
 }
 
 export function getLengthCategory(value) {
-    if (value <= 300) return 'short';
-    if (value > 300 && value <= 600) return 'medium';
+    if (value <= 400) return 'short';
+    if (value > 400 && value <= 800) return 'medium';
     return 'long';
 }
 
 export function getLengthValue(category) {
-    if (category === 'short') return 150;
-    if (category === 'medium') return 450;
-    return 750;
+    if (category === 'short') return 200;
+    if (category === 'medium') return 400;
+    return 600;
 }
 
 export function getYearCategory(value) {

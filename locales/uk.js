@@ -59,9 +59,9 @@ const uk = {
       quiz: {
             heading: "Пройдіть опитування для завершення реєстрації",
             questionBookLength: "Книги якої довжини Вам подобаються?",
-            answer1BookLength: "До 300 сторінок",
-            answer2BookLength: "300 - 600 сторінок",
-            answer3BookLength: "Більше ніж 600 сторінок",
+            answer1BookLength: "До 400 сторінок",
+            answer2BookLength: "400 - 800 сторінок",
+            answer3BookLength: "Більше ніж 800 сторінок",
             questionBookYear: "Книгам якого року видання Ви надаєте перевагу?",
             answer1BookYear: "1800 - 1900",
             answer2BookYear: "1901 - 2000",

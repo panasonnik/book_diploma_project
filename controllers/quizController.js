@@ -49,8 +49,8 @@ export async function submitQuiz (req, res) {
         // let languageWeights = 0.25/numOfSelectedLanguages;
         let goalYear = 'max';
         let goalPages = 'max';
-        const genreWeights = 0.25;
-        const languageWeights = 0.25;
+        const genreWeights = 0.4;
+        const languageWeights = 0.1;
 
         if(bookLength === 'shortBook') {
           goalPages = 'min';
@@ -157,7 +157,6 @@ export async function submitRetakeQuiz (req, res) {
       const quizAnswer = await getQuizAnswerByUserId(userId);
       await deleteBookScores(userId);
       await calculateBookScores(quizAnswer);
-      await topsis(quizAnswer);
       res.redirect(`/${translations.lang}/home`);
   } catch (error) {
       console.error(error);

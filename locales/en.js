@@ -57,9 +57,9 @@ const en = {
       quiz: {
             heading: "Complete the quiz to finish your registration",
             questionBookLength: "Book of which length do you prefer?",
-            answer1BookLength: "Up to 300 pages",
-            answer2BookLength: "300 - 600 pages",
-            answer3BookLength: "More than 600 pages",
+            answer1BookLength: "Up to 400 pages",
+            answer2BookLength: "400 - 800 pages",
+            answer3BookLength: "More than 800 pages",
             questionBookYear: "Which era of books do you prefer?",
             answer1BookYear: "1800 - 1900",
             answer2BookYear: "1901 - 2000",
