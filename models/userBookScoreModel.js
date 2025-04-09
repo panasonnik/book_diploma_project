@@ -9,6 +9,14 @@ export async function addBookScore(user_id, book_id, score) {
     return newBookScore.insertId;
 }
 
+export async function deleteBookScores(user_id) {
+    const [newBookScore] = await pool.query(`
+    DELETE FROM user_book_scores
+    WHERE user_id = ?
+    `, [user_id]);
+    return newBookScore;
+}
+
 export async function updateBookScore(user_id, book_id, score) {
     const [updatedBookScore] = await pool.query(`
         UPDATE user_book_scores

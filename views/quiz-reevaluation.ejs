@@ -44,11 +44,11 @@
           <label class="likert__question"
             ><%= translations.quiz.questionBookLength %></label
           >
-          <input class="likert__scale__item__input" id="bookLengthLong"
-          type="radio" name="bookLength" value="longBook"
-          <%=preferences.numberOfPages === "long" ? "checked" : "" %> required
+          <input class="likert__scale__item__input" id="bookLengthShort"
+          type="radio" name="bookLength" value="shortBook"
+          <%=preferences.numberOfPages === "short" ? "checked" : "" %> required
           />
-          <label class="likert__scale__item" for="bookLengthLong"
+          <label class="likert__scale__item" for="bookLengthShort"
             ><%= translations.quiz.answer1BookLength %></label
           ><br />
           <input class="likert__scale__item__input" id="bookLengthMedium"
@@ -56,14 +56,14 @@
           <%=preferences.numberOfPages === "medium" ? "checked" : "" %> required
           />
           <label class="likert__scale__item" for="bookLengthMedium"
-            >Середня (300-600) </label
-          ><br />
-          <input class="likert__scale__item__input" id="bookLengthShort"
-          type="radio" name="bookLength" value="shortBook"
-          <%=preferences.numberOfPages === "short" ? "checked" : "" %> required
-          />
-          <label class="likert__scale__item" for="bookLengthShort"
             ><%= translations.quiz.answer2BookLength %></label
+          ><br />
+          <input class="likert__scale__item__input" id="bookLengthLong"
+          type="radio" name="bookLength" value="longBook"
+          <%=preferences.numberOfPages === "long" ? "checked" : "" %> required
+          />
+          <label class="likert__scale__item" for="bookLengthLong"
+            ><%= translations.quiz.answer3BookLength %></label
           ><br />
           <label class="likert__question"
             ><%= translations.quizReevaluation.questionWeightLength %></label
@@ -75,27 +75,24 @@
           <label class="likert__question"
             ><%= translations.quiz.questionBookYear %></label
           >
-          <input
-            class="likert__scale__item__input"
-            id="bookYearOld"
-            type="radio"
-            name="bookYear"
-            value="oldBook"
-            required
-          />
+          <input class="likert__scale__item__input" id="bookYearOld"
+          type="radio" name="bookYear" value="oldBook"
+          <%=preferences.yearPublished === "old" ? "checked" : "" %> required />
           <label class="likert__scale__item" for="bookYearOld"
             ><%= translations.quiz.answer1BookYear %></label
           ><br />
-          <input
-            class="likert__scale__item__input"
-            id="bookYearClassic"
-            type="radio"
-            name="bookYear"
-            value="modernBook"
-            required
+          <input class="likert__scale__item__input" id="bookYearMedium"
+          type="radio" name="bookYear" value="mediumBook"
+          <%=preferences.yearPublished === "medium" ? "checked" : "" %> required
           />
-          <label class="likert__scale__item" for="bookYearClassic"
+          <label class="likert__scale__item" for="bookYearMedium"
             ><%= translations.quiz.answer2BookYear %></label
+          ><br />
+          <input class="likert__scale__item__input" id="bookYearNew"
+          type="radio" name="bookYear" value="newBook"
+          <%=preferences.yearPublished === "new" ? "checked" : "" %> required />
+          <label class="likert__scale__item" for="bookYearNew"
+            ><%= translations.quiz.answer3BookYear %></label
           ><br />
           <label class="likert__question"
             ><%= translations.quizReevaluation.questionWeightYear %></label
@@ -108,13 +105,10 @@
           <div class="checkbox-grid">
             <% for (let i = 0; i < genres.length; i++) { %>
             <label class="checkbox-option">
-              <input
-                type="checkbox"
-                name="genre_preferences"
-                value="<%= genres[i].genre_name_en %>"
-                class="genre-checkbox"
-              />
-              <%= genres[i][`genre_name_${translations.lang}`] %>
+              <input type="checkbox" name="genre_preferences" value="<%=
+              genres[i].genre_name_en %>" class="genre-checkbox" <%=
+              preferences.genre.includes(genres[i].genre_name_en) ? "checked" :
+              "" %> /> <%= translations.dbGenres[genres[i].genre_name_en] %>
             </label>
             <% } %>
           </div>
@@ -136,13 +130,11 @@
           <div class="checkbox-grid">
             <% for (let i = 0; i < languages.length; i++) { %>
             <label class="checkbox-option">
-              <input
-                type="checkbox"
-                name="language_preferences"
-                value="<%= languages[i].language_en %>"
-                class="language-checkbox"
-              />
-              <%= languages[i][`language_${translations.lang}`] %>
+              <input type="checkbox" name="language_preferences" value="<%=
+              languages[i].language_en %>" class="language-checkbox" <%=
+              preferences.language.includes(languages[i].language_en) ?
+              "checked" : "" %> /> <%=
+              translations.dbLanguages[languages[i].language_en] %>
             </label>
             <% } %>
           </div>

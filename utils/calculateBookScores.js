@@ -22,13 +22,15 @@ export async function calculateBookScores(quizAnswer) {
     console.log("Min max: ", minMaxYear);
     let score = 0;
     for (let book of booksByGenre) {
-        if (getLengthCategory(book.number_of_pages) === resolvedQuizAnswer.preferred_length && getYearCategory(book.year_published) === resolvedQuizAnswer.preferred_year) { //якщо книга підходить за довжиною
-        // let normPages = normalizeData(book.number_of_pages,minMaxPages.max, minMaxPages.min, resolvedQuizAnswer.goal_pages);
+        let genreWords = book.genre_name_en.split(',').map(word => word.trim());
+        if (getLengthCategory(book.number_of_pages) === resolvedQuizAnswer.preferred_length &&
+            getYearCategory(book.year_published) === resolvedQuizAnswer.preferred_year ){
+            // && userGenrePreferences.includes(genreWords)) {
+
         let normPages = normalizeUsingMedian(booksByGenre, book.number_of_pages, getLengthValue(resolvedQuizAnswer.preferred_length), 'number_of_pages');
-        // let normYear = normalizeData(book.year_published, minMaxYear.max, minMaxYear.min, resolvedQuizAnswer.goal_year);
         let normYear = normalizeUsingMedian(booksByGenre, book.year_published, getYearValue(resolvedQuizAnswer.preferred_year), 'year_published');
 
-        let genreWords = book.genre_name_en.split(',').map(word => word.trim());
+        
 
         let languageWords = book.language_en.split(',').map(word => word.trim());
         let numOfMatchingLanguages = userLanguagePreferences.filter(genre => languageWords.includes(genre)).length;
@@ -52,8 +54,8 @@ export async function calculateBookScores(quizAnswer) {
         });
         //let numOfMatchingGenres = userGenrePreferences.filter(genre => genreWords.includes(genre)).length;
         console.log("")
-        console.log("Nomr pages * weoghts: ", normPages * resolvedQuizAnswer.weights_number_of_pages);
-        console.log("Nomr year * weights: ", normYear * resolvedQuizAnswer.weights_year_published);
+        console.log("Norm pages * weights: ", normPages * resolvedQuizAnswer.weights_number_of_pages);
+        console.log("Norm year * weights: ", normYear * resolvedQuizAnswer.weights_year_published);
         console.log("Is book has language: ", numOfMatchingLanguages);
         console.log("Language weight: ", eachLanguageWeights);
         console.log("Genre score: ", totalWeight);

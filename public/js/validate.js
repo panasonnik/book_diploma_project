@@ -1,6 +1,13 @@
 let selectedValues = { bookLengthWeights: null, bookYearWeights: null,  genreWeights: null, languageWeights: null};
 
 document.querySelectorAll(".chart-scale").forEach(scale => {
+  const selectedBtn = scale.querySelector(".btn-scale.selected");
+  if (selectedBtn) {
+    const key = scale.dataset.input;
+    const value = selectedBtn.dataset.value;
+    selectedValues[key] = value;
+    document.getElementById(key).value = value;
+  }
     scale.addEventListener("click", event => {
       if (!event.target.classList.contains("btn-scale")) return;
       scale.querySelectorAll(".btn-scale").forEach(btn => btn.classList.remove("selected"));

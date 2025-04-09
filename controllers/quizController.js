@@ -4,9 +4,10 @@ import { calculateBookScores } from '../utils/calculateBookScores.js';
 import { getGenres, getGenreIdByName } from '../models/genreModel.js';
 import { getLanguages } from '../models/bookModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
-import { addUserGenresScore } from '../models/userGenresWeightsModel.js';
+import { addUserGenresScore, clearUserGenresScore} from '../models/userGenresWeightsModel.js';
 import { topsis } from '../utils/topsis.js';
 import { normalize } from "../utils/mathOperationsUtils.js";
+import { deleteBookScores } from "../models/userBookScoreModel.js";
 
 export async function showQuiz(req, res) {
     try {
@@ -128,17 +129,9 @@ export async function showRetakeQuiz(req, res) {
 export async function submitRetakeQuiz (req, res) {
   try {
       const { bookLengthWeights, bookYearWeights, genreWeights, languageWeights, bookLength, bookYear, genre_preferences, language_preferences } = req.body;
-      console.log(req.body);
       const translations = getTranslations(req);
       const userId = req.user.userId;
-      const sumOfUserWeights = bookLengthWeights + bookYearWeights + genreWeights + languageWeights;
-      const weights = {
-        year: normalize(bookYearWeights, sumOfUserWeights),
-        pages: normalize(bookLengthWeights, sumOfUserWeights),
-        genres: normalize(genreWeights, sumOfUserWeights),
-        languages: normalize(languageWeights, sumOfUserWeights)
-      };
-
+      const [normPagesWeights, normYearWeights, normGenreWeights, normLangWeights] = normalize(Number(bookLengthWeights), Number(bookYearWeights), Number(genreWeights), Number(languageWeights));
       let goalYear = 'max';
       let goalPages = 'max';
 
@@ -152,15 +145,17 @@ export async function submitRetakeQuiz (req, res) {
 
       const genrePreferencesArray = Array.isArray(genre_preferences) ? genre_preferences : genre_preferences.split(', ');
       const languagePreferencesArray = Array.isArray(language_preferences) ? language_preferences : language_preferences.split(', ');
-
+      await clearUserGenresScore(userId);
       const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
           const genreId = await getGenreIdByName(element);
-          await addUserGenresScore(userId, genreId.genre_id, weights.genres/genrePreferencesArray.length, 1);
+          await addUserGenresScore(userId, genreId.genre_id, normGenreWeights/genrePreferencesArray.length, 1);
       }));
-
-      await addQuizAnswer(userId, weights.pages, weights.year, weights.genres, weights.languages, genrePreferencesArray, languagePreferencesArray, goalYear, goalPages);
+      let bookLengthPreference = bookLength.replace("Book", "");
+      let bookYearPreference = bookYear.replace("Book", "");
+      await addQuizAnswer(userId, normPagesWeights, normYearWeights, normGenreWeights, normLangWeights, genrePreferencesArray, languagePreferencesArray, goalYear, goalPages, bookLengthPreference, bookYearPreference);
       
       const quizAnswer = await getQuizAnswerByUserId(userId);
+      await deleteBookScores(userId);
       await calculateBookScores(quizAnswer);
       await topsis(quizAnswer);
       res.redirect(`/${translations.lang}/home`);

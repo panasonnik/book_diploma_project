@@ -2,13 +2,17 @@ import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEma
 import { getLanguages } from '../models/bookModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
+import { translateBook } from '../utils/translationUtils.js';
 
 export async function showProfilePage(req, res) {
     try {
         const userId = req.user.userId;
         const translations = getTranslations(req);
-        const savedBooks = await getSavedBooks(userId);
+        let savedBooks = await getSavedBooks(userId);
         const user = await getUserById(userId);
+        savedBooks = savedBooks.map(book => {
+          return translateBook(translations, book);
+        });
         res.render('profile', { translations, savedBooks, user });
     } catch (err) {
         console.error("Error rendering profile page:", err);

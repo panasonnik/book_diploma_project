@@ -2,8 +2,9 @@ export function normalizeData(current, max, min, direction) {
     if(direction === 'max') return ((current - min)/(max-min));
     if(direction === 'min') return ((max - current)/(max-min));
 }
-export function normalize(current, sum) {
-    return sum > 0 ? current/sum : 0;
+export function normalize(...values) {
+    const sum = values.reduce((total, val) => total+val, 0);
+    return values.map(val => val/sum);
 }
 
 export function getMinMax(array, key) {

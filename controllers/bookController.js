@@ -12,7 +12,6 @@ export async function saveBook(req, res) {
         const userId = req.user.userId;
         const translations = getTranslations(req);
         const isLiked = await isBookLiked(userId, bookId);
-
         if (isLiked) {
             await deleteBookPreference(userId, bookId);
         } else {

@@ -62,11 +62,17 @@
             method="POST"
           >
             <input type="hidden" />
-            <button type="submit" class="submit-btn submit-btn--outline submit-btn--small mb">
+            <button
+              type="submit"
+              class="submit-btn submit-btn--outline submit-btn--small mb"
+            >
               <%= translations.home.updateRecsLiked %>
             </button>
           </form>
-          <a href="/<%= translations.lang %>/quiz/update-preferences" class="submit-btn submit-btn--small mb">
+          <a
+            href="/<%= translations.lang %>/quiz/update-preferences"
+            class="submit-btn submit-btn--small mb"
+          >
             <%= translations.home.updateQuiz %>
           </a>
           <% } %>
@@ -123,11 +129,10 @@
                 </div>
               </div>
               <a
-                  href="<%= book.is_read ? `#` : `/${translations.lang}/book/${book.title_en}` %>"
-                  class="submit-btn submit-btn--outline <%= book.is_read ? 'disabled' : '' %>"
-                  <%= book.is_read ? 'aria-disabled="true" style="pointer-events: none;"' : '' %>
+                href="<%= book.is_read ? '#' : '/' + translations.lang + '/book/' + book.title_en %>"
+                class="submit-btn submit-btn--outline <%= book.is_read ? 'disabled' : '' %>"
               >
-                  <%= translations.home.read %>
+                <%= translations.home.read %>
               </a>
             </div>
             <% }); %> <% } else { %>
@@ -200,10 +205,10 @@
                 </div>
               </div>
               <a
-                  href="<%= book.is_read ? `#` : `/${translations.lang}/book/${book.title_en}` %>"
-                  class="submit-btn submit-btn--outline <%= book.is_read ? 'disabled' : '' %>"
+                href="<%= book.is_read ? `#` : `/${translations.lang}/book/${book.title_en}` %>"
+                class="submit-btn submit-btn--outline <%= book.is_read ? 'disabled' : '' %>"
               >
-                  <%= translations.home.read %>
+                <%= translations.home.read %>
               </a>
             </div>
             <% }); %>

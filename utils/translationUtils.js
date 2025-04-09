@@ -1,27 +1,19 @@
-export function translateText(text, dictionary) {
-    return text.replace(/\b[\w']+\b/g, (word) => {
-      const lower = word.toLowerCase();
-      return dictionary[lower] || word;
-    });
-  }
-
-export function translateObject(obj, dictionary) {
-    if (typeof obj === "string") {
-      return translateText(obj, dictionary);
-    }
-  
-    if (Array.isArray(obj)) {
-      return obj.map(item => translateObject(item, dictionary));
-    }
-  
-    if (typeof obj === "object" && obj !== null) {
-      const result = {};
-      for (const key in obj) {
-        result[key] = translateObject(obj[key], dictionary);
-      }
-      return result;
-    }
-  
-    return obj;
-  }
-  
+export function translateBook(translations, book) {
+  const translatedTitle = translations[book.title_en]?.title || book.title_en;
+  const translatedDescription = translations[book.title_en]?.description || book.description_en;
+  const translatedAuthor = translations[book.title_en]?.author || book.author_en;    
+  return {
+    book_id: book.book_id,
+    title_en: book.title_en,
+    title: translatedTitle,
+    author: translatedAuthor,
+    description: translatedDescription,
+    image_url: book.image_url,
+    number_of_pages: book.number_of_pages,
+    year_published: book.year_published,
+    is_liked: book.is_liked,
+    is_read: book.is_read,
+    genre_name: book.genre_name_en.split(",").map(genre => translations.dbGenres[genre] || genre).join(","),
+    language: translations.dbLanguages[book.language_en],
+  };
+}

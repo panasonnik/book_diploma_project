@@ -1,7 +1,7 @@
 import { getUserBooks, getSavedBooks } from '../models/userModel.js';
 import { getBooksByGenre, isBookLiked, isBookRead } from '../models/bookModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
-import { translateText, translateObject } from '../utils/translationUtils.js';
+import { translateBook } from '../utils/translationUtils.js';
 
 export async function showHomepage(req, res) {
     try {
@@ -28,44 +28,16 @@ export async function showHomepage(req, res) {
         if (savedBooks.length >= 3) {
             showUpdateButton = true;
         }
-            Object.keys(booksByGenre).forEach(genre => {
-                booksByGenre[genre] = booksByGenre[genre].map(book => {
-                const translatedTitle = translations[book.title_en]?.title || book.title_en;
-                const translatedDescription = translations[book.title_en]?.description || book.description_en;
-                const translatedAuthor = translations[book.title_en]?.author || book.author_en;
-               
-                return {
-                  title: translatedTitle,
-                  author: translatedAuthor,
-                  description: translatedDescription,
-                  image_url: book.image_url,
-                  number_of_pages: book.number_of_pages,
-                  year_published: book.year_published,
-                  is_liked: book.is_liked,
-                  is_read: book.is_read,
-                  genre_name: book.genre_name_en.split(",").map(genre => translations.dbGenres[genre] || genre).join(","),
-                  language: translations.dbLanguages[book.language_en],
-                };
-                });
+        
+        Object.keys(booksByGenre).forEach(genre => {
+            booksByGenre[genre] = booksByGenre[genre].map(book => {
+                return translateBook(translations, book);
             });
-            books = books.map(book => {
-                const translatedTitle = translations[book.title_en]?.title || book.title_en;
-                const translatedDescription = translations[book.title_en]?.description || book.description_en;
-                const translatedAuthor = translations[book.title_en]?.author || book.author_en;
-               
-                return {
-                  title: translatedTitle,
-                  author: translatedAuthor,
-                  description: translatedDescription,
-                  image_url: book.image_url,
-                  number_of_pages: book.number_of_pages,
-                  year_published: book.year_published,
-                  is_liked: book.is_liked,
-                  is_read: book.is_read,
-                  genre_name: book.genre_name_en.split(",").map(genre => translations.dbGenres[genre] || genre).join(","),
-                  language: translations.dbLanguages[book.language_en],
-                };
-            });
+        });
+        books = books.map(book => {
+            return translateBook(translations, book);
+        });
+
         res.render('homepage', { translations, showUpdateButton, books: books.slice(0,4), booksByGenre });
 
     } catch (err) {
