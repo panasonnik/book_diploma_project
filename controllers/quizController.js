@@ -63,10 +63,10 @@ export async function submitQuiz (req, res) {
         const genrePreferencesArray = Array.isArray(genre_preferences) ? genre_preferences : genre_preferences.split(', ');
         const languagePreferencesArray = Array.isArray(language_preferences) ? language_preferences : language_preferences.split(', ');
         await clearUserGenresScore(userId);
-        const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
-            const genreId = await getGenreIdByName(element);
-            await addUserGenresScore(userId, genreId.genre_id, genreWeights/genrePreferencesArray.length, 1);
-        }));
+        // const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
+        //     const genreId = await getGenreIdByName(element);
+        //     await addUserGenresScore(userId, genreId.genre_id, genreWeights/genrePreferencesArray.length, 1);
+        // }));
 
         let bookLengthPreference = bookLength.replace("Book", "");
         let bookYearPreference = bookYear.replace("Book", "");

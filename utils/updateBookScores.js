@@ -1,4 +1,5 @@
-import { getSavedBooks, getReadBooks } from '../models/userModel.js';
+import { getSavedBooks } from '../models/userModel.js';
+import { getUserReadBooks } from '../models/userBooksModel.js';
 import { getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { getTranslations } from './getTranslations.js';
 import { updateQuantitativeCriterions, updateGenreWeights, distributeGenreWeights, updateGenreLanguage } from './updateUserPreferences.js';
@@ -6,7 +7,7 @@ import { calculateBookScores } from './calculateBookScores.js';
 import { recalculateWeights } from "./recalculateWeights.js";
 
 export async function updateBookScoresReadBooks(userId, userGenres) {
-    const readBooks = await getReadBooks(userId);
+    const readBooks = await getUserReadBooks(userId);
     if(readBooks.length > 0) {
         await updateQuantitativeCriterions(userId, readBooks);
         let changeGenreFlag = true;

@@ -1,4 +1,5 @@
-import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle, addReadBook, deleteReadBook } from '../models/bookModel.js';
+import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle } from '../models/bookModel.js';
+import { getBookReadData, addUserReadBook, updateBookReadingProgress } from '../models/userBooksModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
@@ -17,7 +18,6 @@ export async function saveBook(req, res) {
             await deleteBookPreference(userId, bookId);
         } else {
             await saveBookPreference(userId, bookId);
-            
             // await updateBookScores(userId, bookId);
         }
         
@@ -41,39 +41,46 @@ export async function removeBook(req, res) {
     }
 }
 
-export async function removeReadBook(req, res) {
-    try {
-        const bookId = req.body.book_id;
-        const translations = getTranslations(req);
-        const userId = req.user.userId;
-        await deleteReadBook(userId, bookId);
-        const deletedBookGenre = await getBookGenre (bookId);
-        await modifyGenreWeights(userId, deletedBookGenre);
-        res.redirect(req.get('Referer'));
-    } catch (err) {
-        console.error("Error removing book:", err);
-        res.status(500).send("Error removing book");
-    }
-}
+// export async function removeReadBook(req, res) {
+//     try {
+//         const bookId = req.body.book_id;
+//         const translations = getTranslations(req);
+//         const userId = req.user.userId;
+//         await deleteReadBook(userId, bookId);
+//         const deletedBookGenre = await getBookGenre (bookId);
+//         await modifyGenreWeights(userId, deletedBookGenre);
+//         res.redirect(req.get('Referer'));
+//     } catch (err) {
+//         console.error("Error removing book:", err);
+//         res.status(500).send("Error removing book");
+//     }
+// }
 
 export async function showReadBookPage (req, res) {
     try {
         const { title } = req.params;
         const userId = req.user.userId;
+
         const translations = getTranslations(req);
+
         let book = await getBookByTitle(title);
+        let bookReadData = await getBookReadData(userId, book.book_id);
+        if(!bookReadData) {
+            bookReadData = await addUserReadBook(userId, book.book_id, 0); //add new book to read
+        }
         const bookGenre = await getBookGenre(book.book_id);
-        await addReadBook(userId, book.book_id);
+        // await addReadBook(userId, book.book_id);
         const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
+
         book.is_liked = await isBookLiked(userId, book.book_id);
         book = translateBook(translations, book);
+
         req.session.isBooksReadModified = true;
         if (!req.session.userGenres) {
             req.session.userGenres = [];
         }
         
         const genres = bookGenre[0].genre_name_en.split(',').map(genre => genre.trim());
-        
         genres.forEach(genreName => {
             const existingGenre = req.session.userGenres.find(g => g.name === genreName);
         
@@ -84,7 +91,24 @@ export async function showReadBookPage (req, res) {
             }
         });
         
-        res.render('read-book', { translations, book, bookPreviewUrl });
+        res.render('read-book', { translations, book, bookPreviewUrl, pagesRead: bookReadData.pages_read });
+    } catch (err) {
+        console.error("Error rendering read book:", err);
+        res.status(500).send("Error rendering read book");
+    }
+}
+
+export async function updateBookPages (req, res) {
+    try {
+        const { title } = req.params;
+        const newPages = req.body.pageCount;
+        const userId = req.user.userId;
+        const translations = getTranslations(req);
+
+        let book = await getBookByTitle(title);
+      
+        await updateBookReadingProgress(userId, book.book_id, newPages);
+        res.redirect(`/${translations.lang}/book/${title}`);
     } catch (err) {
         console.error("Error rendering read book:", err);
         res.status(500).send("Error rendering read book");

@@ -96,8 +96,7 @@ export async function getUserBooks(userId) {
     try {
         const [rows] = await pool.query(`
             SELECT b.*, ubs.book_score, 
-            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
-            GROUP_CONCAT(g.genre_name_uk ORDER BY g.genre_name_uk SEPARATOR ', ') AS genre_name_uk
+            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
             FROM books b
             INNER JOIN user_book_scores ubs ON b.book_id = ubs.book_id
             LEFT JOIN books_genres bg ON b.book_id = bg.book_id
@@ -117,8 +116,7 @@ export async function getSavedBooks(userId) {
     try {
         const [rows] = await pool.query(`
             SELECT b.*,
-            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
-            GROUP_CONCAT(g.genre_name_uk ORDER BY g.genre_name_uk SEPARATOR ', ') AS genre_name_uk
+            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
             FROM user_book_preferences p
             JOIN books b ON p.book_id = b.book_id
             JOIN books_genres bg ON b.book_id = bg.book_id
@@ -133,22 +131,21 @@ export async function getSavedBooks(userId) {
     }
 }
 
-export async function getReadBooks(userId) {
-    try {
-        const [rows] = await pool.query(`
-            SELECT b.*,
-            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
-            GROUP_CONCAT(g.genre_name_uk ORDER BY g.genre_name_uk SEPARATOR ', ') AS genre_name_uk
-            FROM user_book_read r
-            JOIN books b ON r.book_id = b.book_id
-            JOIN books_genres bg ON b.book_id = bg.book_id
-            JOIN genres g ON bg.genre_id = g.genre_id  
-            WHERE r.user_id = ?
-            GROUP BY b.book_id;
-            `, [userId]);
-            return rows;
-    } catch (err) {
-        console.error("Error fetching user's books:", err);
-        throw new Error("Error fetching user's books");
-    }
-}
+// export async function getReadBooks(userId) {
+//     try {
+//         const [rows] = await pool.query(`
+//             SELECT b.*,
+//             GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
+//             FROM user_book_read r
+//             JOIN books b ON r.book_id = b.book_id
+//             JOIN books_genres bg ON b.book_id = bg.book_id
+//             JOIN genres g ON bg.genre_id = g.genre_id  
+//             WHERE r.user_id = ?
+//             GROUP BY b.book_id;
+//             `, [userId]);
+//             return rows;
+//     } catch (err) {
+//         console.error("Error fetching user's books:", err);
+//         throw new Error("Error fetching user's books");
+//     }
+// }

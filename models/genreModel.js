@@ -8,8 +8,7 @@ export async function getGenres() {
 
 export async function getBookGenre (bookId) {
     const [bookGenre] = await pool.query(`
-        SELECT GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
-            GROUP_CONCAT(g.genre_name_uk ORDER BY g.genre_name_uk SEPARATOR ', ') AS genre_name_uk
+        SELECT GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
         FROM genres g
         JOIN books_genres bg ON g.genre_id = bg.genre_id
         WHERE bg.book_id = ?
@@ -22,7 +21,7 @@ export async function getGenreIdByName (name) {
     const [genreId] = await pool.query(`
         SELECT g.*
         FROM genres g
-        WHERE g.genre_name_en = ? OR g.genre_name_uk = ?;
+        WHERE g.genre_name_en = ?;
         `, [name, name]);
     return genreId[0];
 }

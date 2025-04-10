@@ -2,23 +2,19 @@ import pool from "../config/db.js";
 
 export async function getUserGenresScore (userId) {
     const [rows] = await pool.query(`
-SELECT uw.*, 
-       g.genre_name_en,
-       g.genre_name_uk
-FROM user_genres_weights uw
-JOIN books_genres bg ON uw.genre_id = bg.genre_id
-JOIN genres g ON bg.genre_id = g.genre_id
-WHERE uw.user_id = ?
-GROUP BY uw.user_id, uw.genre_id;
+        SELECT uw.*, g.genre_name_en
+        FROM user_genres_weights uw
+        JOIN books_genres bg ON uw.genre_id = bg.genre_id
+        JOIN genres g ON bg.genre_id = g.genre_id
+        WHERE uw.user_id = ?
+        GROUP BY uw.user_id, uw.genre_id;
         `, [userId]);
     return rows;
 }
 
 export async function getUserGenreScoreByGenreName (userId, genre_name_en) {
     const [rows] = await pool.query(`
-        SELECT uw.*, 
-            g.genre_name_en,
-            g.genre_name_uk
+        SELECT uw.*, g.genre_name_en
         FROM user_genres_weights uw
         JOIN books_genres bg ON uw.genre_id = bg.genre_id
         JOIN genres g ON bg.genre_id = g.genre_id

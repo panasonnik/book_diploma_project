@@ -1,5 +1,6 @@
-import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail, getReadBooks } from '../models/userModel.js';
+import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail } from '../models/userModel.js';
 import { getLanguages } from '../models/bookModel.js';
+import { getUserReadBooks } from '../models/userBooksModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 import { translateBook } from '../utils/translationUtils.js';
@@ -24,7 +25,7 @@ export async function showReadBooksPage(req, res) {
     try {
       const userId = req.user.userId;
       const translations = getTranslations(req);
-      let readBooks = await getReadBooks(userId);
+      let readBooks = await getUserReadBooks(userId);
       const user = await getUserById(userId);
       readBooks = readBooks.map(book => {
         return translateBook(translations, book);

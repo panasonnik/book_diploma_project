@@ -77,6 +77,38 @@
                   <%= book.author %>
                 </p>
               </div>
+              <div class="book-card__page-data">
+                <form
+                  class="form mt-5"
+                  action="<%= '/' + translations.lang + '/book/' + book.title_en + '/update-pages' %>"
+                  method="POST"
+                >
+                  <div class="form__field">
+                    <label class="form__field__label" for="page-count"
+                      >PAGES:
+                    </label>
+                    <input
+                      class="form__input-field"
+                      type="number"
+                      id="pageCount"
+                      name="pageCount"
+                      autocomplete="off"
+                      min="1"
+                      max="<%= book.number_of_pages %>"
+                      value="<%= pagesRead %>"
+                      required
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    class="submit-btn"
+                    id="register__create-btn"
+                  >
+                    SAve
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
