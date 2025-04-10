@@ -13,6 +13,7 @@ export function translateBook(translations, book) {
     year_published: book.year_published,
     is_liked: book.is_liked,
     is_read: book.is_read,
+    is_completed: book.is_completed,
     genre_name: book.genre_name_en.split(", ").map(genre => translations.dbGenres[genre] || genre).join(", "),
     language: translations.dbLanguages[book.language_en],
   };

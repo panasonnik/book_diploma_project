@@ -42,6 +42,8 @@ const en = {
             'Young Adult':"Young Adult",
             topPicks:"Top picks for you!",
             read: "Read book",
+            continueReading: "Continue reading",
+            readingCompleted: "Book finished",
             updateRecsRead:"Update book recs based on read",
             updateQuiz: "Retake quiz",
             updateRecsLiked:"Update recommendations",
@@ -91,6 +93,12 @@ const en = {
             languagePrefs: "Language preferences: ",
             cancel: "Cancel",
             save: "Save",
+            pagesRead: "pages read",
+            lastUpdated: "Last updated"
+      },
+      readBook: {
+            pages: "Enter your reading progress (number of read pages)",
+            errorNotFound: "No book found or not available in Ukrainian/English."
       },
       dbGenres: {
             Mystery: "Mystery",
@@ -102,11 +110,6 @@ const en = {
       dbLanguages: {
             English: "English",
             Ukrainian: "Ukrainian"
-      },
-      "The Great Gatsby" : {
-            title: "The Great Gatsby",
-            author: "F. Scott Fitzgerald",
-            description: "A novel set in the Roaring Twenties about wealth, love, and the American Dream."
       }
 };
   

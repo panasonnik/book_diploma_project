@@ -93,16 +93,6 @@ export async function isBookLiked (userId, bookId) {
     return rows.length > 0;
 }
 
-// export async function isBookRead (userId, bookId) {
-//     const [rows] = await pool.query(`
-//         SELECT * 
-//         FROM user_book_read 
-//         WHERE user_id = ? AND book_id = ?
-//         `, [userId, bookId]
-//     );
-//     return rows.length > 0;
-// }
-
 export async function getLanguages() {
     const dbResult = await pool.query("SELECT b.language_en FROM books b");
     const languagesList = dbResult[0];

@@ -1,5 +1,5 @@
 import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle } from '../models/bookModel.js';
-import { getBookReadData, addUserReadBook, updateBookReadingProgress } from '../models/userBooksModel.js';
+import { getBookReadData, addUserReadBook, updateBookReadingProgress, completeBook} from '../models/userBooksModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
@@ -91,7 +91,7 @@ export async function showReadBookPage (req, res) {
             }
         });
         
-        res.render('read-book', { translations, book, bookPreviewUrl, pagesRead: bookReadData.pages_read });
+        res.render('read-book', { translations, book, bookPreviewUrl, pagesRead: bookReadData.pages_read, isCompleted: bookReadData.is_book_completed });
     } catch (err) {
         console.error("Error rendering read book:", err);
         res.status(500).send("Error rendering read book");
@@ -108,6 +108,9 @@ export async function updateBookPages (req, res) {
         let book = await getBookByTitle(title);
       
         await updateBookReadingProgress(userId, book.book_id, newPages);
+        if (newPages == book.number_of_pages) {
+            await completeBook(userId, book.book_id);
+        }
         res.redirect(`/${translations.lang}/book/${title}`);
     } catch (err) {
         console.error("Error rendering read book:", err);

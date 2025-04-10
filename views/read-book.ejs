@@ -85,7 +85,7 @@
                 >
                   <div class="form__field">
                     <label class="form__field__label" for="page-count"
-                      >PAGES:
+                      ><%= translations.readBook.pages %>
                     </label>
                     <input
                       class="form__input-field"
@@ -105,7 +105,7 @@
                     class="submit-btn"
                     id="register__create-btn"
                   >
-                    SAve
+                    <%= translations.profile.save %>
                   </button>
                 </form>
               </div>
@@ -123,7 +123,7 @@
             class="mt"
           ></iframe>
           <% } else { %>
-          <p>No book found or not available in Ukrainian/English.</p>
+          <p><%= translations.readBook.errorNotFound %></p>
           <% } %>
         </div>
       </div>

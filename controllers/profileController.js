@@ -1,6 +1,6 @@
 import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail } from '../models/userModel.js';
 import { getLanguages } from '../models/bookModel.js';
-import { getUserReadBooks } from '../models/userBooksModel.js';
+import { getUserReadBooks, getBookReadData } from '../models/userBooksModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 import { translateBook } from '../utils/translationUtils.js';
@@ -27,9 +27,19 @@ export async function showReadBooksPage(req, res) {
       const translations = getTranslations(req);
       let readBooks = await getUserReadBooks(userId);
       const user = await getUserById(userId);
-      readBooks = readBooks.map(book => {
-        return translateBook(translations, book);
-      });
+      readBooks = await Promise.all(
+        readBooks.map(async (book) => {
+          const readingData = await getBookReadData(userId, book.book_id);
+        return {
+          ...translateBook(translations, book),
+          pages_read: readingData.pages_read,
+          last_updated: new Date(readingData.updated_at).toLocaleDateString('en-GB')
+        }
+        })
+      );
+      
+      
+      console.log(readBooks);
 
       res.render('read-books-profile', { translations, readBooks, user });
   } catch (err) {

@@ -46,3 +46,33 @@ export async function updateBookReadingProgress (user_id, book_id, pages_read) {
 
     return updatedBook;
 }
+
+export async function isBookRead (userId, bookId) {
+    const [rows] = await pool.query(`
+        SELECT * 
+        FROM user_books 
+        WHERE user_id = ? AND book_id = ? AND pages_read > 0 AND is_book_completed = FALSE
+        `, [userId, bookId]
+    );
+    return rows.length > 0;
+}
+
+export async function isBookCompleted (userId, bookId) {
+    const [rows] = await pool.query(`
+        SELECT * 
+        FROM user_books 
+        WHERE user_id = ? AND book_id = ? AND is_book_completed = TRUE
+        `, [userId, bookId]
+    );
+    return rows.length > 0;
+}
+
+export async function completeBook (userId, bookId) {
+    const [updatedBook] = await pool.query(`
+        UPDATE user_books
+        SET is_book_completed = TRUE
+        WHERE user_id = ? AND book_id = ?
+        `, [userId, bookId]);
+
+    return updatedBook;
+}
