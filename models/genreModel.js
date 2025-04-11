@@ -14,7 +14,7 @@ export async function getBookGenre (bookId) {
         WHERE bg.book_id = ?
         GROUP BY bg.book_id;
         `, [bookId]);
-    return bookGenre;
+    return bookGenre[0].genre_name_en;
 }
 
 export async function getGenreIdByName (name) {

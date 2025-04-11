@@ -15,7 +15,7 @@ export async function updateBookScoresReadBooks(userId, userGenres) {
         await recalculateWeights(userId, 2.0, readBooks, changeGenreFlag); // 2.0 - action intensity factor. Для прочитаних книг більше. Для просто "Обраних книг" = 1.5 (менша зміна вагів).
         
         const quizAnswer = await getQuizAnswerByUserId(userId);
-        await updateGenreWeights(userId, userGenres, quizAnswer);
+        //await updateGenreWeights(userId, userGenres, quizAnswer);
         await calculateBookScores(quizAnswer);
     }
     

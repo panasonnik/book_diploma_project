@@ -1,5 +1,6 @@
 import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle } from '../models/bookModel.js';
-import { getBookReadData, addUserReadBook, updateBookReadingProgress, completeBook} from '../models/userBooksModel.js';
+import { getBookReadData, addUserReadBook, updateBookReadingProgress, completeBook, isBookCompleted } from '../models/userBooksModel.js';
+import { addReadBookGenre } from '../utils/userBookReadUtils.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
@@ -73,6 +74,7 @@ export async function showReadBookPage (req, res) {
         const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
 
         book.is_liked = await isBookLiked(userId, book.book_id);
+        book.is_completed = await isBookCompleted(userId, book.book_id);
         book = translateBook(translations, book);
 
         req.session.isBooksReadModified = true;
@@ -80,7 +82,7 @@ export async function showReadBookPage (req, res) {
             req.session.userGenres = [];
         }
         
-        const genres = bookGenre[0].genre_name_en.split(',').map(genre => genre.trim());
+        const genres = bookGenre.split(',').map(genre => genre.trim());
         genres.forEach(genreName => {
             const existingGenre = req.session.userGenres.find(g => g.name === genreName);
         
@@ -110,6 +112,7 @@ export async function updateBookPages (req, res) {
         await updateBookReadingProgress(userId, book.book_id, newPages);
         if (newPages == book.number_of_pages) {
             await completeBook(userId, book.book_id);
+            await addReadBookGenre(userId, book.book_id);
         }
         res.redirect(`/${translations.lang}/book/${title}`);
     } catch (err) {
