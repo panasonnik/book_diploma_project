@@ -1,8 +1,10 @@
 import { getBooks } from "../models/bookModel.js";
 import { getGenreIdByName } from "../models/genreModel.js";
-import { getQuizAnswerByUserId, updateGenreLanguagePreferences, updateQuantitativeCriterionsQuizAnswer } from "../models/quizAnswerModel.js";
+import { getQuizAnswerByUserId, updateGenreLanguagePreferences, updateQuantitativeCriterionsQuizAnswer, updateQuizAnswerLanguages } from "../models/quizAnswerModel.js";
 import { getUserGenresScore, addUserGenresScore, clearUserGenresScore } from "../models/userGenresWeightsModel.js";
 import { findMostFrequent, getAverage, getLengthCategory, getYearCategory } from "./mathOperationsUtils.js";
+import { getUserReadBooks } from '../models/userBooksModel.js';
+import { getUserReadingHabits } from "./userBookReadUtils.js";
 
 export async function updateGenreLanguage(userId, readBooks) {
     const resolvedReadBooks = await readBooks;
@@ -62,68 +64,110 @@ export async function updateQuantitativeCriterions (userId, readBooks) {
     let newPreferredLength = getLengthCategory(avgBookPages);
     let newPreferredYear = getYearCategory(avgBookYear);
     await updateQuantitativeCriterionsQuizAnswer(userId, newPreferredLength, newPreferredYear);
-}  
+}
 
-export async function updateGenreWeights (userId, userGenres, quizAnswer) {
-    const userGenreScore = await getUserGenresScore(userId);
-    const resolvedQuizAnswer = await quizAnswer;
+export async function updateGenreWeights (userId, genresObj) {
+    const quizAnswer = await getQuizAnswerByUserId(userId);
+    const totalGenreWeights = quizAnswer.weights_genre;
+
+    let totalNumberOfBooksRead = Object.values(genresObj).reduce((sum, count) => sum + count, 0);
+
     await clearUserGenresScore(userId);
-    const weightsGenre = resolvedQuizAnswer.weights_genre;
-        const genresFromDb = userGenreScore.map(item => ({
-            name: item.genre_name_en,
-            count: item.books_read_count
-          }));
-        console.log("Genre from DB: ", genresFromDb);
-        let mergedGenres = mergeGenres(genresFromDb, userGenres); 
-        console.log("Merged genres: ", mergedGenres);
-        let newBooksReadByUser = mergedGenres.reduce((sum, item) => sum + item.count, 0);
-        mergedGenres.forEach(async (genre) => {
-            let genreProportion = genre.count / newBooksReadByUser;
-            let genreWeightPart = weightsGenre * genreProportion;
-            const genreItem = await getGenreIdByName(genre.name);
-            const genreId = genreItem.genre_id;
-            await addUserGenresScore(userId, genreId, genreWeightPart, genre.count);
-        });
+    for (const [genre, count] of Object.entries(genresObj)) {
+        let genreProportion = count / totalNumberOfBooksRead;
+        let genreWeightPart = totalGenreWeights * genreProportion;
+        const genreId = await getGenreIdByName(genre);
+        console.log("The genre ", genre, " will be added with score ", genreWeightPart, " with ", count);
+        await addUserGenresScore(userId, genreId, genreWeightPart, count);
+    }
 }
 
-export async function modifyGenreWeights (userId, deletedGenre) {
-    const userGenreScore = await getUserGenresScore(userId);
+export async function updateUserBookReading (userId) {
+    const userBooksReading = await getUserReadBooks(userId);
     const quizAnswer = await getQuizAnswerByUserId(userId);
-    
-    const weightsGenre = quizAnswer.weights_genre;
-    const genresFromDb = userGenreScore.map(item => ({
-        name: item.genre_name_en,
-        count: item.genre_name_en === deletedGenre ? Math.max(0, item.books_read_count - 1) : item.books_read_count
-    }));
-        let newBooksReadByUser = genresFromDb.reduce((sum, item) => sum + item.count, 0);
-        await clearUserGenresScore(userId);
-        genresFromDb.forEach(async (genre) => {
-            let genreProportion = genre.count / newBooksReadByUser;
-            let genreWeightPart = weightsGenre * genreProportion;
-            
-            const genreItem = await getGenreIdByName(genre.name);
-            const genreId = genreItem.genre_id;
-            await addUserGenresScore(userId, genreId, genreWeightPart, genre.count);
-        });
-}
+    const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+    let statistics = {
+        shortBooksCompleted: 0,
+        shortBooksStarted: 0,
+        shortBooksForgotten: 0,
 
-export async function distributeGenreWeights (userId) {
-    const userGenreScore = await getUserGenresScore(userId);
-    const quizAnswer = await getQuizAnswerByUserId(userId);
-    const weightsGenre = quizAnswer.weights_genre;
-    const genresFromDb = userGenreScore.map(item => ({
-        name: item.genre_name_en,
-        count: item.books_read_count
-    }));
-        let newBooksReadByUser = genresFromDb.reduce((sum, item) => sum + item.count, 0);
-        genresFromDb.forEach(async (genre) => {
-            let genreProportion = genre.count / newBooksReadByUser;
-            let genreWeightPart = weightsGenre * genreProportion;
-            
-            const genreItem = await getGenreIdByName(genre.name);
-            const genreId = genreItem.genre_id;
-            await addUserGenresScore(userId, genreId, genreWeightPart, genre.count);
-        });
+        mediumLengthBooksCompleted: 0,
+        mediumLengthBooksStarted: 0,
+        mediumLengthBooksForgotten: 0,
+
+        longBooksCompleted: 0,
+        longBooksStarted: 0,
+        longBooksForgotten: 0,
+
+        newBooksCompleted: 0,
+        newBooksStarted: 0,
+        newBooksForgotten: 0,
+
+        mediumYearBooksCompleted: 0,
+        mediumYearBooksStarted: 0,
+        mediumYearBooksForgotten: 0,
+
+        oldBooksCompleted: 0,
+        oldBooksStarted: 0,
+        oldBooksForgotten: 0,
+
+        genres: [],
+        genresForgotten: [],
+        languages: [],
+        languagesForgotten: []
+    };
+    userBooksReading.forEach(book => {
+        const timeInMsSinceLastUpdate = new Date() - book.updated_at;
+        const percentageRead = (book.pages_read / book.number_of_pages) * 100;
+        const bookLengthCategory = getLengthCategory(book.number_of_pages);
+        const bookYearCategory = getYearCategory(book.year_published);
+        const isForgotten = percentageRead < 30 && timeInMsSinceLastUpdate > oneWeekMs;
+        
+        if(!isForgotten) {
+            statistics.genres.push(...book.genre_name_en.split(',').map(g => g.trim()));
+            statistics.languages.push(...book.language_en.split(',').map(l => l.trim()));
+        } else {
+            statistics.genresForgotten.push(...book.genre_name_en.split(',').map(g => g.trim()));
+            statistics.languagesForgotten.push(...book.language_en.split(',').map(l => l.trim()));
+        }
+
+        if (bookLengthCategory === 'short') {
+            if(percentageRead >= 80) statistics.shortBooksCompleted += 1;
+            else if(!isForgotten) statistics.shortBooksStarted += 1;
+            else if (isForgotten) statistics.shortBooksForgotten += 1;
+        }
+        else if (bookLengthCategory === 'medium') {
+            if(percentageRead >= 80) statistics.mediumLengthBooksCompleted += 1;
+            else if(!isForgotten) statistics.mediumLengthBooksStarted += 1;
+            else if (isForgotten) statistics.mediumLengthBooksForgotten += 1;
+        }
+        else if (bookLengthCategory === 'long') {
+            if(percentageRead >= 80) statistics.longBooksCompleted += 1;
+            else if(!isForgotten) statistics.longBooksStarted += 1;
+            else if (isForgotten) statistics.longBooksForgotten += 1;
+        }
+
+        if (bookYearCategory === 'old') {
+            if(percentageRead >= 80) statistics.oldBooksCompleted += 1;
+            else if(!isForgotten) statistics.oldBooksStarted += 1;
+            else if (isForgotten) statistics.oldBooksForgotten += 1;
+        }
+        else if (bookYearCategory === 'medium') {
+            if(percentageRead >= 80) statistics.mediumYearBooksCompleted += 1;
+            else if(!isForgotten) statistics.mediumYearBooksStarted += 1;
+            else if (isForgotten) statistics.mediumYearBooksForgotten += 1;
+        }
+        else if (bookYearCategory === 'new') {
+            if(percentageRead >= 80) statistics.newBooksCompleted += 1;
+            else if(!isForgotten) statistics.newBooksStarted += 1;
+            else if (isForgotten) statistics.newBooksForgotten += 1;
+        }
+    });
+    const readingHabits = await getUserReadingHabits(statistics);
+    console.log(readingHabits);
+    await updateQuantitativeCriterionsQuizAnswer(userId, readingHabits.preferredLength, readingHabits.preferredYear);
+    await updateQuizAnswerLanguages(userId, readingHabits.languagePreferences);
+    await updateGenreWeights(userId, readingHabits.genrePreferences);
 }
 
 function mergeGenres(array1, array2) {

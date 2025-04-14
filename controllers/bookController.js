@@ -1,12 +1,10 @@
 import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle } from '../models/bookModel.js';
 import { getBookReadData, addUserReadBook, updateBookReadingProgress, completeBook, isBookCompleted } from '../models/userBooksModel.js';
-import { addReadBookGenre } from '../utils/userBookReadUtils.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
 import { getBookGenre } from '../models/genreModel.js';
 
-import { modifyGenreWeights } from '../utils/updateUserPreferences.js';
 import { translateBook } from '../utils/translationUtils.js';
 
 export async function saveBook(req, res) {
@@ -42,21 +40,6 @@ export async function removeBook(req, res) {
     }
 }
 
-// export async function removeReadBook(req, res) {
-//     try {
-//         const bookId = req.body.book_id;
-//         const translations = getTranslations(req);
-//         const userId = req.user.userId;
-//         await deleteReadBook(userId, bookId);
-//         const deletedBookGenre = await getBookGenre (bookId);
-//         await modifyGenreWeights(userId, deletedBookGenre);
-//         res.redirect(req.get('Referer'));
-//     } catch (err) {
-//         console.error("Error removing book:", err);
-//         res.status(500).send("Error removing book");
-//     }
-// }
-
 export async function showReadBookPage (req, res) {
     try {
         const { title } = req.params;
@@ -70,7 +53,7 @@ export async function showReadBookPage (req, res) {
             bookReadData = await addUserReadBook(userId, book.book_id, 0); //add new book to read
         }
         const bookGenre = await getBookGenre(book.book_id);
-        // await addReadBook(userId, book.book_id);
+        //await addReadBook(userId, book.book_id);
         const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
 
         book.is_liked = await isBookLiked(userId, book.book_id);
@@ -78,20 +61,20 @@ export async function showReadBookPage (req, res) {
         book = translateBook(translations, book);
 
         req.session.isBooksReadModified = true;
-        if (!req.session.userGenres) {
-            req.session.userGenres = [];
-        }
+        // if (!req.session.userGenres) {
+        //     req.session.userGenres = [];
+        // }
         
-        const genres = bookGenre.split(',').map(genre => genre.trim());
-        genres.forEach(genreName => {
-            const existingGenre = req.session.userGenres.find(g => g.name === genreName);
+        // const genres = bookGenre.split(',').map(genre => genre.trim());
+        // genres.forEach(genreName => {
+        //     const existingGenre = req.session.userGenres.find(g => g.name === genreName);
         
-            if (existingGenre) {
-                existingGenre.count += 1;
-            } else {
-                req.session.userGenres.push({ name: genreName, count: 1 });
-            }
-        });
+        //     if (existingGenre) {
+        //         existingGenre.count += 1;
+        //     } else {
+        //         req.session.userGenres.push({ name: genreName, count: 1 });
+        //     }
+        // });
         
         res.render('read-book', { translations, book, bookPreviewUrl, pagesRead: bookReadData.pages_read, isCompleted: bookReadData.is_book_completed });
     } catch (err) {
@@ -112,7 +95,7 @@ export async function updateBookPages (req, res) {
         await updateBookReadingProgress(userId, book.book_id, newPages);
         if (newPages == book.number_of_pages) {
             await completeBook(userId, book.book_id);
-            await addReadBookGenre(userId, book.book_id);
+            //await addReadBookGenre(userId, book.book_id);
         }
         res.redirect(`/${translations.lang}/book/${title}`);
     } catch (err) {

@@ -37,9 +37,6 @@ export async function showReadBooksPage(req, res) {
         }
         })
       );
-      
-      
-      console.log(readBooks);
 
       res.render('read-books-profile', { translations, readBooks, user });
   } catch (err) {

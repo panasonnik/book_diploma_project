@@ -2,6 +2,7 @@ import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, g
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
 import { updateBookScoresReadBooks, updateBookScoresLikedBooks } from '../utils/updateBookScores.js';
 import { getTranslations } from '../utils/getTranslations.js';
+import { updateUserBookReading } from '../utils/updateUserPreferences.js';
 
 export async function registerUser(req, res) {
     const { username, email, password } = req.body;
@@ -58,6 +59,7 @@ export async function loginUser(req, res) {
 export async function logoutUser(req, res) {
     try {
         const translations = getTranslations(req);
+        await updateUserBookReading(req.user.userId); //updates user preferences (year, length, genres, languages)
         if (req.session.isBooksReadModified) {
             await updateBookScoresReadBooks(req.user.userId, req.session.userGenres);
         }

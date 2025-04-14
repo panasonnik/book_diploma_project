@@ -12,14 +12,26 @@ export async function getBookReadData(user_id, book_id) {
 export async function getUserReadBooks(userId) {
     try {
         const [rows] = await pool.query(`
-            SELECT b.*,
+            SELECT 
+            ub.book_id,
+            ub.user_id,
+            ub.pages_read,
+            ub.is_book_completed,
+            ub.created_at,
+            ub.updated_at,
+            b.*,
             GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
             FROM user_books ub
             JOIN books b ON ub.book_id = b.book_id
             JOIN books_genres bg ON b.book_id = bg.book_id
             JOIN genres g ON bg.genre_id = g.genre_id  
             WHERE ub.user_id = ?
-            GROUP BY b.book_id;
+            GROUP BY ub.book_id,
+            ub.user_id,
+            ub.pages_read,
+            ub.is_book_completed,
+            ub.created_at,
+            ub.updated_at;
             `, [userId]);
             return rows;
     } catch (err) {

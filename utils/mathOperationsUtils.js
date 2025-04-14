@@ -18,6 +18,7 @@ export function getMinMax(array, key) {
 export function normalizeUsingMedian(array, current, median, key) { 
     return 1 - Math.abs(current - median) / maxDeviation(array, key, median);
 }
+
 function maxDeviation (array, key, median) {
     const values = array.map(item => item[key]);
     return Math.max(...values.map(v => Math.abs(v - median)));
