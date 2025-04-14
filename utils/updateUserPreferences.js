@@ -77,7 +77,6 @@ export async function updateGenreWeights (userId, genresObj) {
         let genreProportion = count / totalNumberOfBooksRead;
         let genreWeightPart = totalGenreWeights * genreProportion;
         const genreId = await getGenreIdByName(genre);
-        console.log("The genre ", genre, " will be added with score ", genreWeightPart, " with ", count);
         await addUserGenresScore(userId, genreId, genreWeightPart, count);
     }
 }

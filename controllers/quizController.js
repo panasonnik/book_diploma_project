@@ -148,7 +148,7 @@ export async function submitRetakeQuiz (req, res) {
       await clearUserGenresScore(userId);
       const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
           const genreId = await getGenreIdByName(element);
-          await addUserGenresScore(userId, genreId.genre_id, normGenreWeights/genrePreferencesArray.length, 1);
+          await addUserGenresScore(userId, genreId, normGenreWeights/genrePreferencesArray.length, 1);
       }));
       let bookLengthPreference = bookLength.replace("Book", "");
       let bookYearPreference = bookYear.replace("Book", "");

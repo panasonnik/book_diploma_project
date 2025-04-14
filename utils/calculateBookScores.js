@@ -43,9 +43,9 @@ export async function calculateBookScores(quizAnswer) {
 
     const filteredBooks = [];
 
-    if (allEqual) { //if all weights are equal
+    if (allEqual) {
         for (const book of booksByGenre) {
-            let matches = 0; //if the book matches 3 out of 4 criterions
+            let matches = 0;
             for (const key in userWeights) {
                     if (Array.isArray(criteria[key])) {
                         if (book[key].includes(criteria[key])) {
@@ -60,9 +60,9 @@ export async function calculateBookScores(quizAnswer) {
                     }
             }
             if (matches >= 3) filteredBooks.push(book);
-            else await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score); //else - score for the book is 0
+            else await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
         }
-    } else { //check if the weights are greater than threshold, to prioritize criterions
+    } else {
         for (const book of booksByGenre) {
             let needsToBeExcluded = false;
 
