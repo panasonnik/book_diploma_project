@@ -98,7 +98,8 @@ const en = {
       },
       readBook: {
             pages: "Enter your reading progress (number of read pages)",
-            errorNotFound: "No book found or not available in Ukrainian/English."
+            errorNotFound: "No book found or not available in Ukrainian/English.",
+            totalPages: "pages"
       },
       dbGenres: {
             Mystery: "Mystery",

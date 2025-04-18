@@ -1,4 +1,4 @@
-import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, getUsers, hasCompletedQuiz } from '../models/userModel.js';
+import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, hasCompletedQuiz } from '../models/userModel.js';
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
 import { updateBookScoresReadBooks, updateBookScoresLikedBooks } from '../utils/updateBookScores.js';
 import { getTranslations } from '../utils/getTranslations.js';
@@ -61,7 +61,7 @@ export async function logoutUser(req, res) {
         const translations = getTranslations(req);
         await updateUserBookReading(req.user.userId); //updates user preferences (year, length, genres, languages)
         if (req.session.isBooksReadModified) {
-            await updateBookScoresReadBooks(req.user.userId, req.session.userGenres);
+            await updateBookScoresReadBooks(req.user.userId);
         }
         Object.keys(req.cookies).forEach(cookieName => {
             res.clearCookie(cookieName, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });

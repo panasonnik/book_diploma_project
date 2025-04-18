@@ -76,10 +76,14 @@
                 <p class="subheading subheading--small subheading--light">
                   <%= book.author %>
                 </p>
+                <p class="subheading subheading--small subheading--light">
+                  <%= book.number_of_pages %> <%=
+                  translations.readBook.totalPages %>
+                </p>
               </div>
               <div class="book-card__page-data">
                 <form
-                  class="form mt-5"
+                  class="form mt"
                   action="<%= '/' + translations.lang + '/book/' + book.title_en + '/update-pages' %>"
                   method="POST"
                 >

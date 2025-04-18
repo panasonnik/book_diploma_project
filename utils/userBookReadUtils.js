@@ -1,52 +1,3 @@
-//not used
-// export async function addReadBookGenre (userId, bookId) {
-//     const quizAnswer = await getQuizAnswerByUserId(userId);
-//     const totalGenreWeights = quizAnswer.weights_genre;
-
-//     const userGenreWeights = await getUserGenresScore(userId);
-//     let readBookGenres = await getBookGenre(bookId);
-//     readBookGenres = readBookGenres.split(",");
-//     const genreWeightsFromDB = userGenreWeights.map(genre => ({
-//         name: genre.genre_name_en,
-//         count: genre.books_read_count
-//     }));
-
-//     const newGenres = Object.values(
-//         readBookGenres.reduce((acc, genre) => {
-//           if (!acc[genre]) {
-//             acc[genre] = { name: genre, count: 0 };
-//           }
-//           acc[genre].count++;
-//           return acc;
-//         }, {})
-//     );
-    
-//     const mergedGenres = mergeGenres(genreWeightsFromDB, newGenres);
-   
-//     let totalNumberOfBooksRead = mergedGenres.reduce((sum, item) => sum + item.count, 0);
-
-//     await clearUserGenresScore(userId);
-//     mergedGenres.forEach(async (genre) => {
-//         let genreProportion = genre.count / totalNumberOfBooksRead;
-//         let genreWeightPart = totalGenreWeights * genreProportion;
-//         const genreId = await getGenreIdByName(genre.name);
-//         await addUserGenresScore(userId, genreId, genreWeightPart, genre.count);
-//     });
-// }
-
-// function mergeGenres(array1, array2) {
-//     let genreMap = new Map();
-//     [...array1, ...array2].forEach(genre => {
-//         if (genreMap.has(genre.name)) {
-//             genreMap.get(genre.name).count += genre.count;
-//         } else {
-//             genreMap.set(genre.name, { name: genre.name, count: genre.count });
-//         }
-//     });
-
-//     return Array.from(genreMap.values());
-// }
-
 export async function getUserReadingHabits(statistics) {
   
     const lengthGroup = [
@@ -100,7 +51,7 @@ export async function getUserReadingHabits(statistics) {
     const bestWorstLanguagesForgotten = getBestWorstRates(languageRates, 'forgottenRate');
 
     const highestScoredGenres = getHighestScored(genreRates, completedGenres);
-    const highestScoredLanguages = getHighestScored(languageRates, completedLanguages);
+    //const highestScoredLanguages = getHighestScored(languageRates, completedLanguages);
 
     if(bestWorstBookLength.best.categoryName !== bestWorstBookLength.worst.categoryName) {
         console.log("User prefers ", bestWorstBookLength.best.categoryName, "-length books");
@@ -137,7 +88,7 @@ export async function getUserReadingHabits(statistics) {
   function getRates(group) {
     return group.map(category => {
         const total = category.completed + category.inProgress + category.forgotten;
-        const completedRate = total !== 0 ? category.completed / total: 0;
+        const completedRate = total !== 0 ? category.completed / total : 0;
         const weightedScore = completedRate * Math.log(total + 1);
         return {
             categoryName: category.categoryName,

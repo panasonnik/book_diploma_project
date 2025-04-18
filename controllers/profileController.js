@@ -2,6 +2,7 @@ import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEma
 import { getLanguages } from '../models/bookModel.js';
 import { getUserReadBooks, getBookReadData } from '../models/userBooksModel.js';
 import {updateQuizAnswerLanguages, getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
+import { isBookRead, isBookCompleted } from '../models/userBooksModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 import { translateBook } from '../utils/translationUtils.js';
 
@@ -11,9 +12,14 @@ export async function showProfilePage(req, res) {
         const translations = getTranslations(req);
         let savedBooks = await getSavedBooks(userId);
         const user = await getUserById(userId);
+        for (let book of savedBooks) {
+          book.is_read = await isBookRead(userId, book.book_id);
+          book.is_completed = await isBookCompleted(userId, book.book_id);
+        }
         savedBooks = savedBooks.map(book => {
           return translateBook(translations, book);
         });
+        
         res.render('profile', { translations, savedBooks, user });
     } catch (err) {
         console.error("Error rendering profile page:", err);
@@ -30,13 +36,15 @@ export async function showReadBooksPage(req, res) {
       readBooks = await Promise.all(
         readBooks.map(async (book) => {
           const readingData = await getBookReadData(userId, book.book_id);
-        return {
-          ...translateBook(translations, book),
-          pages_read: readingData.pages_read,
-          last_updated: new Date(readingData.updated_at).toLocaleDateString('en-GB')
-        }
+          return {
+            ...translateBook(translations, book),
+            pages_read: readingData.pages_read,
+            updated_at_raw: readingData.updated_at,
+            last_updated: new Date(readingData.updated_at).toLocaleDateString('en-GB')
+          };
         })
       );
+      readBooks.sort((a, b) => new Date(b.updated_at_raw) - new Date(a.updated_at_raw));
 
       res.render('read-books-profile', { translations, readBooks, user });
   } catch (err) {
@@ -77,29 +85,11 @@ export async function showEditProfilePage(req, res) {
 
 export async function saveProfileChanges(req, res) {
     try {
-        const { username, email, languages } = req.body;
+        const { username, email } = req.body;
         const translations = getTranslations(req);
         const userId = req.user.userId;
         const user = await getUserById(userId);
-        const languagesObj = await getLanguages();
-        let bookLanguages = [];
-
-        for (let i = 0; i < languagesObj.length; i++) {
-          let isDuplicate = false;
-
-          for (let j = 0; j < bookLanguages.length; j++) {
-            if (languagesObj[i].language_en === bookLanguages[j].language_en &&
-                languagesObj[i].language_uk === bookLanguages[j].language_uk) {
-              isDuplicate = true;
-              break;
-            }
-          }
         
-          if (!isDuplicate) {
-            bookLanguages.push(languagesObj[i]);
-          }
-        }
-        const languagePreferencesString = Array.isArray(languages) ? languages.join(', ') : languages;
         const existingUsername = await getUserByUsername(username);
 
         if (existingUsername && username !== user.username) {
@@ -112,10 +102,6 @@ export async function saveProfileChanges(req, res) {
         }
 
         await updateUser(userId, username, email);
-        await updateQuizAnswerLanguages(userId, languagePreferencesString);
-            
-        const quizAnswer = await getQuizAnswerByUserId(userId);
-        //await calculateBookScores(quizAnswer);
         res.redirect(`/${translations.lang}/profile`);
         } catch (error) {
             console.error(error);

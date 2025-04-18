@@ -155,10 +155,13 @@
                 </div>
               </div>
               <a
-                href="<%= book.is_read ? '#' : '/' + translations.lang + '/book/' + book.title_en %>"
-                class="submit-btn submit-btn--outline <%= book.is_read ? 'disabled' : '' %>"
+                href="<%= book.is_completed ? `#` : `/${translations.lang}/book/${book.title_en}` %>"
+                class="submit-btn submit-btn--outline <%= book.is_completed ? 'disabled' : '' %>"
               >
-                <%= translations.home.read %>
+                <% if (book.is_completed) { %> <%=
+                translations.home.readingCompleted %> <% } else if
+                (book.is_read) { %> <%=translations.home.continueReading %> <% }
+                else { %> <%=translations.home.read %> <% } %>
               </a>
             </div>
             <% }); %> <% } else { %>

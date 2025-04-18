@@ -27,7 +27,6 @@ router.post('/update-book-scores-read',authenticateToken, updateBookScoresReadBo
 router.post('/update-book-scores-liked',authenticateToken, updateBookScoresLikedBooks);
 router.post('/save-book',authenticateToken, saveBook);
 router.post('/remove-book',authenticateToken, removeBook);
-// router.post('/remove-read-book',authenticateToken, removeReadBook);
 
 export default router;
 

@@ -1,7 +1,6 @@
-import { getBooks } from "../models/bookModel.js";
 import { getGenreIdByName } from "../models/genreModel.js";
 import { getQuizAnswerByUserId, updateGenreLanguagePreferences, updateQuantitativeCriterionsQuizAnswer, updateQuizAnswerLanguages } from "../models/quizAnswerModel.js";
-import { getUserGenresScore, addUserGenresScore, clearUserGenresScore } from "../models/userGenresWeightsModel.js";
+import { addUserGenresScore, clearUserGenresScore } from "../models/userGenresWeightsModel.js";
 import { findMostFrequent, getAverage, getLengthCategory, getYearCategory } from "./mathOperationsUtils.js";
 import { getUserReadBooks } from '../models/userBooksModel.js';
 import { getUserReadingHabits } from "./userBookReadUtils.js";
@@ -22,37 +21,6 @@ export async function updateGenreLanguage(userId, readBooks) {
 
     await updateGenreLanguagePreferences(userId, genresWithoutDuplicates, languagesWithoutDuplicates);
 }
-
-
-
-// export async function updateCriteriaDirection (userId, readBooks) {
-//     const resolvedReadBooks = await readBooks;
-//     const books = await getBooks();
-//     const quizAnswer = await getQuizAnswerByUserId(userId);
-//     let newGoalYear = quizAnswer.goal_year;
-//     let newGoalPages = quizAnswer.goal_pages;
-    
-//     const avgBookYear = getAverage(resolvedReadBooks, 'year_published');
-//     const allYears = books.map(book => book.year_published);
-//     const medianYear = findMedian(allYears);
-
-//     const avgBookPages = getAverage(resolvedReadBooks, 'number_of_pages');
-//     const allPages = books.map(book => book.number_of_pages);
-//     const medianPages = findMedian(allPages);
-
-//     if (avgBookYear > medianYear) {
-//         newGoalYear = 'max';
-//     } else {
-//         newGoalYear = 'min';
-//     }
-
-//     if (avgBookPages > medianPages) {
-//         newGoalPages = 'max';
-//     } else {
-//         newGoalPages = 'min';
-//     }
-//     await updateCriteriaDirectionQuizAnswer(userId, newGoalYear, newGoalPages);
-// }  
 
 export async function updateQuantitativeCriterions (userId, readBooks) {
     const resolvedReadBooks = await readBooks;
@@ -83,7 +51,6 @@ export async function updateGenreWeights (userId, genresObj) {
 
 export async function updateUserBookReading (userId) {
     const userBooksReading = await getUserReadBooks(userId);
-    const quizAnswer = await getQuizAnswerByUserId(userId);
     const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
     let statistics = {
         shortBooksCompleted: 0,
@@ -167,17 +134,4 @@ export async function updateUserBookReading (userId) {
     await updateQuantitativeCriterionsQuizAnswer(userId, readingHabits.preferredLength, readingHabits.preferredYear);
     await updateQuizAnswerLanguages(userId, readingHabits.languagePreferences);
     await updateGenreWeights(userId, readingHabits.genrePreferences);
-}
-
-function mergeGenres(array1, array2) {
-    let genreMap = new Map();
-    [...array1, ...array2].forEach(genre => {
-        if (genreMap.has(genre.name)) {
-            genreMap.get(genre.name).count += genre.count;
-        } else {
-            genreMap.set(genre.name, { name: genre.name, count: genre.count });
-        }
-    });
-
-    return Array.from(genreMap.values());
 }

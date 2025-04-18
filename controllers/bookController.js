@@ -17,9 +17,7 @@ export async function saveBook(req, res) {
             await deleteBookPreference(userId, bookId);
         } else {
             await saveBookPreference(userId, bookId);
-            // await updateBookScores(userId, bookId);
         }
-        
         res.redirect(`/${translations.lang}/home`);
     } catch (err) {
         console.error("Error saving book:", err);
@@ -30,7 +28,6 @@ export async function saveBook(req, res) {
 export async function removeBook(req, res) {
     try {
         const bookId = req.body.book_id;
-        const translations = getTranslations(req);
         const userId = req.user.userId;
         await deleteBookPreference(userId, bookId);
         res.redirect(req.get('Referer'));
@@ -52,8 +49,6 @@ export async function showReadBookPage (req, res) {
         if(!bookReadData) {
             bookReadData = await addUserReadBook(userId, book.book_id, 0); //add new book to read
         }
-        const bookGenre = await getBookGenre(book.book_id);
-        //await addReadBook(userId, book.book_id);
         const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
 
         book.is_liked = await isBookLiked(userId, book.book_id);
@@ -61,20 +56,6 @@ export async function showReadBookPage (req, res) {
         book = translateBook(translations, book);
 
         req.session.isBooksReadModified = true;
-        // if (!req.session.userGenres) {
-        //     req.session.userGenres = [];
-        // }
-        
-        // const genres = bookGenre.split(',').map(genre => genre.trim());
-        // genres.forEach(genreName => {
-        //     const existingGenre = req.session.userGenres.find(g => g.name === genreName);
-        
-        //     if (existingGenre) {
-        //         existingGenre.count += 1;
-        //     } else {
-        //         req.session.userGenres.push({ name: genreName, count: 1 });
-        //     }
-        // });
         
         res.render('read-book', { translations, book, bookPreviewUrl, pagesRead: bookReadData.pages_read, isCompleted: bookReadData.is_book_completed });
     } catch (err) {

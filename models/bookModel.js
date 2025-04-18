@@ -56,7 +56,7 @@ export async function getBooksByGenre() {
 export async function getBooksWithGenres() {
     const rows = await pool.query(`
         SELECT b.*, 
-            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
+        GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
         FROM books b
         JOIN books_genres bg ON b.book_id = bg.book_id
         JOIN genres g ON bg.genre_id = g.genre_id
@@ -98,21 +98,4 @@ export async function getLanguages() {
     const languagesList = dbResult[0];
     return languagesList;
 }
-
-// export async function addReadBook(userId, bookId) {
-//     const [newBookRead] = await pool.query(`
-//     INSERT INTO user_book_read (user_id, book_id)
-//     VALUES (?, ?) 
-//     ON DUPLICATE KEY UPDATE read_id = read_id;
-//     `, [userId, bookId]);
-//     return getBookById(newBookRead.insertId);
-// }
-
-// export async function deleteReadBook (userId, bookId) {
-//     const [deletedReadBook] = await pool.query(`
-//         DELETE FROM user_book_read
-//         WHERE user_id = ? AND book_id = ?
-//         `, [userId, bookId]);
-//         return deletedReadBook;
-// }
 

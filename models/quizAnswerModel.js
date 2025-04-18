@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, preferred_length, preferred_year) {
+export async function addQuizAnswer(user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, preferred_length, preferred_year) {
     if (Array.isArray(genre_preferences)) {
         genre_preferences = genre_preferences.join(', ');
     }
@@ -9,7 +9,7 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
     }
     const [newQuizAnswer] = await pool.query(`
     INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, preferred_length, preferred_year, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
     ON DUPLICATE KEY UPDATE 
     weights_number_of_pages = VALUES(weights_number_of_pages),
     weights_year_published = VALUES(weights_year_published),
@@ -17,12 +17,10 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
     weights_language = VALUES(weights_language),
     genre_preferences = VALUES(genre_preferences),
     language_preferences = VALUES(language_preferences),
-    goal_year = VALUES(goal_year),
-    goal_pages = VALUES(goal_pages),
     preferred_length = VALUES(preferred_length),
     preferred_year = VALUES(preferred_year),
     created_at = NOW()
-    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, preferred_length, preferred_year]);
+    `, [user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, preferred_length, preferred_year]);
     return newQuizAnswer.insertId;
 }
 

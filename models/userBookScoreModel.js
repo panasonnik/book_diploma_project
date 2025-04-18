@@ -35,7 +35,6 @@ export async function bookScoreExists(user_id, book_id) {
     return rows.length > 0;
 }
 
-
 export async function getUserBookScores(userId) {
     const [bookScores] = await pool.query(`
         SELECT * 
