@@ -72,8 +72,8 @@ export async function updateBookPages (req, res) {
         const translations = getTranslations(req);
 
         let book = await getBookByTitle(title);
-      
-        await updateBookReadingProgress(userId, book.book_id, newPages);
+        const readProgress = newPages/book.number_of_pages;
+        await updateBookReadingProgress(userId, book.book_id, newPages, readProgress);
         if (newPages == book.number_of_pages) {
             await completeBook(userId, book.book_id);
             //await addReadBookGenre(userId, book.book_id);

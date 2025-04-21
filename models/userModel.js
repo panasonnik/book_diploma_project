@@ -109,14 +109,32 @@ export async function getUserBooks(userId) {
 export async function getSavedBooks(userId) {
     try {
         const [rows] = await pool.query(`
-            SELECT b.*,
-            GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en
-            FROM user_book_preferences p
-            JOIN books b ON p.book_id = b.book_id
-            JOIN books_genres bg ON b.book_id = bg.book_id
-            JOIN genres g ON bg.genre_id = g.genre_id  
-            WHERE p.user_id = ?
-            GROUP BY b.book_id;
+            SELECT 
+    b.book_id,
+    b.title_en,
+    b.author_en,
+    b.description_en,
+    b.language_en,
+    b.image_url,
+    b.number_of_pages,
+    b.year_published,
+    GROUP_CONCAT(g.genre_name_en ORDER BY g.genre_name_en SEPARATOR ', ') AS genre_name_en,
+    ub.read_progress
+FROM 
+    user_book_preferences p
+JOIN 
+    books b ON p.book_id = b.book_id
+JOIN 
+    books_genres bg ON b.book_id = bg.book_id
+JOIN 
+    genres g ON bg.genre_id = g.genre_id  
+LEFT JOIN 
+    user_books ub ON b.book_id = ub.book_id AND ub.user_id = p.user_id  
+WHERE 
+    p.user_id = ?            
+GROUP BY 
+    b.book_id, ub.read_progress;
+
             `, [userId]);
             return rows;
     } catch (err) {

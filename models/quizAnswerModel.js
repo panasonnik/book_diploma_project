@@ -100,3 +100,21 @@ export async function getQuizAnswerByUserId(id) {
         `, [id]); //prepared statement
     return quizAnswerById[0];
 }
+
+export async function getPagesRange(userId) {
+    const [pages] = await pool.query(`
+       SELECT min_pages, max_pages
+       FROM quiz_answers
+       WHERE user_id = ? 
+    `, [userId]);
+    return pages[0];
+}
+
+export async function getYearRange(userId) {
+    const [years] = await pool.query(`
+        SELECT min_year, max_year
+        FROM quiz_answers
+        WHERE user_id = ? 
+     `, [userId]);
+     return years[0];
+}

@@ -7,6 +7,14 @@ export async function getBooks() {
     return booksList;
 }
 
+export async function getLanguageCount() {
+    const [languages] = await pool.query(`
+        SELECT COUNT(DISTINCT TRIM(language_en)) AS different_languages
+        FROM books;
+    `);
+    return languages[0].different_languages;
+}
+
 export async function getBookById(id) {
     const [bookById] = await pool.query(`
         SELECT * 

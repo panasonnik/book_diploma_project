@@ -9,6 +9,20 @@ export async function getBookReadData(user_id, book_id) {
     return bookData[0];
 }
 
+export async function getUserBooksWithLanguage (userId) {
+    const [bookData] = await pool.query(`
+        SELECT b.language_en,
+        COUNT(*) AS books_read_count,
+        AVG(ub.read_progress) AS avg_read_progress
+    FROM user_books ub
+    JOIN books b ON ub.book_id = b.book_id
+    WHERE ub.user_id = ?
+    GROUP BY b.language_en;
+
+    `, [userId]);
+    return bookData;
+}
+
 export async function getUserReadBooks(userId) {
     try {
         const [rows] = await pool.query(`
@@ -17,6 +31,7 @@ export async function getUserReadBooks(userId) {
             ub.user_id,
             ub.pages_read,
             ub.is_book_completed,
+            ub.read_progress,
             ub.created_at,
             ub.updated_at,
             b.*,
@@ -30,6 +45,7 @@ export async function getUserReadBooks(userId) {
             ub.user_id,
             ub.pages_read,
             ub.is_book_completed,
+            ub.read_progress,
             ub.created_at,
             ub.updated_at;
             `, [userId]);
@@ -49,12 +65,12 @@ export async function addUserReadBook(user_id, book_id, pages_read) {
     return newBook;
 }
 
-export async function updateBookReadingProgress (user_id, book_id, pages_read) {
+export async function updateBookReadingProgress (user_id, book_id, pages_read, read_progress) {
     const [updatedBook] = await pool.query(`
         UPDATE user_books
-        SET pages_read = ?
+        SET pages_read = ?, read_progress = ?
         WHERE user_id = ? AND book_id = ?
-        `, [pages_read, user_id, book_id]);
+        `, [pages_read, read_progress, user_id, book_id]);
 
     return updatedBook;
 }
@@ -82,9 +98,10 @@ export async function isBookCompleted (userId, bookId) {
 export async function completeBook (userId, bookId) {
     const [updatedBook] = await pool.query(`
         UPDATE user_books
-        SET is_book_completed = TRUE
+        SET is_book_completed = TRUE, read_progress = 1
         WHERE user_id = ? AND book_id = ?
         `, [userId, bookId]);
 
     return updatedBook;
 }
+
