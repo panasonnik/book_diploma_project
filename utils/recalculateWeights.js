@@ -1,8 +1,9 @@
 import { normalizeData, getMinMax, normalize } from "../utils/mathOperationsUtils.js";
-import { updateQuizAnswer, getQuizAnswerByUserId, getPagesRange, getYearRange } from "../models/quizAnswerModel.js";
+import { updateQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { getUserGenresScore, clearUserGenresScore, addUserGenresScore } from "../models/userGenresWeightsModel.js";
 import { getUserBooksWithLanguage } from "../models/userBooksModel.js";
 import { getLanguageCount } from "../models/bookModel.js";
+import { getPagesRange, getYearRange } from "../models/appSettingsModel.js";
 import { getGenreIdByName } from "../models/genreModel.js";
 
 export async function recalculateWeights(userId, actionIntensityFactor, books, isLikedBooksPassedOn) {

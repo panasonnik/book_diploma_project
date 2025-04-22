@@ -1,3 +1,5 @@
+import { getPagesRange, getYearRange } from '../models/appSettingsModel.js';
+
 export function normalizeData(current, max, min, direction) {
     if(direction === 'max') return ((current - min)/(max-min));
     if(direction === 'min') return ((max - current)/(max-min));
@@ -54,27 +56,31 @@ export function findMedian(values) {
       : values[mid];
 }
 
-export function getLengthCategory(value) {
-    if (value <= 300) return 'short';
-    if (value > 300 && value <= 700) return 'medium';
+export async function getLengthCategory(value) {
+    const pagesData = await getPagesRange();
+    if (value < pagesData[0].pages_median_min) return 'short';
+    if (value >= pagesData[0].pages_median_min && value <= pagesData[0].pages_median_max) return 'medium';
     return 'long';
 }
 
-export function getLengthValue(category) {
-    if (category === 'short') return 150;
-    if (category === 'medium') return 500;
-    return 850;
+export async function getLengthValue(category) {
+    const pagesData = await getPagesRange();
+    if (category === 'short') return Math.round(((Number(pagesData[0].pages_median_min)) + pagesData[0].pages_min)/2);
+    if (category === 'medium') return Math.round((Number(pagesData[0].pages_median_min)) + (Number(pagesData[0].pages_median_max))/2);
+    return Math.round(((Number(pagesData[0].pages_median_max)) + pagesData[0].pages_max)/2);
 }
 
-export function getYearCategory(value) {
-    if (value <= 1900) return 'old';
-    if (value > 1900 && value <= 2000) return 'medium';
+export async function getYearCategory(value) {
+    const yearData = await getYearRange();
+    if (value < yearData[0].year_median_min) return 'old';
+    if (value >= yearData[0].year_median_min && value <= yearData[0].year_median_max) return 'medium';
     return 'new';
 }
-export function getYearValue(category) {
-    if (category === 'new') return 2012;
-    if (category === 'medium') return 1950;
-    return 1850;
+export async function getYearValue(category) {
+    const yearData = await getYearRange();
+    if (category === 'new') return Math.round(((Number(yearData[0].year_median_max)) + yearData[0].year_max)/2);
+    if (category === 'medium') return Math.round((Number(yearData[0].year_median_min)) + (Number(yearData[0].year_median_max))/2);
+    return Math.round(((Number(yearData[0].year_median_min)) + yearData[0].year_min)/2);
 }
   
 

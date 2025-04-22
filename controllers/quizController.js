@@ -7,12 +7,15 @@ import { getTranslations } from '../utils/getTranslations.js';
 import { addUserGenresScore, clearUserGenresScore} from '../models/userGenresWeightsModel.js';
 import { normalize } from "../utils/mathOperationsUtils.js";
 import { deleteBookScores } from "../models/userBookScoreModel.js";
+import { getPagesRange, getYearRange } from "../models/appSettingsModel.js";
 
 export async function showQuiz(req, res) {
     try {
         const translations = getTranslations(req);
         const genres = await getGenres();
         const languagesObj = await getLanguages();
+        const pageData = await getPagesRange();
+        const yearData = await getYearRange();
         let languages = [];
 
         for (let i = 0; i < languagesObj.length; i++) {
@@ -30,7 +33,7 @@ export async function showQuiz(req, res) {
             languages.push(languagesObj[i]);
           }
         }
-        res.render('quiz', { translations, genres, languages });
+        res.render('quiz', { translations, genres, languages, lowerPageBound: pageData[0].pages_median_min, upperPageBound: pageData[0].pages_median_max, lowerYearBound: yearData[0].year_median_min, upperYearBound: yearData[0].year_median_max });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading quiz");
@@ -78,6 +81,8 @@ export async function showRetakeQuiz(req, res) {
       const translations = getTranslations(req);
       const genres = await getGenres();
       const languagesObj = await getLanguages();
+      const pageData = await getPagesRange();
+      const yearData = await getYearRange();
       const quizAnswer = await getQuizAnswerByUserId(req.user.userId);
       let languages = [];
 
@@ -108,7 +113,7 @@ export async function showRetakeQuiz(req, res) {
         genre: quizAnswer.genre_preferences,
         language: quizAnswer.language_preferences,
       };
-      res.render('quiz-reevaluation', { translations, genres, languages, weights, preferences });
+      res.render('quiz-reevaluation', { translations, genres, languages, weights, preferences, lowerPageBound: pageData[0].pages_median_min, upperPageBound: pageData[0].pages_median_max, lowerYearBound: yearData[0].year_median_min, upperYearBound: yearData[0].year_median_max });
   } catch (err) {
       console.error(err);
       res.status(500).send("Error loading quiz");

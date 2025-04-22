@@ -49,21 +49,24 @@
           <%=preferences.numberOfPages === "short" ? "checked" : "" %> required
           />
           <label class="likert__scale__item" for="bookLengthShort"
-            ><%= translations.quiz.answer1BookLength %></label
+            ><%= translations.quiz.upTo %> <%= lowerPageBound %> <%=
+            translations.quiz.pages %></label
           ><br />
           <input class="likert__scale__item__input" id="bookLengthMedium"
           type="radio" name="bookLength" value="mediumBook"
           <%=preferences.numberOfPages === "medium" ? "checked" : "" %> required
           />
           <label class="likert__scale__item" for="bookLengthMedium"
-            ><%= translations.quiz.answer2BookLength %></label
+            ><%= lowerPageBound %> - <%= upperPageBound %> <%=
+            translations.quiz.pages %></label
           ><br />
           <input class="likert__scale__item__input" id="bookLengthLong"
           type="radio" name="bookLength" value="longBook"
           <%=preferences.numberOfPages === "long" ? "checked" : "" %> required
           />
           <label class="likert__scale__item" for="bookLengthLong"
-            ><%= translations.quiz.answer3BookLength %></label
+            ><%= translations.quiz.moreThan %> <%= upperPageBound %> <%=
+            translations.quiz.pages %></label
           ><br />
           <label class="likert__question"
             ><%= translations.quizReevaluation.questionWeightLength %></label
@@ -79,20 +82,23 @@
           type="radio" name="bookYear" value="oldBook"
           <%=preferences.yearPublished === "old" ? "checked" : "" %> required />
           <label class="likert__scale__item" for="bookYearOld"
-            ><%= translations.quiz.answer1BookYear %></label
+            ><%= translations.quiz.upTo %> <%= lowerYearBound %> <%=
+            translations.quiz.yearChanged %></label
           ><br />
           <input class="likert__scale__item__input" id="bookYearMedium"
           type="radio" name="bookYear" value="mediumBook"
           <%=preferences.yearPublished === "medium" ? "checked" : "" %> required
           />
           <label class="likert__scale__item" for="bookYearMedium"
-            ><%= translations.quiz.answer2BookYear %></label
+            ><%= lowerYearBound %> - <%= upperYearBound %> <%=
+            translations.quiz.year %></label
           ><br />
           <input class="likert__scale__item__input" id="bookYearNew"
           type="radio" name="bookYear" value="newBook"
           <%=preferences.yearPublished === "new" ? "checked" : "" %> required />
           <label class="likert__scale__item" for="bookYearNew"
-            ><%= translations.quiz.answer3BookYear %></label
+            ><%= translations.quiz.after %> <%= upperYearBound %> <%=
+            translations.quiz.yearChanged %></label
           ><br />
           <label class="likert__question"
             ><%= translations.quizReevaluation.questionWeightYear %></label

@@ -7,6 +7,26 @@ export async function getBooks() {
     return booksList;
 }
 
+export async function getBookPagesMetrics() {
+    const [median] = await pool.query(`
+        SELECT MIN(number_of_pages) AS min_pages, MAX(number_of_pages) AS max_pages,
+        (MIN(number_of_pages) + MAX(number_of_pages)) / 2 AS median
+        FROM books
+        WHERE number_of_pages IS NOT NULL;
+    `);
+    return median[0];
+}
+
+export async function getBookYearMetrics() {
+    const [median] = await pool.query(`
+        SELECT MIN(year_published) AS min_year, MAX(year_published) AS max_year,
+        (MIN(year_published) + MAX(year_published)) / 2 AS median
+        FROM books
+        WHERE year_published IS NOT NULL;
+    `);
+    return median[0];
+}
+
 export async function getLanguageCount() {
     const [languages] = await pool.query(`
         SELECT COUNT(DISTINCT TRIM(language_en)) AS different_languages

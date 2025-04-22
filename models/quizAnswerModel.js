@@ -8,7 +8,7 @@ export async function addQuizAnswer(user_id, weights_number_of_pages, weights_ye
         language_preferences = language_preferences.join(', ');
     }
     const [newQuizAnswer] = await pool.query(`
-    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, goal_year, goal_pages, preferred_length, preferred_year, created_at)
+    INSERT INTO quiz_answers (user_id, weights_number_of_pages, weights_year_published, weights_genre, weights_language, genre_preferences, language_preferences, preferred_length, preferred_year, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) 
     ON DUPLICATE KEY UPDATE 
     weights_number_of_pages = VALUES(weights_number_of_pages),

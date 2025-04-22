@@ -10,6 +10,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import langRoutes from './routes/languageRoutes.js';
 import bookRoutes from './routes/bookRoutes.js';
 import { saveLastPage } from './middleware/saveLastPage.js';
+import { initAppSettings } from './utils/initAppSettings.js';
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+await initAppSettings();
 
 app.get('/', (req, res) => {
   let currentLang = req.cookies.lang || 'uk';
