@@ -60,20 +60,6 @@ export async function updateQuantitativeCriterionsQuizAnswer(user_id, preferred_
     return updatedQuizAnswer;
 }
 
-export async function updateQuizAnswerLanguages(user_id, languages) {
-    if (Array.isArray(languages)) {
-        languages = languages.join(', ');
-    }
-
-    const [updatedQuizAnswer] = await pool.query(`
-        UPDATE quiz_answers 
-        SET language_preferences = ?
-        WHERE user_id = ?
-        `, [languages, user_id]
-    );
-    return updatedQuizAnswer;
-}
-
 export async function updateGenreLanguagePreferences(user_id, genres, languages) {
     
     if (Array.isArray(languages)) {

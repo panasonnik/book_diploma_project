@@ -23,7 +23,9 @@ export async function getUserReadingHabits(statistics) {
     // console.log("Languages forgotten: ", forgottenLanguages);
 
     const lengthRates = getRates(lengthGroup);
+    
     const yearRates = getRates(yearGroup);
+    console.log(yearRates);
 
     const genreRates = getQualitativeRates (completedGenres, forgottenGenres);
     const languageRates = getQualitativeRates (completedLanguages, forgottenLanguages);
@@ -88,7 +90,7 @@ export async function getUserReadingHabits(statistics) {
   function getRates(group) {
     return group.map(category => {
         const total = category.completed + category.inProgress + category.forgotten;
-        const completedRate = total !== 0 ? category.completed / total : 0;
+        const completedRate = total !== 0 ? ((category.completed + category.inProgress) / total) : 0;
         const weightedScore = completedRate * Math.log(total + 1);
         return {
             categoryName: category.categoryName,

@@ -1,10 +1,8 @@
-import { normalizeData, getMinMax, normalize } from "../utils/mathOperationsUtils.js";
+import { normalize, getLengthCategory, getYearCategory } from "../utils/mathOperationsUtils.js";
 import { updateQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { getUserGenresScore, clearUserGenresScore, addUserGenresScore } from "../models/userGenresWeightsModel.js";
 import { getUserBooksWithLanguage } from "../models/userBooksModel.js";
 import { getLanguageCount } from "../models/bookModel.js";
-import { getPagesRange, getYearRange } from "../models/appSettingsModel.js";
-import { getGenreIdByName } from "../models/genreModel.js";
 
 export async function recalculateWeights(userId, actionIntensityFactor, books, isLikedBooksPassedOn) {
     const quizAnswer = await getQuizAnswerByUserId(userId);
@@ -12,8 +10,9 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
     const savedBooks = await books;
     const booksWithLanguage = await getUserBooksWithLanguage(userId);
     const languageCount = await getLanguageCount();
-    const pagesRange = await getPagesRange(userId);
-    const yearRange = await getYearRange(userId);
+
+    const pagesPreference = quizAnswer.preferred_length;
+    const yearPreference = quizAnswer.preferred_year;
     const signal = 0.2; //constant to change weights slightly when user liked books
 
     // let genres = quizAnswer.genre_preferences;
@@ -72,23 +71,29 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
         let totalScore = 0;
         let engagementRatio = 0;
         //if we're dealing with read books, calculate new weights based on reading progress
-        savedBooks.forEach(book => {
-            if (book.number_of_pages >= pagesRange.min_pages && book.number_of_pages <= pagesRange.max_pages) {
-                readBooksScore += book.read_progress; //if book is in desired range
+
+            for (const book of savedBooks) {
+              const bookLengthCategory = await getLengthCategory(book.number_of_pages);
+              if(bookLengthCategory == pagesPreference) {
+                readBooksScore += Number(book.read_progress); //if book is in desired range
+              }
+              totalScore += Number(book.read_progress); //total
             }
-            totalScore += book.read_progress; //total
-        });
+        
         engagementRatio = readBooksScore / totalScore;
         newNumberOfPagesWeight = oldPagesWeight + learningRate * actionIntensityFactor * (engagementRatio - oldPagesWeight); //not normalized
 
         readBooksScore = 0;
         totalScore = 0;
-        savedBooks.forEach(book => {
-            if (book.year_published >= yearRange.min_year && book.year_published <= yearRange.max_year) {
+
+            for (const book of savedBooks) {
+              const bookYearCategory = await getYearCategory(book.year_published);
+              if(bookYearCategory == yearPreference) {
                 readBooksScore += book.read_progress; //if book is in desired range
+              }
+              totalScore += book.read_progress; //total
             }
-            totalScore += book.read_progress; //total
-        });
+        
         engagementRatio = readBooksScore / totalScore;
         newYearWeight = oldYearWeight + learningRate * actionIntensityFactor * (engagementRatio - oldYearWeight); //not normalized
     }
@@ -99,8 +104,7 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
     // const mostEngagedLanguage = Object.keys(newWeightForSingleLanguage).reduce((a, b) =>
     //     newWeightForSingleLanguage[a] > newWeightForSingleLanguage[b] ? a : b
     // );
-
-    let [normWeightPages,normWeightYear,normGenresWeight,normLangsWeight] = normalize(Number(newNumberOfPagesWeight), Number(newYearWeight), Number(newGenresWeight), Number(newLanguagesWeight));
+    let [normWeightPages,normWeightYear,normGenresWeight,normLangsWeight] = normalize(newNumberOfPagesWeight, newYearWeight, newGenresWeight, newLanguagesWeight);
     //update genres weights, redistribute
     const genreRatio = normGenresWeight / newGenresWeight;
     const normalizedGenreWeights = {};
@@ -108,7 +112,6 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
     for (let genre in newWeightForSingleGenre) {
         normalizedGenreWeights[genre] = newWeightForSingleGenre[genre] * genreRatio;
     }
-    console.log(normalizedGenreWeights);
     // let totalNumberOfBooksRead = userGenresScore.reduce((sum, score) => sum + score.books_read_count, 0);
         
         await clearUserGenresScore(userId);
@@ -117,7 +120,6 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
                 if (normalizedGenreWeights.hasOwnProperty(genreName)) {
                     genre.weight = normalizedGenreWeights[genreName];
                 }
-                console.log(genre);
                 await addUserGenresScore(userId, genre.genre_id, genre.weight, genre.books_read_count);
             }
 

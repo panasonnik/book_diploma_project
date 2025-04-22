@@ -1,7 +1,6 @@
 import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail } from '../models/userModel.js';
 import { getLanguages } from '../models/bookModel.js';
 import { getUserReadBooks, getBookReadData } from '../models/userBooksModel.js';
-import {updateQuizAnswerLanguages, getQuizAnswerByUserId } from '../models/quizAnswerModel.js';
 import { isBookRead, isBookCompleted } from '../models/userBooksModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 import { translateBook } from '../utils/translationUtils.js';
