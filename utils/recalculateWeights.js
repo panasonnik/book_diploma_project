@@ -45,6 +45,7 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
             languageCounts[lang] = (languageCounts[lang] || 0) + 1;
         }
     }
+    
     //console.log(userGenresScore);
     
     let newWeightForSingleGenre = {};
@@ -114,7 +115,6 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
     }
     // let totalNumberOfBooksRead = userGenresScore.reduce((sum, score) => sum + score.books_read_count, 0);
         
-        await clearUserGenresScore(userId);
             for (const genre of userGenresScore) {
                 const genreName = genre.genre_name_en;
                 if (normalizedGenreWeights.hasOwnProperty(genreName)) {

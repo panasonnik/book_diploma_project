@@ -12,7 +12,8 @@ export async function updateBookScoresReadBooks(userId) {
         await recalculateWeights(userId, 2.0, readBooks, isLikedBooksPassedOn); // 2.0 - action intensity factor. Для прочитаних книг більше. Для просто "Обраних книг" = 1.5 (менша зміна вагів).
         
         const quizAnswer = await getQuizAnswerByUserId(userId);
-        await calculateBookScores(quizAnswer);
+        const initialQuizFlag = false;
+        await calculateBookScores(quizAnswer, initialQuizFlag);
     }
 }
 
@@ -25,6 +26,7 @@ export async function updateBookScoresLikedBooks(req, res) {
     
     await recalculateWeights(userId, 1.5, savedBooks, isLikedBooksPassedOn);
     const quizAnswer = await getQuizAnswerByUserId(userId);
-    await calculateBookScores(quizAnswer);
+    const initialQuizFlag = false;
+    await calculateBookScores(quizAnswer, initialQuizFlag);
     res.redirect(`/${translations.lang}/home`);
 }

@@ -83,6 +83,8 @@ export async function getUserReadingHabits(statistics) {
         preferredLength: bestWorstBookLength.best.categoryName,
         preferredYear: bestWorstBookYear.best.categoryName,
         genrePreferences: highestScoredGenres,
+        genreForgotten: bestWorstGenresForgotten.best.name,
+        //genreForgottenCount: bestWorstGenresForgotten.best.forgottenCount,
         languagePreferences: bestWorstLanguages.best.name
     };
   }
@@ -133,7 +135,8 @@ export async function getUserReadingHabits(statistics) {
         return {
             name: item,
             completedRate: total !== 0 ? (completed/total) : 0, 
-            forgottenRate: total !== 0 ? (forgotten/total) : 0
+            forgottenRate: total !== 0 ? (forgotten/total) : 0,
+            forgottenCount: forgotten
         };
     });
 

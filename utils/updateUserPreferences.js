@@ -1,6 +1,6 @@
 import { getGenreIdByName } from "../models/genreModel.js";
 import { getQuizAnswerByUserId, updateGenreLanguagePreferences, updateQuantitativeCriterionsQuizAnswer } from "../models/quizAnswerModel.js";
-import { addUserGenresScore, clearUserGenresScore } from "../models/userGenresWeightsModel.js";
+import { addUserGenresScore, clearUserGenresScore, deleteGenreScore, getUserGenresScore } from "../models/userGenresWeightsModel.js";
 import { findMostFrequent, getAverage, getLengthCategory, getYearCategory } from "./mathOperationsUtils.js";
 import { getUserReadBooks } from '../models/userBooksModel.js';
 import { getUserReadingHabits } from "./userBookReadUtils.js";
@@ -34,20 +34,41 @@ export async function updateQuantitativeCriterions (userId, readBooks) {
     await updateQuantitativeCriterionsQuizAnswer(userId, newPreferredLength, newPreferredYear);
 }
 
-export async function updateGenreWeights (userId, genresObj) {
-    const quizAnswer = await getQuizAnswerByUserId(userId);
-    const totalGenreWeights = quizAnswer.weights_genre;
+// export async function updateGenreWeights (userId, genresObj) {
+//     const quizAnswer = await getQuizAnswerByUserId(userId);
+//     const totalGenreWeights = quizAnswer.weights_genre;
 
-    let totalNumberOfBooksRead = Object.values(genresObj).reduce((sum, count) => sum + count, 0);
+//     let totalNumberOfBooksRead = Object.values(genresObj).reduce((sum, count) => sum + count, 0);
 
-    await clearUserGenresScore(userId);
-    for (const [genre, count] of Object.entries(genresObj)) {
-        let genreProportion = count / totalNumberOfBooksRead;
-        let genreWeightPart = totalGenreWeights * genreProportion;
-        const genreId = await getGenreIdByName(genre);
-        await addUserGenresScore(userId, genreId, genreWeightPart, count);
-    }
-}
+//     await clearUserGenresScore(userId);
+//     for (const [genre, count] of Object.entries(genresObj)) {
+//         let genreProportion = count / totalNumberOfBooksRead;
+//         let genreWeightPart = totalGenreWeights * genreProportion;
+//         const genreId = await getGenreIdByName(genre);
+//         await addUserGenresScore(userId, genreId, genreWeightPart, count);
+//     }
+// }
+
+// export async function deleteGenreAndUpdateWeights (userId, genreNameToDelete, genreCountToDelete) {
+//     const quizAnswer = await getQuizAnswerByUserId(userId);
+//     const totalGenreWeights = quizAnswer.weights_genre;
+//     const userReadBooks = await getUserReadBooks(userId);
+//     const userGenresScore = await getUserGenresScore(userId);
+//     console.log(userGenresScore);
+//     const totalBooksRead = userReadBooks.length - genreCountToDelete;
+//     console.log(totalBooksRead);
+//     const genreIdToDelete = await getGenreIdByName(genreNameToDelete);
+    
+//     //let totalNumberOfBooksRead = Object.values(genresObj).reduce((sum, count) => sum + count, 0);
+//     await deleteGenreScore(userId, genreIdToDelete);
+//     await clearUserGenresScore(userId);
+//     for (const genre of userGenresScore) {
+//         console.log("Genre: ", genre);
+//         let genreProportion = genre.books_read_count / totalBooksRead;
+//         let genreWeightPart = totalGenreWeights * genreProportion;
+//         await addUserGenresScore(userId, genre.genre_id, genreWeightPart, genre.books_read_count);
+//     }
+// }
 
 export async function updateUserBookReading (userId) {
     const userBooksReading = await getUserReadBooks(userId);
@@ -136,4 +157,5 @@ export async function updateUserBookReading (userId) {
     console.log(readingHabits);
     await updateQuantitativeCriterionsQuizAnswer(userId, readingHabits.preferredLength, readingHabits.preferredYear);
     await updateGenreLanguagePreferences(userId, Object.keys(readingHabits.genrePreferences), readingHabits.languagePreferences);
+    //await deleteGenreAndUpdateWeights(userId, readingHabits.genreForgotten, readingHabits.genreForgottenCount);
 }
