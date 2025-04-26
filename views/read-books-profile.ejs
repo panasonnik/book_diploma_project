@@ -101,31 +101,44 @@
             <% if (readBooks && readBooks.length > 0) { %> <%
             readBooks.forEach(book => { %>
             <div class="book-card profile__book-card">
-              <div class="book-card__image-container">
-                <img
-                  src="<%= book.image_url %>"
-                  alt="<%= book.title%> cover"
-                  class="book-card__cover-image book-cover"
-                  onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
-                  onerror="this.src='/images/onerror_image.jpg';"
-                />
+              <div class="book-card__content">
+                <div class="book-card__image-container">
+                  <img
+                    src="<%= book.image_url %>"
+                    alt="<%= book.title%> cover"
+                    class="book-card__cover-image book-cover"
+                    onclick="openModal('<%= book.title %>', '<%= book.author %>', '<%= book.description %>','<%= book.image_url %>', '<%= book.year_published %>', '<%= book.number_of_pages %>', '<%= book.genre_name %>', '<%= book.language %>')"
+                    onerror="this.src='/images/onerror_image.jpg';"
+                  />
+                </div>
+                <div class="book-card__details book-card__details__profile">
+                  <h3 class="subheading subheading--regular">
+                    <%= book.title %>
+                  </h3>
+                  <p class="subheading subheading--small subheading--light">
+                    <%= book.author %>
+                  </p>
+                </div>
+                <div class="book-card__read-data">
+                  <p class="text">
+                    <%= book.pages_read %> / <%= book.number_of_pages %> <%=
+                    translations.profile.pagesRead%>
+                  </p>
+                  <p class="text text--muted">
+                    <%= translations.profile.lastUpdated%>: <%=
+                    book.last_updated %>
+                  </p>
+                </div>
               </div>
-              <div class="book-card__details">
-                <h3 class="subheading subheading--regular">
-                  <%= book.title %>
-                </h3>
-                <p class="subheading subheading--small subheading--light">
-                  <%= book.author %>
-                </p>
-              </div>
-
-              <p class="text">
-                <%= book.pages_read %> / <%= book.number_of_pages %> <%=
-                translations.profile.pagesRead%>
-              </p>
-              <p class="text text--muted">
-                <%= translations.profile.lastUpdated%>: <%= book.last_updated %>
-              </p>
+              <a
+                href="<%= book.is_completed ? '#' : '/' + translations.lang + '/book/' + book.title_en %>"
+                class="submit-btn submit-btn--outline <%= book.is_completed ? 'disabled' : '' %>"
+              >
+                <% if (book.is_completed) { %> <%=
+                translations.home.readingCompleted %> <% } else if
+                (book.is_read) { %> <%= translations.home.continueReading %> <%
+                } else { %> <%= translations.home.read %> <% } %>
+              </a>
             </div>
             <% }); %> <% } else { %>
             <p class="subheading subheading--small subheading--light">

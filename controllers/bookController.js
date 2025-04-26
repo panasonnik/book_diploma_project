@@ -43,13 +43,18 @@ export async function showReadBookPage (req, res) {
         const userId = req.user.userId;
 
         const translations = getTranslations(req);
-
+        let bookPreviewUrl;
         let book = await getBookByTitle(title);
         let bookReadData = await getBookReadData(userId, book.book_id);
         if(!bookReadData) {
             bookReadData = await addUserReadBook(userId, book.book_id, 0); //add new book to read
         }
-        const bookPreviewUrl = await getBookFromOpenLibraryApi(title);
+        if(translations.lang === 'uk') {
+            bookPreviewUrl = await getBookFromOpenLibraryApi(translations[title].title);
+        } else {
+            bookPreviewUrl = await getBookFromOpenLibraryApi(title);
+        }
+        
 
         book.is_liked = await isBookLiked(userId, book.book_id);
         book.is_completed = await isBookCompleted(userId, book.book_id);

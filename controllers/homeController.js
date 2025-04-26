@@ -28,9 +28,9 @@ export async function showHomepage(req, res) {
             }
         }
         console.log(savedBooks);
-        // if (savedBooks.length >= 3) {
-        //     showUpdateButton = true;
-        // }
+        if (savedBooks.length >= 3) {
+            showUpdateButton = true;
+        }
         
         Object.keys(booksByGenre).forEach(genre => {
             booksByGenre[genre] = booksByGenre[genre].map(book => {

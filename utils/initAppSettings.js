@@ -1,5 +1,4 @@
-import pool from "../config/db.js";
-import { getPagesRange } from "../models/appSettingsModel.js";
+import { setAppSettings } from "../models/appSettingsModel.js";
 import { getBookPagesMetrics, getBookYearMetrics } from '../models/bookModel.js';
 
 export async function initAppSettings() {
@@ -30,13 +29,7 @@ export async function initAppSettings() {
     ];
   
     for (const setting of settings) {
-        await pool.query(`
-            INSERT INTO app_settings (\`key\`, \`value\`)
-             VALUES (?, ?)
-             ON DUPLICATE KEY UPDATE
-               \`value\` = VALUES(\`value\`)`,
-            [setting.key, setting.value]
-          );
+        await setAppSettings(setting.key, setting.value);
     }
   }
 

@@ -21,3 +21,14 @@ export async function getYearRange() {
     `);
     return dbResult;
 }
+
+export async function setAppSettings(key, value) {
+    const [dbResult] = await pool.query(`
+        INSERT INTO app_settings (\`key\`, \`value\`)
+        VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE
+        \`value\` = VALUES(\`value\`)`,
+        [key, value]
+    );
+    return dbResult;
+}

@@ -1,5 +1,5 @@
 import { getSavedBooks, getUserById, updateUser, getUserByUsername, getUserByEmail } from '../models/userModel.js';
-import { getLanguages } from '../models/bookModel.js';
+import { getLanguages, isBookLiked } from '../models/bookModel.js';
 import { getUserReadBooks, getBookReadData } from '../models/userBooksModel.js';
 import { isBookRead, isBookCompleted } from '../models/userBooksModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
@@ -32,6 +32,11 @@ export async function showReadBooksPage(req, res) {
       const translations = getTranslations(req);
       let readBooks = await getUserReadBooks(userId);
       const user = await getUserById(userId);
+      for(let book of readBooks) {
+        book.is_liked = await isBookLiked(userId, book.book_id);
+        book.is_read = await isBookRead(userId, book.book_id);
+        book.is_completed = await isBookCompleted(userId, book.book_id);
+      }
       readBooks = await Promise.all(
         readBooks.map(async (book) => {
           const readingData = await getBookReadData(userId, book.book_id);
