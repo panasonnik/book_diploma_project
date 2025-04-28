@@ -1,9 +1,5 @@
 import { getPagesRange, getYearRange } from '../models/appSettingsModel.js';
 
-export function normalizeData(current, max, min, direction) {
-    if(direction === 'max') return ((current - min)/(max-min));
-    if(direction === 'min') return ((max - current)/(max-min));
-}
 export function normalize(...values) {
     const sum = values.reduce((total, val) => total+val, 0);
     return values.map(val => val/sum);
@@ -17,14 +13,27 @@ export function getMinMax(array, key) {
     };
 }
 
-export function normalizeUsingMedian(array, current, median, key) { 
-    return 1 - Math.abs(current - median) / maxDeviation(array, key, median);
+// export function normalizeUsingMedian(array, current, median, key) { 
+//     return 1 - Math.abs(current - median) / maxDeviation(array, key, median);
+// }
+
+export function normalizeData(current, preference, min, median, max) {
+    if (preference === 'long' || preference === 'new') {
+        return Math.max(0, Math.min(1, (current - median) / (max - median)));
+    } else if (preference === 'medium') {
+        const maxDeviation = Math.max(median - min, max - median);
+        return Math.max(0, Math.min(1, 1 - Math.abs(current - median) / maxDeviation));
+    } else if (preference === 'short' || preference === 'old') {
+        return Math.max(0, Math.min(1, (median - current) / (median - min)));
+    } else {
+        throw new Error('Unknown preference type');
+    }
 }
 
-function maxDeviation (array, key, median) {
-    const values = array.map(item => item[key]);
-    return Math.max(...values.map(v => Math.abs(v - median)));
-} 
+// function maxDeviation (array, key, median) {
+//     const values = array.map(item => item[key]);
+//     return Math.max(...values.map(v => Math.abs(v - median)));
+// } 
 
 export function findMostFrequent(books, key) {
     const genreCounts = {};
@@ -63,11 +72,18 @@ export async function getLengthCategory(value) {
     return 'long';
 }
 
-export async function getLengthValue(category) {
+export async function getMedianLength(category) {
     const pagesData = await getPagesRange();
     if (category === 'short') return Math.round(((Number(pagesData[0].pages_median_min)) + pagesData[0].pages_min)/2);
     if (category === 'medium') return Math.round((Number(pagesData[0].pages_median_min)) + (Number(pagesData[0].pages_median_max))/2);
     return Math.round(((Number(pagesData[0].pages_median_max)) + pagesData[0].pages_max)/2);
+}
+
+export async function getLengthRangeFromPreference(category) {
+    const pagesData = await getPagesRange();
+    if (category === 'short') return [Number(pagesData[0].pages_median_min), pagesData[0].pages_min];
+    if (category === 'medium') return [Number(pagesData[0].pages_median_min), Number(pagesData[0].pages_median_max)];
+    return [Number(pagesData[0].pages_median_max), pagesData[0].pages_max];
 }
 
 export async function getYearCategory(value) {
@@ -76,11 +92,18 @@ export async function getYearCategory(value) {
     if (value >= yearData[0].year_median_min && value <= yearData[0].year_median_max) return 'medium';
     return 'new';
 }
-export async function getYearValue(category) {
+export async function getMedianYear(category) {
     const yearData = await getYearRange();
     if (category === 'new') return Math.round(((Number(yearData[0].year_median_max)) + yearData[0].year_max)/2);
     if (category === 'medium') return Math.round((Number(yearData[0].year_median_min)) + (Number(yearData[0].year_median_max))/2);
     return Math.round(((Number(yearData[0].year_median_min)) + yearData[0].year_min)/2);
+}
+
+export async function getYearRangeFromPreference(category) {
+    const yearData = await getYearRange();
+    if (category === 'new') return [Number(yearData[0].year_median_max),yearData[0].year_max];
+    if (category === 'medium') return [Number(yearData[0].year_median_min), Number(yearData[0].year_median_max)];
+    return [Number(yearData[0].year_median_min), yearData[0].year_min];
 }
   
 

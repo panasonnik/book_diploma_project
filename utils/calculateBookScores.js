@@ -1,7 +1,7 @@
 import { getBooksWithGenres } from "../models/bookModel.js";
 import { addBookScore } from "../models/userBookScoreModel.js";
 import { getUserGenresScore } from "../models/userGenresWeightsModel.js";
-import { getLengthCategory, normalizeUsingMedian, getLengthValue, getYearCategory, getYearValue } from "../utils/mathOperationsUtils.js";
+import { getLengthCategory, normalizeData, getMedianLength, getYearCategory, getMedianYear, getLengthRangeFromPreference, getYearRangeFromPreference } from "../utils/mathOperationsUtils.js";
 
 //initial book score calculation (each criteria weight = 0.25)
 export async function calculateBookScores(quizAnswer, initialQuizFlag) {
@@ -98,15 +98,19 @@ export async function calculateBookScores(quizAnswer, initialQuizFlag) {
     }
     booksByGenre = filteredBooks;
    
-    for (let book of booksByGenre) {
+    for (let book of filteredBooks) {
         let genreWords = book.genre_name_en.split(',').map(word => word.trim());
         // if (getLengthCategory(book.number_of_pages) === resolvedQuizAnswer.preferred_length &&
         //      getYearCategory(book.year_published) === resolvedQuizAnswer.preferred_year ){
             // && userGenrePreferences.includes(genreWords)) {
-        const lengthValue = await getLengthValue(resolvedQuizAnswer.preferred_length);
-        const yearValue = await getYearValue(resolvedQuizAnswer.preferred_year);
-        let normPages = normalizeUsingMedian(booksByGenre, book.number_of_pages, lengthValue, 'number_of_pages');
-        let normYear = normalizeUsingMedian(booksByGenre, book.year_published, yearValue, 'year_published');
+        const lengthValue = await getMedianLength(resolvedQuizAnswer.preferred_length);
+        const [minLength, maxLength] = await getLengthRangeFromPreference(resolvedQuizAnswer.preferred_length);
+        const yearValue = await getMedianYear(resolvedQuizAnswer.preferred_year);
+        const [minYear, maxYear] = await getYearRangeFromPreference(resolvedQuizAnswer.preferred_year);
+        let normPages = normalizeData(book.number_of_pages, resolvedQuizAnswer.preferred_length, minLength, lengthValue, maxLength);
+        let normYear = normalizeData(book.year_published, resolvedQuizAnswer.preferred_year, minYear, yearValue, maxYear);
+        // let normPages = normalizeUsingMedian(booksByGenre, book.number_of_pages, lengthValue, 'number_of_pages');
+        // let normYear = normalizeUsingMedian(booksByGenre, book.year_published, yearValue, 'year_published');
 
         let languageWords = book.language_en.split(',').map(word => word.trim());
         let numOfMatchingLanguages = userLanguagePreferences.filter(genre => languageWords.includes(genre)).length;
@@ -135,7 +139,11 @@ export async function calculateBookScores(quizAnswer, initialQuizFlag) {
         }
        
         score = (normPages * userWeights.number_of_pages) + (normYear * userWeights.year_published) + totalGenreWeight + (numOfMatchingLanguages * eachLanguageWeights);
-
+        console.log(book.title_en, " has ", score);
+        console.log("Pages: ", normPages);
+        console.log("Year: ", normYear);
+        console.log("Genre: ", totalGenreWeight);
+        console.log("Lang: ", eachLanguageWeights);
         await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
         scoredBooks.push({ ...book, score });
     }

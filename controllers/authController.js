@@ -43,6 +43,7 @@ export async function loginUser(req, res) {
             return res.render('login', {translations, errorDB:null, errorUsername: null, errorPassword: 'Incorrect password', data: {usernameOrEmail}});
         }
         const token = generateToken(user.user_id);
+        console.log(token);
         const cookie = setCookie(res, token);
         const hasCompleted = await hasCompletedQuiz(user.user_id);
         if (hasCompleted) {
