@@ -13,9 +13,42 @@ export function getMinMax(array, key) {
     };
 }
 
-// export function normalizeUsingMedian(array, current, median, key) { 
-//     return 1 - Math.abs(current - median) / maxDeviation(array, key, median);
+// export function normalizeUsingMedian(array, current, median, key, preference) {
+//     const maxDev = maxDeviation(array, key, median);
+
+//     if (preference === 'medium') {
+//         return 1 - Math.abs(current - median) / maxDev;
+//     } else if (preference === 'new') {
+//         const maxValue = Math.max(...array.map(item => item[key]));
+//         return (current - median) / (maxValue - median);
+//     } else if (preference === 'old') {
+//         const minValue = Math.min(...array.map(item => item[key]));
+//         return (median - current) / (median - minValue);
+//     } else {
+//         return 0; // fallback
+//     }
 // }
+
+export function normalizeByPreference(current, preference, globalMin, globalMax, lowerBound, upperBound, median) {
+
+    if (current >= lowerBound && current <= upperBound) {
+        return 1;
+    }
+
+    if ((preference === 'old' || preference === 'short') && current > upperBound) {
+        return Math.max(0, 1 - (current - upperBound) / (globalMax - upperBound));
+    } else if ((preference === 'new' || preference === 'long') && current < lowerBound) {
+        return Math.max(0, 1 - (lowerBound - current) / (lowerBound - globalMin));
+    } else if (preference === 'medium') {
+        const distance = Math.min(Math.abs(current - lowerBound), Math.abs(current - upperBound));
+        const maxDistance = Math.max(median - globalMin, globalMax - median);
+        return Math.max(0, 1 - distance / maxDistance);
+    }
+
+    return 0;
+}
+
+
 
 export function normalizeData(current, preference, min, median, max) {
     if (preference === 'long' || preference === 'new') {
@@ -30,10 +63,10 @@ export function normalizeData(current, preference, min, median, max) {
     }
 }
 
-// function maxDeviation (array, key, median) {
-//     const values = array.map(item => item[key]);
-//     return Math.max(...values.map(v => Math.abs(v - median)));
-// } 
+function maxDeviation (array, key, median) {
+    const values = array.map(item => item[key]);
+    return Math.max(...values.map(v => Math.abs(v - median)));
+} 
 
 export function findMostFrequent(books, key) {
     const genreCounts = {};
