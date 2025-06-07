@@ -1,74 +1,74 @@
 <div class="modal-overlay" aria-modal="true" role="dialog" id="bookModal">
-    <div class="modal__container">
-      <div class="modal__content">
-        <div class="modal__header">
-          <h2 class="heading heading--bold" id="modalBookTitle"></h2>
-          <button
-            class="close-button"
-            aria-label="Close modal"
-            onclick="closeModal()"
-          >
-            ×
-          </button>
+  <div class="modal__container">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2 class="heading heading--bold" id="modalBookTitle"></h2>
+        <button
+          class="close-button"
+          aria-label="Close modal"
+          onclick="closeModal()"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal__body">
+        <div class="book-cover-container">
+          <img
+            class="book-card__cover-image"
+            src=""
+            alt="Book cover"
+            id="modalBookImage"
+          />
         </div>
-        <div class="modal__body">
-          <div class="book-cover-container">
-            <img
-              class="book-card__cover-image"
-              src=""
-              alt="Book cover"
-              id="modalBookImage"
-            />
+        <div class="modal__book-details">
+          <div class="modal__book-details__section">
+            <h3 class="subheading subheading--bold">
+              <%= translations.home.author%>
+            </h3>
+            <p
+              class="subheading subheading--light subheading--small"
+              id="modalAuthorName"
+            ></p>
           </div>
-          <div class="modal__book-details">
-            <div class="modal__book-details__section">
-              <h3 class="subheading subheading--bold">
-                <%= translations.home.author%>
-              </h3>
-              <p
-                class="subheading subheading--light subheading--small"
-                id="modalAuthorName"
-              ></p>
+          <div
+            class="modal__book-details__section modal__book-details__section--description"
+          >
+            <h3 class="subheading subheading--bold">
+              <%= translations.home.description%>
+            </h3>
+            <p
+              class="subheading subheading--light subheading--small"
+              id="modalBookDescription"
+            ></p>
+          </div>
+          <div class="modal__book-additional-details">
+            <div class="detail-item">
+              <h4 class="subheading subheading--bold subheading--small">
+                <%= translations.home.genre%>
+              </h4>
+              <p class="text text--muted" id="modalGenres"></p>
             </div>
-            <div
-              class="modal__book-details__section modal__book-details__section--description"
-            >
-              <h3 class="subheading subheading--bold">
-                <%= translations.home.description%>
-              </h3>
-              <p
-                class="subheading subheading--light subheading--small"
-                id="modalBookDescription"
-              ></p>
+            <div class="detail-item">
+              <h4 class="subheading subheading--bold subheading--small">
+                <%= translations.home.year%>
+              </h4>
+              <p class="text text--muted" id="modalYear"></p>
             </div>
-            <div class="modal__book-additional-details">
-              <div class="detail-item">
-                <h4 class="subheading subheading--bold subheading--small">
-                  <%= translations.home.genre%>
-                </h4>
-                <p class="text text--muted" id="modalGenres"></p>
-              </div>
-              <div class="detail-item">
-                <h4 class="subheading subheading--bold subheading--small">
-                  <%= translations.home.year%>
-                </h4>
-                <p class="text text--muted" id="modalYear"></p>
-              </div>
-              <div class="detail-item">
-                <h4 class="subheading subheading--bold subheading--small">
-                  <%= translations.home.pages%>
-                </h4>
-                <p class="text text--muted" id="modalPages"></p>
-              </div>
-              <div class="detail-item">
-                <h4 class="subheading subheading--bold subheading--small">
-                  <%= translations.home.language%>
-                </h4>
-                <p class="text text--muted" id="modalLanguage"></p>
-              </div>
+            <div class="detail-item">
+              <h4 class="subheading subheading--bold subheading--small">
+                <%= translations.home.pages%>
+              </h4>
+              <p class="text text--muted" id="modalPages"></p>
+            </div>
+            <div class="detail-item">
+              <h4 class="subheading subheading--bold subheading--small">
+                <%= translations.home.language%>
+              </h4>
+              <p class="text text--muted" id="modalLanguage"></p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

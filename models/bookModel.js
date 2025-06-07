@@ -7,6 +7,22 @@ export async function getBooks() {
     return booksList;
 }
 
+export async function addBook(title_en, author_en, description_en, image_url, number_of_pages, language_en, year_published) {
+    const [newBook] = await pool.query(`
+    INSERT INTO books (title_en, author_en, description_en, image_url, number_of_pages, language_en, year_published)
+    VALUES (?, ?, ?, ?, ?, ?, ?) 
+    ON DUPLICATE KEY UPDATE 
+    title_en = VALUES(title_en),
+    author_en = VALUES(author_en),
+    description_en = VALUES(description_en),
+    image_url = VALUES(image_url),
+    number_of_pages = VALUES(number_of_pages),
+    language_en = VALUES(language_en),
+    year_published = VALUES(year_published);
+    `, [title_en, author_en, description_en, image_url, number_of_pages, language_en, year_published]);
+    return newBook.insertId;
+}
+
 export async function getBookPagesMetrics() {
     const [median] = await pool.query(`
         SELECT MIN(number_of_pages) AS min_pages, MAX(number_of_pages) AS max_pages,
@@ -57,6 +73,13 @@ export async function getBookByTitle(title) {
     return bookById[0];
 }
 
+export async function deleteBookFromDB (book_id) {
+    const [bookById] = await pool.query(`
+       DELETE FROM books
+       WHERE book_id = ?
+        `, [book_id]);
+    return bookById[0];
+}
 export async function getBooksByGenre() {
     try {
         const genres = await getGenres();

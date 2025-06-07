@@ -1,4 +1,4 @@
-import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, hasCompletedQuiz } from '../models/userModel.js';
+import { getUserByEmail, getUserByUsername, getUserByEmailOrUsername, addUser, hasCompletedQuiz, getUserRole } from '../models/userModel.js';
 import { hashPassword, comparePassword, generateToken, setCookie } from '../utils/authUtils.js';
 import { updateBookScoresReadBooks, updateBookScoresLikedBooks } from '../utils/updateBookScores.js';
 import { getTranslations } from '../utils/getTranslations.js';
@@ -43,7 +43,7 @@ export async function loginUser(req, res) {
             return res.render('login', {translations, errorDB:null, errorUsername: null, errorPassword: 'Incorrect password', data: {usernameOrEmail}});
         }
         const token = generateToken(user.user_id);
-        console.log(token);
+        
         const cookie = setCookie(res, token);
         const hasCompleted = await hasCompletedQuiz(user.user_id);
         if (hasCompleted) {
@@ -60,8 +60,8 @@ export async function loginUser(req, res) {
 export async function logoutUser(req, res) {
     try {
         const translations = getTranslations(req);
-        await updateUserBookReading(req.user.userId); //updates user preferences (year, length, genres, languages)
         if (req.session.isBooksReadModified) {
+            await updateUserBookReading(req.user.userId); //updates user preferences (year, length, genres, languages)
             await updateBookScoresReadBooks(req.user.userId);
         }
         Object.keys(req.cookies).forEach(cookieName => {

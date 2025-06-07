@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="<%= translations.lang %>">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <title>Add book</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <%- include('partials/navbar', { translations, isAdmin }) %>
+      <div class="content">
+        <form
+          class="form mt-5"
+          action="/<%= translations.lang %>/book/add"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="flex">
+            <div class="form__field">
+              <label class="form__field__label" for="title">TITLE</label>
+              <input
+                class="form__input-field"
+                type="text"
+                id="title"
+                name="title"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="form__field">
+              <label class="form__field__label" for="author">AUTHOR</label>
+              <input
+                class="form__input-field"
+                type="text"
+                id="author"
+                name="author"
+                autocomplete="off"
+                required
+              />
+            </div>
+          </div>
+          <div class="form__field">
+            <label class="form__field__label" for="description"
+              >Description</label
+            >
+            <textarea
+              class="form__input-field"
+              id="description"
+              name="description"
+              rows="6"
+              placeholder="Enter book description here..."
+            ></textarea>
+          </div>
+
+          <label class="form__field__label"
+            >Cover Image: <input type="file" name="cover" accept="image/*"
+          /></label>
+
+          <div class="form__field">
+            <label class="form__field__label" for="pages"
+              >number of pages</label
+            >
+            <input
+              class="form__input-field form__input-field--short"
+              type="number"
+              id="pages"
+              name="pages"
+              min="1"
+              autocomplete="off"
+              required
+            />
+          </div>
+          <div class="form__field">
+            <label class="form__field__label" for="year">Year published</label>
+            <input
+              class="form__input-field form__input-field--short"
+              type="number"
+              id="year"
+              name="year"
+              min="0"
+              max="2025"
+              autocomplete="off"
+              required
+            />
+          </div>
+          <div class="form__field">
+            <label class="form__field__label" for="language">Language</label>
+            <input
+              class="form__input-field form__input-field--short"
+              type="text"
+              id="language"
+              name="language"
+              autocomplete="off"
+              required
+            />
+          </div>
+          <div class="form__field">
+            <label class="form__field__label" for="genre">Genre</label>
+            <select
+              class="form__input-field form__input-field--short"
+              name="genre_id"
+              id="genre"
+              required
+            >
+              <% genres.forEach(genre => { %>
+              <option value="<%= genre.genre_id %>">
+                <%= genre.genre_name_en %>
+              </option>
+              <% }) %>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn" id="register__create-btn">
+            Add
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

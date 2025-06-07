@@ -4,10 +4,12 @@ import { calculateBookScores } from '../utils/calculateBookScores.js';
 import { getGenres, getGenreIdByName } from '../models/genreModel.js';
 import { getLanguages } from '../models/bookModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
-import { addUserGenresScore, clearUserGenresScore} from '../models/userGenresWeightsModel.js';
+import { getUserReadBooks } from '../models/userBooksModel.js';
+import { addUserGenresScore, clearUserGenresScore, getUserGenresScore, getUserGenresWeights } from '../models/userGenresWeightsModel.js';
 import { normalize } from "../utils/mathOperationsUtils.js";
 import { deleteBookScores } from "../models/userBookScoreModel.js";
 import { getPagesRange, getYearRange } from "../models/appSettingsModel.js";
+import { getTopTwoByReadCount } from '../utils/userBookReadUtils.js';
 
 export async function showQuiz(req, res) {
     try {
@@ -50,17 +52,16 @@ export async function submitQuiz (req, res) {
         // let languageWeights = 0.25/numOfSelectedLanguages;
         
 
-         await clearUserGenresScore(userId);
-        // const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
-        //     const genreId = await getGenreIdByName(element);
-        //     await addUserGenresScore(userId, genreId.genre_id, genreWeights/genrePreferencesArray.length, 1);
-        // }));
+        await clearUserGenresScore(userId);
+        const genreIds = await Promise.all(genrePreferencesArray.map(async (element) => {
+            const genreId = await getGenreIdByName(element);
+            await addUserGenresScore(userId, genreId, genreWeights/genrePreferencesArray.length, 1);
+        }));
 
         let bookLengthPreference = bookLength.replace("Book", "");
         let bookYearPreference = bookYear.replace("Book", "");
 
         await addQuizAnswer(userId, bookLengthWeights, bookYearWeights, genreWeights, languageWeights, genrePreferencesArray, languagePreferencesArray, bookLengthPreference, bookYearPreference);
-      
         req.user = await completeQuizUser(userId);
         const quizAnswer = await getQuizAnswerByUserId(userId);
         const initialQuizFlag = true;
@@ -80,6 +81,15 @@ export async function showRetakeQuiz(req, res) {
       const pageData = await getPagesRange();
       const yearData = await getYearRange();
       const quizAnswer = await getQuizAnswerByUserId(req.user.userId);
+      const userReadBooks = await getUserReadBooks(req.user.userId);
+      let userMostReadGenres;
+      // if(userReadBooks.length === 0) {
+      //   userMostReadGenres = await getUserGenresWeights(req.user.userId);
+      // } else {
+      //   userMostReadGenres = await getUserGenresScore(req.user.userId);
+      // }
+      userMostReadGenres = await getUserGenresWeights(req.user.userId);
+      //console.log(userMostReadGenres);
       let languages = [];
 
       for (let i = 0; i < languagesObj.length; i++) {
@@ -106,9 +116,10 @@ export async function showRetakeQuiz(req, res) {
       let preferences = {
         numberOfPages: quizAnswer.preferred_length,
         yearPublished: quizAnswer.preferred_year,
-        genre: quizAnswer.genre_preferences,
+        genre: getTopTwoByReadCount(userMostReadGenres),
         language: quizAnswer.language_preferences,
       };
+      //console.log(preferences.genre);
       res.render('quiz-reevaluation', { translations, genres, languages, weights, preferences, lowerPageBound: pageData[0].pages_median_min, upperPageBound: pageData[0].pages_median_max, lowerYearBound: yearData[0].year_median_min, upperYearBound: yearData[0].year_median_max });
   } catch (err) {
       console.error(err);

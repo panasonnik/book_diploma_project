@@ -1,4 +1,4 @@
-import { getUserBooks, getSavedBooks } from '../models/userModel.js';
+import { getUserBooks, getSavedBooks, getUserRole } from '../models/userModel.js';
 import { getBooksByGenre, isBookLiked } from '../models/bookModel.js';
 import { isBookRead, isBookCompleted } from '../models/userBooksModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
@@ -7,6 +7,7 @@ import { translateBook } from '../utils/translationUtils.js';
 export async function showHomepage(req, res) {
     try {
         const userId = req.user.userId;
+        const userRole = await getUserRole(userId);
         const translations = getTranslations(req);
         let books = await getUserBooks(userId);
         const savedBooks = await getSavedBooks(userId);
@@ -27,7 +28,7 @@ export async function showHomepage(req, res) {
                 }
             }
         }
-        console.log(savedBooks);
+        
         if (savedBooks.length >= 3) {
             showUpdateButton = true;
         }
@@ -40,14 +41,25 @@ export async function showHomepage(req, res) {
         books = books.map(book => {
             return translateBook(translations, book);
         });
-
-        res.render('homepage', { translations, showUpdateButton, books: books.slice(0,4), booksByGenre });
+        const parameters = {
+            translations, 
+            showUpdateButton, 
+            books: books.slice(0,4), 
+            booksByGenre
+        };
+        if (userRole === 'admin') {
+            parameters.isAdmin = true;
+        } else {
+            parameters.isAdmin = false;
+        }
+        res.render('homepage', parameters);
 
     } catch (err) {
         console.error("Error rendering homepage:", err);
         res.status(500).send("Error loading homepage");
     } 
 }
+
 
 
 

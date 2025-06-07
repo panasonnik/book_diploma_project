@@ -25,11 +25,13 @@ export async function getUserReadingHabits(statistics) {
     const lengthRates = getRates(lengthGroup);
     
     const yearRates = getRates(yearGroup);
-    console.log(yearRates);
+    // console.log(lengthGroup);
+    // console.log(yearGroup);
 
     const genreRates = getQualitativeRates (completedGenres, forgottenGenres);
     const languageRates = getQualitativeRates (completedLanguages, forgottenLanguages);
-
+    // console.log(genreRates);
+    // console.log(languageRates);
     // console.log("Genre rates: ", genreRates);
     //genres with highest completedRate save to DB
     // console.log("Lang rates: ", languageRates);
@@ -134,6 +136,7 @@ export async function getUserReadingHabits(statistics) {
 
         return {
             name: item,
+            completedCount: completed,
             completedRate: total !== 0 ? (completed/total) : 0, 
             forgottenRate: total !== 0 ? (forgotten/total) : 0,
             forgottenCount: forgotten
@@ -151,4 +154,37 @@ export async function getUserReadingHabits(statistics) {
     });
     return result;
   }
+
+export function getTopTwoByReadCount(genresArr) {
+  const topCounts = [...new Set(genresArr.map(item => item.books_read_count))]
+    .sort((a, b) => b - a)
+    .slice(0, 2);
+  return genresArr.filter(item => topCounts.includes(item.books_read_count)).map(item => item.genre_name_en);;
+}
+
+export function mergeGenres(genresScore, genresWeights) {
+  const resultMap = new Map();
+
+  for (const genre of genresScore) {
+    resultMap.set(genre.genre_id, { ...genre });
+  }
+
+  for (const genre of genresWeights) {
+    if (resultMap.has(genre.genre_id)) {
+      resultMap.get(genre.genre_id).weight = genre.weight;
+    } else {
+      resultMap.set(genre.genre_id, {
+        genre_id: genre.genre_id,
+        genre_name_en: genre.genre_name_en,
+        avg_read_progress: 1,
+        books_read_count: 1,
+        weight: genre.weight
+      });
+    }
+  }
+
+  return Array.from(resultMap.values());
+}
+
+
   

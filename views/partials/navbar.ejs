@@ -21,6 +21,16 @@
         >English</a
       >
     </div>
+    <% if (isAdmin) { %>
+    <a class="navbar__language__link" href="/<%= translations.lang %>/book/add"
+      >Add book</a
+    >
+    <a
+      class="navbar__language__link"
+      href="/<%= translations.lang %>/book/add-genre"
+      >Add genre</a
+    >
+    <% } %>
     <a href="/<%= translations.lang %>/profile">
       <button class="submit-btn submit-btn--navbar">
         <svg

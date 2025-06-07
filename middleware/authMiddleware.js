@@ -1,4 +1,4 @@
-import { getUserById } from '../models/userModel.js';
+import { getUserById, getUserRole } from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -31,5 +31,16 @@ export async function checkQuizCompletion(req, res, next) {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+export async function isAdmin(req, res, next) {
+    const userId = req.user.userId;
+    const userRole = await getUserRole(userId);
+  if (userRole === 'admin') {
+    return next();
+  } else {
+    return res.status(403).json({ message: 'Access denied: admin only' });
+  }
+}
+
 
 

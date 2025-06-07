@@ -40,6 +40,10 @@
         &.error {
             border-color: $error-color;
         }
+
+        &--short {
+            width: 20%;
+        }
     }
 
     &__row {

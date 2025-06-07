@@ -16,6 +16,16 @@ export async function getUserGenresScore (userId) {
     ON g.genre_id = ugw.genre_id AND ub.user_id = ugw.user_id
     WHERE ub.user_id = ?
     GROUP BY g.genre_id, g.genre_name_en, ugw.weight, ugw.books_read_count;
+        `, [userId]);
+    return rows;
+}
+
+export async function getUserGenresWeights (userId) {
+    const [rows] = await pool.query(`
+    SELECT ug.user_id, ug.genre_id, g.genre_name_en, ug.weight, ug.books_read_count
+FROM user_genres_weights ug
+JOIN genres g ON ug.genre_id = g.genre_id
+WHERE ug.user_id = ?;
 
         `, [userId]);
     return rows;

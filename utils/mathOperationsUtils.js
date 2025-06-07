@@ -35,16 +35,15 @@ export function normalizeByPreference(current, preference, globalMin, globalMax,
         return 1;
     }
 
-    if ((preference === 'old' || preference === 'short') && current > upperBound) {
-        return Math.max(0, 1 - (current - upperBound) / (globalMax - upperBound));
-    } else if ((preference === 'new' || preference === 'long') && current < lowerBound) {
-        return Math.max(0, 1 - (lowerBound - current) / (lowerBound - globalMin));
-    } else if (preference === 'medium') {
-        const distance = Math.min(Math.abs(current - lowerBound), Math.abs(current - upperBound));
-        const maxDistance = Math.max(median - globalMin, globalMax - median);
-        return Math.max(0, 1 - distance / maxDistance);
+    if (current > upperBound) {
+        const denomRange = globalMax - upperBound;
+        if(denomRange === 0) return 0;
+        return Math.max(0, 1 - (current - upperBound) / denomRange);
+    } else if (current < lowerBound) {
+        const denomRange = lowerBound - globalMin;
+        if(denomRange === 0) return 0;
+        return Math.max(0, 1 - (lowerBound - current) / denomRange);
     }
-
     return 0;
 }
 

@@ -11,11 +11,17 @@ html {
     }
 }
 
+.flex {
+    display: flex;
+    gap: 1rem;
+}
+
 @media (max-width: 1024px) {
     .content {
         padding: 2rem 4rem;
+
         &--flexbox {
-            display:block;
+            display: block;
         }
     }
 }

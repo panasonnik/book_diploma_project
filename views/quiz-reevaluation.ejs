@@ -9,27 +9,7 @@
   </head>
   <body>
     <div class="container">
-      <nav class="navbar">
-        <div class="logo">
-          <div class="logo-good">GOOD</div>
-          <div class="logo-book">BOOK</div>
-        </div>
-        <div class="navbar__language-switch">
-          <a
-            href="/lang/switch/uk"
-            class="navbar__language__link <%= translations.lang == 'uk' ? 'active' : '' %>"
-          >
-            Українська
-          </a>
-
-          |
-          <a
-            href="/lang/switch/en"
-            class="navbar__language__link <%= translations.lang == 'en' ? 'active' : '' %>"
-            >English</a
-          >
-        </div>
-      </nav>
+      <%- include('partials/navbar', { translations }) %>
       <div class="content">
         <h1 class="heading heading--bold heading--muted">
           <%= translations.quizReevaluation.heading %>

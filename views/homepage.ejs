@@ -9,7 +9,7 @@
   </head>
   <body>
     <div class="container">
-      <%- include('partials/navbar', { translations }) %>
+      <%- include('partials/navbar', { translations, isAdmin }) %>
       <button
         class="round-btn to-top-btn"
         onclick="topFunction()"
@@ -125,6 +125,26 @@
                 (book.is_read) { %> <%= translations.home.continueReading %> <%
                 } else { %> <%= translations.home.read %> <% } %>
               </a>
+              <% if (isAdmin) { %>
+              <form
+                class="form mt-5"
+                action="/<%= translations.lang %>/book/delete-book"
+                method="POST"
+              >
+                <input
+                  type="hidden"
+                  name="book_id"
+                  value="<%= book.book_id %>"
+                />
+                <button
+                  type="submit"
+                  class="submit-btn"
+                  id="register__create-btn"
+                >
+                  Delete book
+                </button>
+              </form>
+              <% } %>
             </div>
             <% }); %> <% } else { %>
             <p><%= translations.home.noBooks%></p>
@@ -204,6 +224,26 @@
                 (book.is_read) { %> <%=translations.home.continueReading %> <% }
                 else { %> <%=translations.home.read %> <% } %>
               </a>
+              <% if (isAdmin) { %>
+              <form
+                class="form"
+                action="/<%= translations.lang %>/book/delete-book"
+                method="POST"
+              >
+                <input
+                  type="hidden"
+                  name="book_id"
+                  value="<%= book.book_id %>"
+                />
+                <button
+                  type="submit"
+                  class="submit-btn"
+                  id="register__create-btn"
+                >
+                  Delete book
+                </button>
+              </form>
+              <% } %>
             </div>
             <% }); %>
           </div>

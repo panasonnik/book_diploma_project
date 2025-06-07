@@ -142,3 +142,13 @@ GROUP BY
         throw new Error("Error fetching user's books");
     }
 }
+
+export async function getUserRole(id) {
+    try {
+        const [rows] = await pool.execute('SELECT role FROM users WHERE user_id = ?', [id]);
+        return rows[0].role;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}

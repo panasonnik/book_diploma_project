@@ -104,13 +104,12 @@ export async function updateUserBookReading (userId) {
         languagesForgotten: []
     };
     for(const book of userBooksReading) {
-        console.log(book);
+        //console.log(book);
         const timeInMsSinceLastUpdate = new Date() - book.updated_at;
         const percentageRead = (book.pages_read / book.number_of_pages) * 100;
         const bookLengthCategory = await getLengthCategory(book.number_of_pages);
         const bookYearCategory = await getYearCategory(book.year_published);
-        // const isForgotten = percentageRead < 30 && timeInMsSinceLastUpdate > oneWeekMs;
-        const isForgotten = percentageRead < 30;
+        const isForgotten = percentageRead < 30 || timeInMsSinceLastUpdate > oneWeekMs;
         
         if(!isForgotten) {
             statistics.genres.push(...book.genre_name_en.split(',').map(g => g.trim()));

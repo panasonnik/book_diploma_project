@@ -89,6 +89,7 @@ const en = {
             yourSavedBooks: "Your saved books",
             yourReadBooks: "Your read books",
             noBooks: "You haven't saved books yet...",
+            noReadBooks: "You haven't read books yet...",
             edit: "Edit profile",
             languagePrefs: "Language preferences: ",
             cancel: "Cancel",

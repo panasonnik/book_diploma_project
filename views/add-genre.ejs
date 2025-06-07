@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="<%= translations.lang %>">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <title>Add book</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <%- include('partials/navbar', { translations, isAdmin }) %>
+      <div class="content">
+        <h1 class="heading heading--bold mb">All genres</h1>
+        <% genres.forEach(genre => { %>
+        <p class="subheading subheading--regular">
+          <%= translations.home[genre]%>
+        </p>
+        <br />
+        <% }) %>
+        <form
+          class="form mt-5"
+          action="/<%= translations.lang %>/book/add-genre"
+          method="POST"
+        >
+          <div class="form__field">
+            <label class="form__field__label" for="genre">Genre</label>
+            <input
+              class="form__input-field"
+              type="text"
+              pattern="[A-Za-z\s'-]+"
+              title="Only English letters allowed"
+              id="genre"
+              name="genre"
+              autocomplete="off"
+              required
+            />
+          </div>
+
+          <button type="submit" class="submit-btn" id="register__create-btn">
+            Add genre
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

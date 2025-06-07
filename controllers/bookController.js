@@ -1,9 +1,9 @@
-import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle } from '../models/bookModel.js';
+import { saveBookPreference, isBookLiked, deleteBookPreference, getBookByTitle, addBook, deleteBookFromDB } from '../models/bookModel.js';
 import { getBookReadData, addUserReadBook, updateBookReadingProgress, completeBook, isBookCompleted } from '../models/userBooksModel.js';
 import { getTranslations } from '../utils/getTranslations.js';
 
 import { getBookFromOpenLibraryApi } from '../utils/getBookFromOpenLibraryApi.js';
-import { getBookGenre } from '../models/genreModel.js';
+import { getBookGenre, getGenres, addGenre, addBookGenre } from '../models/genreModel.js';
 
 import { translateBook } from '../utils/translationUtils.js';
 
@@ -87,5 +87,68 @@ export async function updateBookPages (req, res) {
     } catch (err) {
         console.error("Error rendering read book:", err);
         res.status(500).send("Error rendering read book");
+    }
+}
+
+export async function addBookPage (req, res) {
+    const translations = getTranslations(req);
+    const isAdmin = true;
+    const genres = await getGenres();
+    res.render('add-book', {translations, isAdmin, genres});
+}
+
+export async function addGenrePage (req,res) {
+    const translations = getTranslations(req);
+    const isAdmin = true;
+    let genres = await getGenres();
+    genres = genres.map(genre => genre.genre_name_en);
+    res.render('add-genre', {translations, isAdmin, genres});
+}
+
+export async function addBookToDB (req,res) {
+     const { title, author, description, genre_id, year, pages, language } = req.body;
+     const translations = getTranslations(req);
+     console.log('File info:', req.file);
+if (!req.file) {
+  return res.status(400).send('No file uploaded');
+}
+
+    const imageUrl = req.file ? `/images/${req.file.filename}` : null;
+
+  try {
+    const bookId = await addBook(title, author, description, imageUrl, pages, language, year);
+    await addBookGenre (bookId, genre_id);
+    res.redirect(`/${translations.lang}/home`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error adding book');
+  }
+}
+
+export async function addGenreToDB (req,res) {
+    const { genre } = req.body;
+    console.log(genre);
+    const translations = getTranslations(req);
+  try {
+    await addGenre(genre);
+    res.redirect(`/${translations.lang}/home`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error adding genre');
+  }
+}
+
+export async function deleteBook (req,res) {
+    try {
+        const bookId = req.body.book_id;
+        console.log(req.body.book_id);
+        const translations = getTranslations(req);
+        
+        await deleteBookFromDB(bookId);
+      
+        res.redirect(`/${translations.lang}/home`);
+    } catch (err) {
+        console.error("Error deleting book:", err);
+        res.status(500).send("Error deleting book");
     }
 }

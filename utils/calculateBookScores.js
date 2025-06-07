@@ -1,6 +1,7 @@
 import { getBooksWithGenres } from "../models/bookModel.js";
 import { addBookScore } from "../models/userBookScoreModel.js";
-import { getUserGenresScore } from "../models/userGenresWeightsModel.js";
+import { getUserGenresScore, getUserGenresWeights } from "../models/userGenresWeightsModel.js";
+import { getUserReadBooks } from '../models/userBooksModel.js';
 import { getLengthCategory, getMinMax, normalizeByPreference, getMedianLength, getYearCategory, getMedianYear, getLengthRangeFromPreference, getYearRangeFromPreference } from "../utils/mathOperationsUtils.js";
 
 //initial book score calculation (each criteria weight = 0.25)
@@ -10,6 +11,7 @@ export async function calculateBookScores(quizAnswer, initialQuizFlag) {
     let booksByGenre = await getBooksWithGenres();
 
     const userGenresScore = await getUserGenresScore(resolvedQuizAnswer.user_id);
+    const userGenresWeights = await getUserGenresWeights(resolvedQuizAnswer.user_id);
     let userGenrePreferences = resolvedQuizAnswer.genre_preferences.split(',').map(genre => genre.trim());
     let eachGenreWeights = resolvedQuizAnswer.weights_genre / userGenrePreferences.length;
 
@@ -20,10 +22,10 @@ export async function calculateBookScores(quizAnswer, initialQuizFlag) {
     const criteria = {
         number_of_pages: resolvedQuizAnswer.preferred_length,
         year_published: resolvedQuizAnswer.preferred_year,
-        genre_name_en: initialQuizFlag ? userGenrePreferences : userGenresScore.map(genre => genre.genre_name_en),
+        // genre_name_en: initialQuizFlag ? userGenrePreferences : userGenresScore.map(genre => genre.genre_name_en),
+        genre_name_en: initialQuizFlag? userGenresWeights.map(genre => genre.genre_name_en) : userGenresScore.map(genre => genre.genre_name_en),
         language_en: resolvedQuizAnswer.language_preferences.trim().split(",").map(str => str.trim())
     };
-    console.log(criteria);
     const userWeights = {
         number_of_pages: Number(resolvedQuizAnswer.weights_number_of_pages),
         year_published: Number(resolvedQuizAnswer.weights_year_published),
@@ -42,32 +44,59 @@ export async function calculateBookScores(quizAnswer, initialQuizFlag) {
     let filteredBooks = [];
 
     if (initialQuizFlag) {
-        filteredBooks = booksByGenre;
-        // for (const book of booksByGenre) {
-        //     let matches = 0;
-        //     for (const key in userWeights) {
-        //         const lengthCategory = await getLengthCategory(book[key]);
-        //         const yearCategory = await getYearCategory(book[key]);
-        //             if (Array.isArray(criteria[key])) {
-        //                 console.log("Book ", book.title_en, " has key ", book[key]);
-        //                 console.log("Includes ", criteria[key]);
-        //                 console.log("\n");
-        //                 if (criteria[key].some(lang => book[key].includes(lang))) {
-        //                     matches += 1;
-        //                 }
-        //             }
-        //             else if (key === 'number_of_pages' && lengthCategory === criteria[key]) {
-        //                 matches += 1;
-        //             }
-        //             else if (key === 'year_published' && yearCategory === criteria[key]) {
-        //                 matches += 1;
-        //             }
-        //     }
-        //     console.log("Book ", book.title_en, " has ", matches, " matches");
-        //     // if (matches >= 3) filteredBooks.push(book);
-        //     // else await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
-        // }
+        //filteredBooks = booksByGenre;
+        for (const book of booksByGenre) {
+            let matches = 0;
+            for (const key in userWeights) {
+                const lengthCategory = await getLengthCategory(book[key]);
+                const yearCategory = await getYearCategory(book[key]);
+                    if (Array.isArray(criteria[key])) {
+                        if (criteria[key].some(lang => book[key].includes(lang))) {
+                            matches += 1;
+                        }
+                    }
+                    else if (key === 'number_of_pages' && lengthCategory === criteria[key]) {
+                        matches += 1;
+                    }
+                    else if (key === 'year_published' && yearCategory === criteria[key]) {
+                        matches += 1;
+                    }
+            }
+            //console.log("Book ", book.title_en, " has ", matches, " matches");
+            if (matches === 4) filteredBooks.push(book);
+            else await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
+        }
+        if(filteredBooks.length === 0) {
+            for (const book of booksByGenre) {
+            let matches = 0;
+            for (const key in userWeights) {
+                const lengthCategory = await getLengthCategory(book[key]);
+                const yearCategory = await getYearCategory(book[key]);
+                    if (Array.isArray(criteria[key])) {
+                        if (criteria[key].some(lang => book[key].includes(lang))) {
+                            matches += 1;
+                        }
+                    }
+                    else if (key === 'number_of_pages' && lengthCategory === criteria[key]) {
+                        matches += 1;
+                    }
+                    else if (key === 'year_published' && yearCategory === criteria[key]) {
+                        matches += 1;
+                    }
+            }
+            //console.log("Book ", book.title_en, " has ", matches, " matches");
+            if (matches === 3) filteredBooks.push(book);
+            else await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
+        }
+        }
+        
     } else {
+        let userReadBooks = await getUserReadBooks(resolvedQuizAnswer.user_id);
+        
+        userReadBooks = userReadBooks.filter(book => book.read_progress > 0.8);
+        const booksToExcludeIds = new Set(userReadBooks.map(book => book.book_id));
+        booksByGenre = booksByGenre.filter(book => !booksToExcludeIds.has(book.book_id));
+        
         for (const book of booksByGenre) {
             let needsToBeExcluded = false;
 
@@ -98,6 +127,7 @@ export async function calculateBookScores(quizAnswer, initialQuizFlag) {
             if (!needsToBeExcluded) filteredBooks.push(book);
         }
     }
+
     booksByGenre = filteredBooks;
     
     for (let book of booksByGenre) {
@@ -145,11 +175,11 @@ export async function calculateBookScores(quizAnswer, initialQuizFlag) {
         }
        
         score = (normPages * userWeights.number_of_pages) + (normYear * userWeights.year_published) + totalGenreWeight + (numOfMatchingLanguages * eachLanguageWeights);
-        console.log(book.title_en, " has ", score);
-        console.log("Pages: ", normPages);
-        console.log("Year: ", normYear);
-        console.log("Genre: ", totalGenreWeight);
-        console.log("Lang: ", eachLanguageWeights);
+        // console.log(book.title_en, " has ", score);
+        // console.log("Pages: ", normPages);
+        // console.log("Year: ", normYear);
+        // console.log("Genre: ", totalGenreWeight);
+        // console.log("Lang: ", eachLanguageWeights);
         await addBookScore(resolvedQuizAnswer.user_id, book.book_id, score);
         scoredBooks.push({ ...book, score });
     }

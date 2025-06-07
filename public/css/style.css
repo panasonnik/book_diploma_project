@@ -37,6 +37,11 @@ html {
   gap: 2rem;
 }
 
+.flex {
+  display: flex;
+  gap: 1rem;
+}
+
 @media (max-width: 1024px) {
   .content {
     padding: 2rem 4rem;
@@ -178,6 +183,9 @@ html {
 }
 .form__input-field.error {
   border-color: #ff4444;
+}
+.form__input-field--short {
+  width: 20%;
 }
 .form__row {
   display: flex;

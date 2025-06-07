@@ -1,12 +1,17 @@
 import { normalize, getLengthCategory, getYearCategory } from "../utils/mathOperationsUtils.js";
 import { updateQuizAnswer, getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
-import { getUserGenresScore, clearUserGenresScore, addUserGenresScore } from "../models/userGenresWeightsModel.js";
+import { getUserGenresScore, clearUserGenresScore, addUserGenresScore, getUserGenresWeights } from "../models/userGenresWeightsModel.js";
 import { getUserBooksWithLanguage } from "../models/userBooksModel.js";
 import { getLanguageCount } from "../models/bookModel.js";
+import { getTopTwoByReadCount, mergeGenres } from "./userBookReadUtils.js";
 
 export async function recalculateWeights(userId, actionIntensityFactor, books, isLikedBooksPassedOn) {
     const quizAnswer = await getQuizAnswerByUserId(userId);
     const userGenresScore = await getUserGenresScore(userId);
+    const userGenresWeights = await getUserGenresWeights(userId);
+
+    let mergedGenres = mergeGenres(userGenresScore, userGenresWeights);
+
     const savedBooks = await books;
     const booksWithLanguage = await getUserBooksWithLanguage(userId);
     const languageCount = await getLanguageCount();
@@ -23,7 +28,7 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
     const oldYearWeight = Number(quizAnswer.weights_year_published);
 
     let languages = quizAnswer.language_preferences;
-    let genres = quizAnswer.genre_preferences;
+    //let genres = quizAnswer.genre_preferences;
 
     const learningRate = 0.4;
 
@@ -46,12 +51,10 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
         }
     }
     
-    //console.log(userGenresScore);
-    
     let newWeightForSingleGenre = {};
     let newWeightForSingleLanguage = {};
     if(!isLikedBooksPassedOn) {
-        for (const genre of userGenresScore) {
+        for (const genre of mergedGenres) {
             newWeightForSingleGenre[genre.genre_name_en.split(",")] = Number(genre.weight) + learningRate * actionIntensityFactor * (genre.books_read_count * genre.avg_read_progress - Number(genre.weight));
             //await addUserGenresScore(userId, genre.genre_id, genreWeightPart, genre.books_read_count);
         }
@@ -115,13 +118,13 @@ export async function recalculateWeights(userId, actionIntensityFactor, books, i
     }
     // let totalNumberOfBooksRead = userGenresScore.reduce((sum, score) => sum + score.books_read_count, 0);
         
-            for (const genre of userGenresScore) {
+            for (const genre of mergedGenres) {
                 const genreName = genre.genre_name_en;
                 if (normalizedGenreWeights.hasOwnProperty(genreName)) {
                     genre.weight = normalizedGenreWeights[genreName];
                 }
                 await addUserGenresScore(userId, genre.genre_id, genre.weight, genre.books_read_count);
             }
-
-    await updateQuizAnswer(userId, normWeightPages, normWeightYear, normGenresWeight, normLangsWeight, genres, languages);
+    let newGenres = getTopTwoByReadCount(mergedGenres);
+    await updateQuizAnswer(userId, normWeightPages, normWeightYear, normGenresWeight, normLangsWeight, newGenres, languages);
 }
