@@ -82,6 +82,7 @@ export async function showRetakeQuiz(req, res) {
       const yearData = await getYearRange();
       const quizAnswer = await getQuizAnswerByUserId(req.user.userId);
       const userReadBooks = await getUserReadBooks(req.user.userId);
+      const isAdmin = false;
       let userMostReadGenres;
       // if(userReadBooks.length === 0) {
       //   userMostReadGenres = await getUserGenresWeights(req.user.userId);
@@ -120,7 +121,7 @@ export async function showRetakeQuiz(req, res) {
         language: quizAnswer.language_preferences,
       };
       //console.log(preferences.genre);
-      res.render('quiz-reevaluation', { translations, genres, languages, weights, preferences, lowerPageBound: pageData[0].pages_median_min, upperPageBound: pageData[0].pages_median_max, lowerYearBound: yearData[0].year_median_min, upperYearBound: yearData[0].year_median_max });
+      res.render('quiz-reevaluation', { isAdmin, translations, genres, languages, weights, preferences, lowerPageBound: pageData[0].pages_median_min, upperPageBound: pageData[0].pages_median_max, lowerYearBound: yearData[0].year_median_min, upperYearBound: yearData[0].year_median_max });
   } catch (err) {
       console.error(err);
       res.status(500).send("Error loading quiz");
@@ -147,7 +148,7 @@ export async function submitRetakeQuiz (req, res) {
       
       const quizAnswer = await getQuizAnswerByUserId(userId);
       await deleteBookScores(userId);
-      const initialQuizFlag = false;
+      const initialQuizFlag = true;
       await calculateBookScores(quizAnswer, initialQuizFlag);
       res.redirect(`/${translations.lang}/home`);
   } catch (error) {

@@ -4,6 +4,7 @@ import { getQuizAnswerByUserId } from "../models/quizAnswerModel.js";
 import { getTranslations } from './getTranslations.js';
 import { calculateBookScores } from './calculateBookScores.js';
 import { recalculateWeights } from "./recalculateWeights.js";
+import { deleteBookScores } from "../models/userBookScoreModel.js";
 
 export async function updateBookScoresReadBooks(userId) {
     const readBooks = await getUserReadBooks(userId);
@@ -13,6 +14,7 @@ export async function updateBookScoresReadBooks(userId) {
         
         const quizAnswer = await getQuizAnswerByUserId(userId);
         const initialQuizFlag = false;
+        await deleteBookScores(userId);
         await calculateBookScores(quizAnswer, initialQuizFlag);
     }
 }

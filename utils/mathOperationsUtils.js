@@ -29,7 +29,7 @@ export function getMinMax(array, key) {
 //     }
 // }
 
-export function normalizeByPreference(current, preference, globalMin, globalMax, lowerBound, upperBound, median) {
+export function normalizeByPreference(current, globalMin, globalMax, lowerBound, upperBound) {
 
     if (current >= lowerBound && current <= upperBound) {
         return 1;

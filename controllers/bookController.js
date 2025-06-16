@@ -61,8 +61,8 @@ export async function showReadBookPage (req, res) {
         book = translateBook(translations, book);
 
         req.session.isBooksReadModified = true;
-        
-        res.render('read-book', { translations, book, bookPreviewUrl, pagesRead: bookReadData.pages_read, isCompleted: bookReadData.is_book_completed });
+        const isAdmin = false;
+        res.render('read-book', { translations, book, bookPreviewUrl, pagesRead: bookReadData.pages_read, isCompleted: bookReadData.is_book_completed, isAdmin });
     } catch (err) {
         console.error("Error rendering read book:", err);
         res.status(500).send("Error rendering read book");
